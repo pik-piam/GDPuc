@@ -1,0 +1,26 @@
+Package: GDPuc
+Type: Package
+Title: Convert GDP time series data into from one unit to another
+Version: 0.0.0.9000
+Author: Johannes Koch
+Maintainer: Johannes Koch <jokoch@pik-potsdam.de>
+Description: Convert GDP time series data into from one unit to another
+    This is helpfull.
+License: GPL (>= 3)
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.1
+Depends: 
+    R (>= 2.10)
+Imports: 
+    dplyr,
+    magrittr,
+    rlang,
+    tibble
+Suggests: 
+    tidyr,
+    tidyselect,
+    stringr,
+    readxl,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
