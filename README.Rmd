@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 # GDPuc
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/johanneskoch94/GDPuc/workflows/R-CMD-check/badge.svg)](https://github.com/johanneskoch94/GDPuc/actions)
 <!-- badges: end -->
 
 GDPuc provides a single function to convert GDP time-series data from one unit to another. All common GDP units are supported. 

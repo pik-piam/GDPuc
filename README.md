@@ -4,6 +4,8 @@
 # GDPuc
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/johanneskoch94/GDPuc/workflows/R-CMD-check/badge.svg)](https://github.com/johanneskoch94/GDPuc/actions)
 <!-- badges: end -->
 
 GDPuc provides a single function to convert GDP time-series data from
