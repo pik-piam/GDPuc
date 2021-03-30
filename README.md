@@ -6,8 +6,6 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/johanneskoch94/GDPuc/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/johanneskoch94/GDPuc/actions/workflows/R-CMD-check.yaml)
-[![Codecov test
-coverage](https://codecov.io/gh/johanneskoch94/GDPuc/branch/main/graph/badge.svg)](https://codecov.io/gh/johanneskoch94/GDPuc?branch=main)
 <!-- badges: end -->
 
 GDPuc provides a single function to convert GDP time-series data from
