@@ -11,8 +11,8 @@ check_user_input <- function(gdp, unit_in, unit_out, source, verbose) {
   if (!tibble::is_tibble(gdp)) {
     rlang::abort("Invalid 'gdp' argument. `gdp` is not a tibble.")
   }
-  if (!all(colnames(gdp) %in% c("iso3c", "year", "value"))) {
-    rlang::abort("Invalid 'gdp' argument. `gdp` does not have the correct columns.")
+  if (!all(c("iso3c", "year", "value") %in% colnames(gdp))) {
+    rlang::abort("Invalid 'gdp' argument. `gdp` does not have the required columns.")
   }
 
   # Check input parameters 'unit_in' and 'unit_out'

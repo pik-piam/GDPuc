@@ -38,11 +38,14 @@ imf_weo <- readxl::read_xlsx(
     `GDP (current US$)` = `GDP (current US$)` * 1e+9,
     `GDP deflator` = `GDP deflator` / 100,
     `GDP, PPP (current international $)` = `GDP, PPP (current international $)` * 1e+9,
+    `MER (LCU per US$)` = ifelse(!is.na(`GDP (current LCU)`) & !is.na(`GDP (current US$)`),
+                                 `GDP (current LCU)` / `GDP (current US$)`,
+                                 NA),
     `Population, total` = `Population, total` * 1e+6
   )
 
 
-wdi_file <- "../../R_projects/gdp_pop_trends/data/source/WB/ef49c821-f93e-4266-b317-cd45cf89cba0_Data.csv"
+wdi_file <- "../../R_projects/gdp_pop_trends/data/source/WB/0280a7cc-4b5d-4768-bfc8-52104dc79791_Data.csv"
 
 wb_wdi <- readr::read_csv(wdi_file, col_types = readr::cols(
   .default = readr::col_double(),
@@ -58,6 +61,13 @@ wb_wdi <- readr::read_csv(wdi_file, col_types = readr::cols(
                 value) %>%
   tidyr::pivot_wider(names_from = variable) %>%
   dplyr::mutate(year = as.integer(substr(year, 1, 4)),
-                `GDP deflator` = `GDP (current LCU)` / `GDP (constant LCU)`)
+                `GDP deflator: linked series` = `GDP deflator: linked series (base year varies by country)` / 100,
+                `GDP deflator` = `GDP deflator (base year varies by country)` / 100,
+                # `PPP conversion factor, GDP (LCU per international $)` = ifelse(
+                #   !is.na(`GDP, PPP (current international $)`),
+                #   `PPP conversion factor, GDP (LCU per international $)`,
+                #   NA
+                # ),
+                `MER (LCU per US$)` = `DEC alternative conversion factor (LCU per US$)`)
 
 usethis::use_data(imf_weo, wb_wdi, internal = TRUE, overwrite = TRUE)

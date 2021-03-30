@@ -4,7 +4,7 @@
 \alias{convertGDP}
 \title{Convert GDP time series data from one unit to another}
 \usage{
-convertGDP(gdp, unit_in, unit_out, source = "imf_weo", verbose = FALSE)
+convertGDP(gdp, unit_in, unit_out, source = "wb_wdi", verbose = FALSE)
 }
 \arguments{
 \item{gdp}{A tibble with 3 columns "iso3c", "year" and "value".}

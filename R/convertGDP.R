@@ -43,7 +43,7 @@
 #'
 #' @return A tibble with 3 columns
 #' @export
-convertGDP <- function(gdp, unit_in, unit_out, source = "imf_weo", verbose = FALSE) {
+convertGDP <- function(gdp, unit_in, unit_out, source = "wb_wdi", verbose = FALSE) {
 
   # Check function arguments
   check_user_input(gdp, unit_in, unit_out, source, verbose)
