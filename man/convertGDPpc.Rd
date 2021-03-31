@@ -8,7 +8,7 @@ convertGDPpc(
   gdppc,
   unit_in,
   unit_out,
-  source = "imf_weo",
+  source = "wb_wdi",
   pop_source = source,
   verbose = FALSE
 )

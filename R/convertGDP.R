@@ -43,10 +43,19 @@
 #'
 #' @return A tibble with 3 columns
 #' @export
-convertGDP <- function(gdp, unit_in, unit_out, source = "wb_wdi", verbose = FALSE) {
+convertGDP <- function(gdp,
+                       unit_in,
+                       unit_out,
+                       source = "wb_wdi",
+                       verbose = FALSE) {
 
   # Check function arguments
   check_user_input(gdp, unit_in, unit_out, source, verbose)
+
+  # Return straight away if no conversion is needed
+  if (identical(unit_in, unit_out)) {
+    return(gdp)
+  }
 
   # Extract base years if they exist, and adjust string
   if (grepl("constant", unit_in)) {
@@ -59,6 +68,28 @@ convertGDP <- function(gdp, unit_in, unit_out, source = "wb_wdi", verbose = FALS
     unit_out <- sub(base_y, "YYYY", unit_out) %>%
       paste0(" base y")
   }
+
+  # Rename columns if necessary
+  if (! "iso3c" %in% colnames(gdp)) {
+    i_iso3c <- gdp %>%
+      dplyr::select(tidyselect:::where(~is.character(.x) & nchar(.x[[1]]) == 3)) %>%
+      colnames()
+    gdp <- gdp %>%
+      dplyr::rename("iso3c" = !!rlang::sym(i_iso3c)) %>%
+      dplyr::arrange("iso3c", 1)
+  }
+  if (! "year" %in% colnames(gdp)) {
+    i_year <- gdp %>%
+      dplyr::select(tidyselect:::where(~is.numeric(.x) &
+                                         !is.na(.x[[1]]) &
+                                         nchar(as.character(.x[[1]])) == 4)) %>%
+      colnames()
+    gdp <- gdp %>%
+      dplyr::rename("year" = !!rlang::sym(i_year)) %>%
+      dplyr::arrange("year", 2)
+  }
+
+
 
   # Get appropriate function
   f <- paste0(unit_in, "_2_", unit_out) %>%
@@ -76,6 +107,14 @@ convertGDP <- function(gdp, unit_in, unit_out, source = "wb_wdi", verbose = FALS
 
   # Call function
   x <- do.call(f, a)
+
+  # Return with original names, if changed
+  if (exists("i_iso3c", envir = this_e)) {
+    x <- x %>% dplyr::rename(!!rlang::sym(i_iso3c) := "iso3c")
+  }
+  if (exists("i_year", envir = this_e)) {
+    x <- x %>% dplyr::rename(!!rlang::sym(i_year) := "year")
+  }
 
   return(x)
 }

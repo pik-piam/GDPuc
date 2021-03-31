@@ -9,7 +9,7 @@
 #'
 #' @return A tibble
 #' @export
-convertGDPpc <- function(gdppc, unit_in, unit_out, source = "imf_weo", pop_source = source, verbose = FALSE) {
+convertGDPpc <- function(gdppc, unit_in, unit_out, source = "wb_wdi", pop_source = source, verbose = FALSE) {
 
   pop <- eval(rlang::sym(pop_source)) %>%
     dplyr::select(iso3c, year, `Population, total`)
