@@ -11,6 +11,7 @@ imf_weo <- readxl::read_xlsx(
     "NGDP",
     "NGDPD",
     "PPPGDP",
+    "NGDPRPPPPC",
     "NGDP_D",
     "PPPEX",
     "LP")) %>%
@@ -28,6 +29,7 @@ imf_weo <- readxl::read_xlsx(
     "GDP (current LCU)" = NGDP,
     "GDP (current US$)" = NGDPD,
     "GDP, PPP (current international $)" = PPPGDP,
+    "GDPpc, PPP (constant 2017 international $)" = NGDPRPPPPC,
     "GDP deflator" = NGDP_D,
     "PPP conversion factor, GDP (LCU per international $)" = PPPEX,
     "Population, total" = LP

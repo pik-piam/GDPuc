@@ -13,7 +13,24 @@ test_that("current_LCU_2_current_IntPPP", {
   expect_equal(gdp_conv, gdp_out)
 })
 
-test_that("current_LCU_2_current_IntPPP", {
+# test_that("current_LCU_2_current_IntPPP", {
+#   gdp_in <- imf_weo %>%
+#     dplyr::filter(!is.na(`GDP, PPP (current international $)`)) %>%
+#     dplyr::select("iso3c", "year", "value" = `GDP (current LCU)`)
+#
+#   gdp_conv <- current_LCU_2_current_IntPPP(gdp_in, "wb_wdi") %>%
+#     dplyr::filter(!is.na(value)) %>%
+#     dplyr::mutate(value = signif(value, 3))
+#
+#   gdp_out <- imf_weo %>%
+#     dplyr::right_join(gdp_conv, by = c("iso3c", "year")) %>%
+#     dplyr::select("iso3c", "year", "value" = `GDP, PPP (current international $)`) %>%
+#     dplyr::mutate(value = signif(value, 3))
+#
+#   expect_equal(gdp_conv, gdp_out)
+# })
+
+test_that("current_IntPPP_2_current_LCU", {
   gdp_in <- wb_wdi %>%
     dplyr::filter(!is.na(`GDP: linked series (current LCU)`)) %>%
     dplyr::select("iso3c", "year", "value" = `GDP, PPP (current international $)`)
