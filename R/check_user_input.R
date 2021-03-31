@@ -65,8 +65,8 @@ check_user_input <- function(gdp, unit_in, unit_out, source, verbose) {
   }
 
   # Check input parameter 'source'
-  if (!source %in% c("imf_weo", "wb_wdi")) {
-    rlang::abort("Invalid 'source' argument. Has to be either 'imf_weo' or 'wb_wdi.")
+  if (!source %in% c("imf_weo", "wb_wdi") & !exists(source, mode = "list")) {
+    rlang::abort("Invalid 'source' argument. Has to be either 'imf_weo', 'wb_wdi' or valid custom source.")
   }
 
   if (!is.logical(verbose)) {
