@@ -127,7 +127,7 @@ constant_LCU_base_x_2_constant_USMER_base_y <- function(gdp, base_x, base_y, sou
 constant_IntPPP_base_x_2_constant_LCU_base_y <- function(gdp, base_x, base_y, source) {
   gdp %>%
     constant_IntPPP_2_constant_LCU(base = base_x, source) %>%
-    constant_LCU_base_x_2_constant_LCU_base_y(basex, base_y, source, linked = TRUE)
+    constant_LCU_base_x_2_constant_LCU_base_y(base_x, base_y, source, linked = TRUE)
 }
 
 #' Convert from constant Int$PPP base year x to current LCU
