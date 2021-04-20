@@ -1,5 +1,6 @@
 ---
 output: github_document
+always_allow_html: yes
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -21,7 +22,16 @@ knitr::opts_chunk$set(
 
 <!-- badges: end -->
 
-GDPuc (a.k.a. GDP unit-conversion) provides a single function to convert GDP time-series data from one unit to another. All common GDP units are supported.
+GDPuc (a.k.a. GDP unit-conversion) provides a single function to convert GDP time-series data from one unit to another. All common GDP units are supported, i.e.:
+
+-   current LCU
+-   current US$MER
+-   current Int$PPP
+-   constant YYYY LCU
+-   constant YYYY US$MER
+-   constant YYYY Int$PPP  
+
+where "YYYY" is a placeholder for a year, e.g. "2010" or "2015".
 
 ## Installation
 
@@ -30,11 +40,11 @@ Since this is still a private repository, you'll need a [github personal acces t
 Open a R session on your machine, either in Rstudio (recommended), or from the command line with the `R` command.
 
 ```{r, eval = FALSE}
-# Make sure devtools is installed:
-install.packages("devtools")
+# Make sure remotes is installed:
+install.packages("remotes")
 
 # Install GDPuc from github:
-devtools::install_github(
+remotes::install_github(
   repo = "johanneskoch94/GDPuc",
   auth_token = "<<your personal github acces token goes here>>"
 )
@@ -42,31 +52,15 @@ devtools::install_github(
 
 ## Usage
 
-The function `convertGDP` takes a tibble that contains at least:
+Load the package.
 
--   a column with iso3c country codes, (ideally named "iso3c")
--   a column with the year, (ideally named "year")
--   a column named "value", with the gdp data 
-
-and converts the "value" column from the unit specified by the `unit_in` argument, into that specified by `unit_out`. 
-It uses GDP deflators, MERs and PPPs from the database specified by the `source` argument (defaults to the world bank's Feb. 2021 WDI).  
-
-Allowed in- and out-units are:
-
--   "current LCU"
--   "current US$MER"
--   "current Int$PPP"
--   "constant YYYY LCU"
--   "constant YYYY US$MER"
--   "constant YYYY Int$PPP"  
-
-where "YYYY" should be replaced by a year, e.g. "2010" or "2015".
-
-```{r usage, eval=FALSE}
-# Load package into R-session
+```{r eval=FALSE}
 library(GDPuc)
+```
 
-# Convert gdp
+The main function of the package is `convertGDP`. 
+
+```{r usage1, eval=FALSE}
 convertGDP(
   gdp = gdp, 
   unit_in = "constant 2005 LCU", 
@@ -74,13 +68,82 @@ convertGDP(
 )
 ```
 
+Here, the `gdp` argument takes a tibble that contains, at least:
+
+-   a column with iso3c country codes, (ideally named "iso3c")
+-   a column with the year, (ideally named "year")
+-   a column named "value", with the gdp data 
+
+  
+Use the `source` argument to control the source of the underlying conversion factors (GDP deflators, MERs and PPPs). 
+There are 2 source options shipped with the package, with `wb_wdi` set as default, but custom sources are possible. 
+
+```{r usage2, eval=FALSE}
+convertGDP(
+  gdp = gdp, 
+  unit_in = "constant 2005 LCU", 
+  unit_out = "constant 2017 Int$PPP",
+  source = "imf_weo"
+)
+```
+
+
+Set the `verbose` argument to `TRUE` to print out the underlying conversion steps and factors. The verbosity can also be controlled via the option `"GDPuc.verbose"`. 
+
+```{r usage3, eval=FALSE}
+convertGDP(
+  gdp = gdp, 
+  unit_in = "constant 2005 LCU", 
+  unit_out = "constant 2017 Int$PPP",
+  verbose = TRUE
+)
+```
+
+
 ## Example
 
-```{r example}
+```{r example1}
 library(GDPuc)
 
-gdp <- tibble::tibble(iso3c = "USA", year = 2010:2020, value = 100:110)
+gdp <- tibble::tibble(
+  iso3c = "USA", 
+  year = 2010:2014, 
+  value = 100:104
+)
 print(gdp)
 
-convertGDP(gdp, "constant 2005 LCU", "constant 2017 Int$PPP")
+convertGDP(
+  gdp = gdp, 
+  unit_in = "constant 2005 LCU", 
+  unit_out = "constant 2017 Int$PPP"
+)
 ```
+
+Setting `verbose = TRUE` will additionally print the following information to the console:
+
+```{r, eval=FALSE}
+convertGDP(
+  gdp = gdp, 
+  unit_in = "constant 2005 LCU", 
+  unit_out = "constant 2017 Int$PPP",
+  verbose = TRUE
+)
+```
+
+```{r, include = FALSE}
+# Turn on ANSI colors
+options(cli.num_colors = 256L)
+asciicast::init_knitr_engine(echo_input = FALSE)
+```
+
+```{asciicast example2}
+library(GDPuc)
+gdp <- tibble::tibble(iso3c = "USA", year = 2010:2020, value = 100:110)
+x <- convertGDP(
+  gdp = gdp, 
+  unit_in = "constant 2005 LCU", 
+  unit_out = "constant 2017 Int$PPP",
+  verbose = TRUE
+)
+```
+

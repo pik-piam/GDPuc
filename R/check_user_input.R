@@ -15,18 +15,15 @@ check_user_input <- function(gdp, unit_in, unit_out, source, verbose) {
     rlang::abort("Invalid 'gdp' argument. `gdp` does not have the required 'value' column.")
   }
   if (! "iso3c" %in% colnames(gdp)) {
-    rlang::warn("Invalid 'gdp' argument. `gdp` does not have the required 'iso3c' column.")
     i_iso3c <- gdp %>%
       dplyr::select(tidyselect:::where(~is.character(.x) & nchar(.x[[1]]) == 3)) %>%
       colnames()
     if (identical(i_iso3c, character(0))) {
-      rlang::abort("Invalid 'gdp' argument. `gdp` does not have the required 'iso3c' column, and no other column could be identified in its stead.")
+      rlang::abort("Invalid 'gdp' argument. `gdp` has no 'iso3c' column, and no other column could be identified in its stead.")
     }
-    rlang::inform(glue::glue("Couldn't find 'iso3c' column in 'gdp'. \\
-                             Assuming {i_iso3c} represents iso3c country codes."))
+    rlang::warn(glue::glue("No 'iso3c' column in 'gdp' argument. Using '{i_iso3c}' column instead."))
   }
   if (! "year" %in% colnames(gdp)) {
-    rlang::warn("Invalid 'gdp' argument. `gdp` does not have the required 'year' column.")
     i_year <- gdp %>%
       dplyr::select(tidyselect:::where(~is.numeric(.x) &
                                          !is.na(.x[[1]]) &
@@ -35,8 +32,7 @@ check_user_input <- function(gdp, unit_in, unit_out, source, verbose) {
     if (identical(i_year, character(0))) {
       rlang::abort("Invalid 'gdp' argument. `gdp` does not have the required 'year' column, and no other column could be identified in its stead.")
     }
-    rlang::inform(glue::glue("Couldn't find 'year' column in 'gdp'. \\
-                             Assuming {i_year} represents years."))
+    rlang::warn(glue::glue("No 'year' column in 'gdp' argument. Using '{i_year}' column instead."))
   }
 
 
