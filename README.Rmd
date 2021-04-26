@@ -35,19 +35,16 @@ where "YYYY" is a placeholder for a year, e.g. "2010" or "2015".
 
 ## Installation
 
-Since this is still a private repository, you'll need a [github personal acces token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with "repo" scope. Once you've created this token, you can use it to install GDPuc directly from github.
+There currently only exists the development version on github. 
 
-Open a R session on your machine, either in Rstudio (recommended), or from the command line with the `R` command.
+Open a R session on your machine and use the `remotes` package to install GDPuc.
 
 ```{r, eval = FALSE}
-# Make sure remotes is installed:
+# Install remotes if necessary:
 install.packages("remotes")
 
 # Install GDPuc from github:
-remotes::install_github(
-  repo = "johanneskoch94/GDPuc",
-  auth_token = "<<your personal github acces token goes here>>"
-)
+remotes::install_github("johanneskoch94/GDPuc")
 ```
 
 ## Usage
