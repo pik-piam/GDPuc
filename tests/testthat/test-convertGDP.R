@@ -23,11 +23,6 @@ test_that("convertGDP", {
       convertGDP(gdp_in, "current LCU", "constant 2017 Int$PPP", "wb_wdi")
     )
   )
-  expect_message(
-    suppressWarnings(
-      convertGDP(gdp_in, "current LCU", "constant 2017 Int$PPP", "wb_wdi")
-    )
-  )
 
   gdp_conv <- suppressWarnings(suppressMessages(
     convertGDP(gdp_in, "current LCU", "constant 2017 Int$PPP", "wb_wdi") %>%
@@ -48,11 +43,6 @@ test_that("convertGDP", {
 
   expect_warning(
     suppressMessages(
-      convertGDP(gdp_in, "current LCU", "constant 2017 Int$PPP", "wb_wdi")
-    )
-  )
-  expect_message(
-    suppressWarnings(
       convertGDP(gdp_in, "current LCU", "constant 2017 Int$PPP", "wb_wdi")
     )
   )

@@ -1,7 +1,7 @@
 Package: GDPuc
 Type: Package
 Title: Convert GDP time series data into from one unit to another
-Version: 0.0.0.9001
+Version: 0.0.0.9002
 Author: Johannes Koch
 Maintainer: Johannes Koch <jokoch@pik-potsdam.de>
 Description: Convert GDP time series data into from one unit to another
@@ -15,6 +15,8 @@ Depends:
 Imports: 
     dplyr,
     glue,
+    cli,
+    crayon,
     magrittr,
     rlang,
     tibble

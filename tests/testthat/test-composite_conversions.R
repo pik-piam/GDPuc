@@ -105,3 +105,26 @@ test_that("constant_IntPPP_base_x_2_current_LCU", {
   expect_equal(gdp_conv, gdp_out)
 })
 
+
+test_that("constant_IntPPP_base_x_2_constant_LCU", {
+  gdp_out_c <- wb_wdi %>%
+    dplyr::select("iso3c", "year", "value" = `GDP: linked series (current LCU)`) %>%
+    current_LCU_2_constant_LCU_base_y(2010, "wb_wdi", linked = TRUE)%>%
+    dplyr::filter(!is.na(value))
+
+  gdp_in <- wb_wdi %>%
+    dplyr::right_join(gdp_out_c %>%
+                        dplyr::select(-value),
+                      by = c("iso3c", "year")) %>%
+    dplyr::select("iso3c", "year", "value" = `GDP, PPP (constant 2017 international $)`)
+
+  gdp_conv <- constant_IntPPP_base_x_2_constant_LCU_base_y(gdp_in, 2017, 2010, "wb_wdi") %>%
+    dplyr::filter(!is.na(value))
+
+  gdp_out <- gdp_out_c %>%
+    dplyr::right_join(gdp_conv %>%
+                        dplyr::select(-value),
+                      by = c("iso3c", "year"))
+
+  expect_equal(gdp_conv, gdp_out)
+})
