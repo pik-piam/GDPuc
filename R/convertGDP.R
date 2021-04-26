@@ -52,6 +52,13 @@ convertGDP <- function(gdp,
   # Check function arguments
   gdp <- check_user_input(gdp, unit_in, unit_out, source, verbose)
 
+  # Set verbose option, if necessary
+  if (verbose != getOption("GDPuc.verbose", default = FALSE)) {
+    old_value <- getOption("GDPuc.verbose", default = FALSE)
+    options("GDPuc.verbose" = verbose)
+    on.exit(options("GDPuc.verbose" = old_value))
+  }
+
   # Return straight away if no conversion is needed
   if (identical(unit_in, unit_out)) {
     return(gdp)
@@ -89,8 +96,6 @@ convertGDP <- function(gdp,
       dplyr::arrange("year", 2)
   }
 
-
-
   # Get appropriate function
   f <- paste0(unit_in, "_2_", unit_out) %>%
     stringr::str_replace_all(c(
@@ -106,7 +111,13 @@ convertGDP <- function(gdp,
     {if (exists("base_y", envir = this_e, inherits = FALSE)) c(., "base_y" = base_y) else .}
 
   # Call function
-  x <- do.call(f, a)
+  cli_inform(function() cli::cli_alert_info(
+    "Converting GDP with conversion factors from {crayon::blue(source)}:")
+  )
+  #catch_msgs({
+    x <- do.call(f, a)
+  #}) -> msgs
+  #cli_conv_steps(msgs)
 
   # Return with original names, if changed
   if (exists("i_iso3c", envir = this_e)) {
