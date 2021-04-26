@@ -40,7 +40,6 @@
 #' @param verbose TRUE or FALSE
 #'
 #' @importFrom magrittr %>%
-#'
 #' @return A tibble with 3 columns
 #' @export
 convertGDP <- function(gdp,
@@ -48,9 +47,10 @@ convertGDP <- function(gdp,
                        unit_out,
                        source = "wb_wdi",
                        verbose = FALSE) {
-
+  return_mag <- FALSE
+  if(is.magpie(gdp)){ return_mag <- TRUE}
   # Check function arguments
-  check_user_input(gdp, unit_in, unit_out, source, verbose)
+  gdp <- check_user_input(gdp, unit_in, unit_out, source, verbose)
 
   # Return straight away if no conversion is needed
   if (identical(unit_in, unit_out)) {
@@ -115,6 +115,13 @@ convertGDP <- function(gdp,
   if (exists("i_year", envir = this_e)) {
     x <- x %>% dplyr::rename(!!rlang::sym(i_year) := "year")
   }
+
+  if (return_mag==TRUE){
+    x <- as.magpie(x[,-1], spatial="iso3c", temporal="year")
+    if(any(is.na(x))) {
+      warning("NAs may have been generated for countries lacking conversion factors!")}
+  }
+
 
   return(x)
 }
