@@ -26,5 +26,6 @@ Suggests:
     stringr,
     readxl,
     testthat (>= 3.0.0),
-    covr
+    covr,
+    magclass
 Config/testthat/edition: 3

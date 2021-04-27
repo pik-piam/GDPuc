@@ -2,7 +2,5 @@
 
 export(convertGDP)
 export(convertGDPpc)
-export(mag2tibb)
-importFrom(magclass,as.data.frame)
 importFrom(magrittr,"%>%")
 importFrom(rlang,"!!")

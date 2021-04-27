@@ -13,5 +13,6 @@ mag2tibb(gdp)
 A tibble
 }
 \description{
-Converts magclass object into tibble with colnames  required for GDPuc
+Converts magclass object into tibble with colnames required
+  for convertGDP.
 }

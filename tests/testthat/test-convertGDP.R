@@ -58,3 +58,10 @@ test_that("convertGDP", {
 
   expect_equal(gdp_conv, gdp_out)
 })
+
+test_that("convertGDP magpie object", {
+  gdp_in <- magclass::new.magpie("USA", years = c(2001, 2002), fill = 100)
+  gdp_conv <- convertGDP(gdp_in, "current LCU", "constant 2017 Int$PPP")
+
+  expect_s4_class(gdp_conv, "magpie")
+})

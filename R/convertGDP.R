@@ -47,10 +47,9 @@ convertGDP <- function(gdp,
                        unit_out,
                        source = "wb_wdi",
                        verbose = FALSE) {
-  return_mag <- FALSE
-  if(is.magpie(gdp)){ return_mag <- TRUE}
+
   # Check function arguments
-  gdp <- check_user_input(gdp, unit_in, unit_out, source, verbose)
+  check_user_input(gdp, unit_in, unit_out, source, verbose)
 
   # Set verbose option, if necessary
   if (verbose != getOption("GDPuc.verbose", default = FALSE)) {
@@ -63,6 +62,12 @@ convertGDP <- function(gdp,
   if (identical(unit_in, unit_out)) {
     return(gdp)
   }
+
+  # Convert to tibble, if necessary
+  if (class(gdp)[1] == "magpie"){
+    return_mag <- TRUE
+    gdp <- mag2tibb(gdp)
+  } else return_mag <- FALSE
 
   # Extract base years if they exist, and adjust string
   if (grepl("constant", unit_in)) {
@@ -79,7 +84,9 @@ convertGDP <- function(gdp,
   # Rename columns if necessary
   if (! "iso3c" %in% colnames(gdp)) {
     i_iso3c <- gdp %>%
-      dplyr::select(tidyselect:::where(~is.character(.x) & nchar(.x[[1]]) == 3)) %>%
+      dplyr::select(tidyselect::vars_select_helpers$where(
+        ~ is.character(.x) & nchar(.x[[1]]) == 3
+      )) %>%
       colnames()
     gdp <- gdp %>%
       dplyr::rename("iso3c" = !!rlang::sym(i_iso3c)) %>%
@@ -87,9 +94,9 @@ convertGDP <- function(gdp,
   }
   if (! "year" %in% colnames(gdp)) {
     i_year <- gdp %>%
-      dplyr::select(tidyselect:::where(~is.numeric(.x) &
-                                         !is.na(.x[[1]]) &
-                                         nchar(as.character(.x[[1]])) == 4)) %>%
+      dplyr::select(tidyselect::vars_select_helpers$where(
+        ~ is.numeric(.x) & !is.na(.x[[1]]) & nchar(as.character(.x[[1]])) == 4
+      )) %>%
       colnames()
     gdp <- gdp %>%
       dplyr::rename("year" = !!rlang::sym(i_year)) %>%
@@ -127,10 +134,11 @@ convertGDP <- function(gdp,
     x <- x %>% dplyr::rename(!!rlang::sym(i_year) := "year")
   }
 
-  if (return_mag==TRUE){
-    x <- as.magpie(x[,-1], spatial="iso3c", temporal="year")
+  # Return as magpie object if necessary
+  if (return_mag){
+    x <- magclass::as.magpie(x[,-1], spatial="iso3c", temporal="year")
     if(any(is.na(x))) {
-      warning("NAs may have been generated for countries lacking conversion factors!")}
+      rlang::warn("NAs may have been generated for countries lacking conversion factors!")}
   }
 
 

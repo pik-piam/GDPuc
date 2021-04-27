@@ -7,37 +7,50 @@
 #' @return TRUE or an Error
 check_user_input <- function(gdp, unit_in, unit_out, source, verbose) {
 
-  if (magclass::is.magpie(gdp)){
-    gdp <-mag2tibb(gdp)
+  # Check if magclass package is required
+  if (class(gdp)[1] == "magpie" && !requireNamespace("magclass", quietly = TRUE)) {
+    rlang::abort("Missing package. Please install the 'magclass' package to convert magpie objects.")
   }
 
   # Check 'gdp' input parameter
-  if (!tibble::is_tibble(gdp)) {
-    rlang::abort("Invalid 'gdp' argument. `gdp` is not a tibble nor a magclass object.")
-  }
-  if (! "value" %in% colnames(gdp)) {
-    rlang::abort("Invalid 'gdp' argument. `gdp` does not have the required 'value' column.")
-  }
-  if (! "iso3c" %in% colnames(gdp)) {
-    i_iso3c <- gdp %>%
-      dplyr::select(tidyselect:::where(~is.character(.x) & nchar(.x[[1]]) == 3)) %>%
-      colnames()
-    if (identical(i_iso3c, character(0))) {
-      rlang::abort("Invalid 'gdp' argument. `gdp` has no 'iso3c' column, and no other column could be identified in its stead.")
+  if (tibble::is_tibble(gdp)) {
+    if (! "value" %in% colnames(gdp)) {
+      rlang::abort("Invalid 'gdp' argument. `gdp` does not have the required 'value' column.")
     }
-    rlang::warn(glue::glue("No 'iso3c' column in 'gdp' argument. Using '{i_iso3c}' column instead."))
-  }
-  if (! "year" %in% colnames(gdp)) {
-    i_year <- gdp %>%
-      dplyr::select(tidyselect:::where(~is.numeric(.x) &
-                                         !is.na(.x[[1]]) &
-                                         nchar(as.character(.x[[1]])) == 4)) %>%
-      colnames()
-    if (identical(i_year, character(0))) {
-      rlang::abort("Invalid 'gdp' argument. `gdp` does not have the required 'year' column, and no other column could be identified in its stead.")
+    if (! "iso3c" %in% colnames(gdp)) {
+      i_iso3c <- gdp %>%
+        dplyr::select(tidyselect::vars_select_helpers$where(
+          ~ is.character(.x) & nchar(.x[[1]]) == 3
+        )) %>%
+        colnames()
+      if (identical(i_iso3c, character(0))) {
+        rlang::abort("Invalid 'gdp' argument. `gdp` has no 'iso3c' column, and no other \\
+                     column could be identified in its stead.")
+      }
+      rlang::warn(glue::glue("No 'iso3c' column in 'gdp' argument. Using '{i_iso3c}' column instead."))
     }
-    rlang::warn(glue::glue("No 'year' column in 'gdp' argument. Using '{i_year}' column instead."))
+    if (! "year" %in% colnames(gdp)) {
+      i_year <- gdp %>%
+        dplyr::select(tidyselect::vars_select_helpers$where(
+          ~ is.numeric(.x) & !is.na(.x[[1]]) & nchar(as.character(.x[[1]])) == 4
+        )) %>%
+        colnames()
+      if (identical(i_year, character(0))) {
+        rlang::abort(glue::glue("Invalid 'gdp' argument. 'gdp' does not have the required \\
+                                'year' column, and no other column could be identified in its stead."))
+      }
+      rlang::warn(glue::glue("No 'year' column in 'gdp' argument. Using '{i_year}' column instead."))
+    }
+
+  } else if (class(gdp) == "magpie"){
+    # Check if there is years info
+    if(is.null(magclass::getYears(gdp))){
+      rlang::abort("No year information in mag object!")
+    }
+  } else {
+    rlang::abort("Invalid 'gdp' argument. `gdp` is neither a tibble nor a 'magpie' object.")
   }
+
 
 
   # Check input parameters 'unit_in' and 'unit_out'
@@ -72,5 +85,6 @@ check_user_input <- function(gdp, unit_in, unit_out, source, verbose) {
   if (!is.logical(verbose)) {
     rlang::abort("Invalid 'verbose' argument. Has to be either TRUE or FALSE.")
   }
-return(gdp)
+
+  TRUE
 }
