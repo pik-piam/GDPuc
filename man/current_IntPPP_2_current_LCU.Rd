@@ -7,7 +7,8 @@
 current_IntPPP_2_current_LCU(gdp, source)
 }
 \arguments{
-\item{gdp}{A tibble with 3 columns "iso3c", "year" and "value".}
+\item{gdp}{A tibble or data-frame with at least 3 columns containing iso3c
+country codes, years, and GDP values.}
 
 \item{source}{A string indicating the source database to use for conversion
 factors.}

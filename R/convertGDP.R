@@ -1,42 +1,16 @@
 #' Convert GDP time series data from one unit to another
 #'
-#'   # All on country level.
-#' 0# Converting current LCU (nominal) to constant LCU with base year x (real)
-#' Need GDP deflator with base year x, unit = [.LCU/xLCU], often given in %
-#' Divide nominal GDP by deflator in every year
-
-#' 1# Changing base year of constant LCU from x to y
-#' Need either deflator with base year x, or current LCU series
-#' With deflator: Multiply constant LCU with base year x [xLCU] with value in y
-#'                of deflator with base year x [yLCU/xLCU]
-#' With current series: Compute deflator (nominal divided by real), then follow above
-
-#' 2# Converting current LCU to current Int$MER or current Int$PPP
-#' Need yearly Market exchange rates, or yearly PPPs
-#' Multiply nominal GDP by chosen conversion factor
-
-#' 3# Converting constant LCU to constant Int$MER or constant Int$PPP, all same base year
-#' Need base year Market exchange rates, or PPPs
-#' Multiply real GDP by chosen conversion factor
-
-#' 3# Converting current LCU to constant Int$MER or constant Int$PPP, all same base year
-#' Need base year Market exchange rates, or PPPs
-#' Multiply real GDP by chosen conversion factor
-
-#' 4# Converting constant Int$MER to constant Int$PPP with base year x
-#' Need MER and PPP of base year
-
-#' 5# Converting current Int$PPP to constant Int$PPP with base year x
-#' Need yearly PPP conversion rate, GDP deflator with base year x
-#' Divide current Int$PPP by PPP conversion rate, then follow 0, and 3
-
-#' ## Converting current LCU to Int$PPP Need yearly PPPs,
+#' convertGDP converts GDP time series data from one unit to another, using GDP
+#' deflators, market exchange rates (MERs) and purchasing power parity
+#' conversion factors (PPPs) from `source`.
 #'
-#' @param gdp A tibble with 3 columns "iso3c", "year" and "value".
+#' @param gdp A tibble or data-frame with at least 3 columns containing iso3c
+#'   country codes, years, and GDP values.
 #' @param unit_in A string with the incoming GDP unit.
 #' @param unit_out A string with the desired output GDP unit.
 #' @param source A string indicating the source database to use for conversion
 #'   factors.
+#' @param with_regions Data-frame or tibble with region mapping
 #' @param verbose TRUE or FALSE
 #'
 #' @importFrom magrittr %>%
@@ -46,10 +20,11 @@ convertGDP <- function(gdp,
                        unit_in,
                        unit_out,
                        source = "wb_wdi",
+                       with_regions = NULL,
                        verbose = FALSE) {
 
   # Check function arguments
-  check_user_input(gdp, unit_in, unit_out, source, verbose)
+  check_user_input(gdp, unit_in, unit_out, source, with_regions, verbose)
 
   # Set verbose option, if necessary
   if (verbose != getOption("GDPuc.verbose", default = FALSE)) {
@@ -60,6 +35,7 @@ convertGDP <- function(gdp,
 
   # Return straight away if no conversion is needed
   if (identical(unit_in, unit_out)) {
+    cli_inform(function() cli::cli_alert_info("No conversion: unit_in = unit_out."))
     return(gdp)
   }
 
@@ -68,6 +44,15 @@ convertGDP <- function(gdp,
     return_mag <- TRUE
     gdp <- mag2tibb(gdp)
   } else return_mag <- FALSE
+  if (class(gdp)[1] == "data.frame") {
+    return_df <- TRUE
+    i_factors <- gdp %>%
+      dplyr::select(tidyselect::vars_select_helpers$where(is.factor)) %>%
+      colnames()
+    gdp <- gdp %>%
+      dplyr::mutate(dplyr::across(tidyselect::all_of(i_factors), as.character)) %>%
+      tibble::as_tibble()
+  } else return_df <- FALSE
 
   # Extract base years if they exist, and adjust string
   if (grepl("constant", unit_in)) {
@@ -121,10 +106,8 @@ convertGDP <- function(gdp,
   cli_inform(function() cli::cli_alert_info(
     "Converting GDP with conversion factors from {crayon::blue(source)}:")
   )
-  #catch_msgs({
-    x <- do.call(f, a)
-  #}) -> msgs
-  #cli_conv_steps(msgs)
+
+  x <- do.call(f, a)
 
   # Return with original names, if changed
   if (exists("i_iso3c", envir = this_e)) {
@@ -134,11 +117,16 @@ convertGDP <- function(gdp,
     x <- x %>% dplyr::rename(!!rlang::sym(i_year) := "year")
   }
 
-  # Return as magpie object if necessary
+  # Return as original object if necessary
   if (return_mag){
     x <- magclass::as.magpie(x[,-1], spatial="iso3c", temporal="year")
     if(any(is.na(x))) {
       rlang::warn("NAs may have been generated for countries lacking conversion factors!")}
+  }
+  if (return_df){
+    x <- x %>%
+      dplyr::mutate(dplyr::across(tidyselect::all_of(i_factors), as.factor)) %>%
+      as.data.frame()
   }
 
 

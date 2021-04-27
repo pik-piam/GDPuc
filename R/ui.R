@@ -1,9 +1,5 @@
-# All console output must eventually go through ui_inform() or cli_inform() so that
+# All console output must eventually go through cli_inform() so that
 # it can be turned on and off with 'GDPuc.verbose' when needed.
-ui_inform <- function(..., verbose = getOption("GDPuc.verbose", default = FALSE)) {
-  if (verbose) rlang::inform(paste0(...)) else invisible()
-}
-
 cli_inform <- function(..., verbose = getOption("GDPuc.verbose", default = FALSE)) {
   if (verbose) do.call(..., args = list()) else invisible()
 }
@@ -22,30 +18,6 @@ cli_elemental <- function(from, to, with, unit, val) {
       cli::cli_text("{crayon::blue(with)} {cli::qty(as.character(values))} conversion factor{?s} in {unit} used:")
       cli::cli_dl(c(values))
     })
-  }
-  cli_inform(my_cli)
-}
-
-# Catch messages for later evaluation
-catch_msgs <- function(expr) {
-  conds <- list()
-
-  add_cond <- function(cnd) {
-    conds <<- append(conds, list(cnd))
-    rlang::cnd_muffle(cnd)
-  }
-
-  withCallingHandlers(
-    message = add_cond,
-    expr
-  )
-
-  conds
-}
-
-cli_conv_steps <- function(piped_steps) {
-  my_cli <- function() {
-    cli::cli_ol(lapply(rev(piped_steps), function(x) x$message))
   }
   cli_inform(my_cli)
 }

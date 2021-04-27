@@ -4,10 +4,11 @@
 \alias{check_user_input}
 \title{Make sure that user input is valid}
 \usage{
-check_user_input(gdp, unit_in, unit_out, source, verbose)
+check_user_input(gdp, unit_in, unit_out, source, with_regions, verbose)
 }
 \arguments{
-\item{gdp}{A tibble with 3 columns "iso3c", "year" and "value".}
+\item{gdp}{A tibble or data-frame with at least 3 columns containing iso3c
+country codes, years, and GDP values.}
 
 \item{unit_in}{A string with the incoming GDP unit.}
 
@@ -15,6 +16,8 @@ check_user_input(gdp, unit_in, unit_out, source, verbose)
 
 \item{source}{A string indicating the source database to use for conversion
 factors.}
+
+\item{with_regions}{Data-frame or tibble with region mapping}
 
 \item{verbose}{TRUE or FALSE}
 }

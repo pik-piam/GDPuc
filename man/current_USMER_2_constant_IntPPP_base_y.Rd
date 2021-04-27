@@ -7,7 +7,8 @@
 current_USMER_2_constant_IntPPP_base_y(gdp, base_y, source)
 }
 \arguments{
-\item{gdp}{A tibble with 3 columns "iso3c", "year" and "value".}
+\item{gdp}{A tibble or data-frame with at least 3 columns containing iso3c
+country codes, years, and GDP values.}
 
 \item{base_y}{A double, base year of outgoing constant gdp series}
 

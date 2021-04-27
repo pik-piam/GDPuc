@@ -5,7 +5,7 @@
 #' @inheritParams convertGDP
 #'
 #' @return TRUE or an Error
-check_user_input <- function(gdp, unit_in, unit_out, source, verbose) {
+check_user_input <- function(gdp, unit_in, unit_out, source, with_regions, verbose) {
 
   # Check if magclass package is required
   if (class(gdp)[1] == "magpie" && !requireNamespace("magclass", quietly = TRUE)) {
@@ -13,7 +13,12 @@ check_user_input <- function(gdp, unit_in, unit_out, source, verbose) {
   }
 
   # Check 'gdp' input parameter
-  if (tibble::is_tibble(gdp)) {
+  if (is.data.frame(gdp)) {
+    # Convert factor columns to character columns
+    gdp <- gdp %>%
+      dplyr::mutate(dplyr::across(tidyselect::vars_select_helpers$where(is.factor), as.character)) %>%
+      tibble::as_tibble()
+
     if (! "value" %in% colnames(gdp)) {
       rlang::abort("Invalid 'gdp' argument. `gdp` does not have the required 'value' column.")
     }
@@ -48,7 +53,7 @@ check_user_input <- function(gdp, unit_in, unit_out, source, verbose) {
       rlang::abort("No year information in mag object!")
     }
   } else {
-    rlang::abort("Invalid 'gdp' argument. `gdp` is neither a tibble nor a 'magpie' object.")
+    rlang::abort("Invalid 'gdp' argument. `gdp` is neither a data-frame, a tibble nor a 'magpie' object.")
   }
 
 
@@ -82,6 +87,20 @@ check_user_input <- function(gdp, unit_in, unit_out, source, verbose) {
     rlang::abort("Invalid 'source' argument. Has to be either 'imf_weo', 'wb_wdi' or valid custom source.")
   }
 
+  # Check input parameter 'with_regions'
+  if (!is.null(with_regions)) {
+    if (!length(with_regions) != 2) {
+      rlang::abort("Invalid 'with_regions' argument. Has to be either 'NULL', or a dataframe of length 2.")
+    }
+    if (!all(c("iso3c", "region") %in% colnames(with_regions))) {
+      rlang::abort("Invalid 'with_regions' argument. Needs to have columns 'iso3c' and 'region'.")
+    }
+    if (grepl("current", unit_in) || grepl("current", unit_out)) {
+      rlang::abort("'Current' GDP units are not compatible with regional aggregation.")
+    }
+  }
+
+  # Check input parameter 'verbose'
   if (!is.logical(verbose)) {
     rlang::abort("Invalid 'verbose' argument. Has to be either TRUE or FALSE.")
   }

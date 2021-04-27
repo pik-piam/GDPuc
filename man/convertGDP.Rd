@@ -4,10 +4,18 @@
 \alias{convertGDP}
 \title{Convert GDP time series data from one unit to another}
 \usage{
-convertGDP(gdp, unit_in, unit_out, source = "wb_wdi", verbose = FALSE)
+convertGDP(
+  gdp,
+  unit_in,
+  unit_out,
+  source = "wb_wdi",
+  with_regions = NULL,
+  verbose = FALSE
+)
 }
 \arguments{
-\item{gdp}{A tibble with 3 columns "iso3c", "year" and "value".}
+\item{gdp}{A tibble or data-frame with at least 3 columns containing iso3c
+country codes, years, and GDP values.}
 
 \item{unit_in}{A string with the incoming GDP unit.}
 
@@ -16,34 +24,15 @@ convertGDP(gdp, unit_in, unit_out, source = "wb_wdi", verbose = FALSE)
 \item{source}{A string indicating the source database to use for conversion
 factors.}
 
+\item{with_regions}{Data-frame or tibble with region mapping}
+
 \item{verbose}{TRUE or FALSE}
 }
 \value{
 A tibble with 3 columns
 }
 \description{
-# All on country level.
-0# Converting current LCU (nominal) to constant LCU with base year x (real)
-Need GDP deflator with base year x, unit = [.LCU/xLCU], often given in %
-Divide nominal GDP by deflator in every year
-1# Changing base year of constant LCU from x to y
-Need either deflator with base year x, or current LCU series
-With deflator: Multiply constant LCU with base year x [xLCU] with value in y
-               of deflator with base year x [yLCU/xLCU]
-With current series: Compute deflator (nominal divided by real), then follow above
-2# Converting current LCU to current Int$MER or current Int$PPP
-Need yearly Market exchange rates, or yearly PPPs
-Multiply nominal GDP by chosen conversion factor
-3# Converting constant LCU to constant Int$MER or constant Int$PPP, all same base year
-Need base year Market exchange rates, or PPPs
-Multiply real GDP by chosen conversion factor
-3# Converting current LCU to constant Int$MER or constant Int$PPP, all same base year
-Need base year Market exchange rates, or PPPs
-Multiply real GDP by chosen conversion factor
-4# Converting constant Int$MER to constant Int$PPP with base year x
-Need MER and PPP of base year
-5# Converting current Int$PPP to constant Int$PPP with base year x
-Need yearly PPP conversion rate, GDP deflator with base year x
-Divide current Int$PPP by PPP conversion rate, then follow 0, and 3
-## Converting current LCU to Int$PPP Need yearly PPPs,
+convertGDP converts GDP time series data from one unit to another, using GDP
+deflators, market exchange rates (MERs) and purchasing power parity
+conversion factors (PPPs) from `source`.
 }
