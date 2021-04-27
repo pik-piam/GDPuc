@@ -7,9 +7,13 @@
 #' @return TRUE or an Error
 check_user_input <- function(gdp, unit_in, unit_out, source, verbose) {
 
+  if (magclass::is.magpie(gdp)){
+    gdp <-mag2tibb(gdp)
+  }
+
   # Check 'gdp' input parameter
   if (!tibble::is_tibble(gdp)) {
-    rlang::abort("Invalid 'gdp' argument. `gdp` is not a tibble.")
+    rlang::abort("Invalid 'gdp' argument. `gdp` is not a tibble nor a magclass object.")
   }
   if (! "value" %in% colnames(gdp)) {
     rlang::abort("Invalid 'gdp' argument. `gdp` does not have the required 'value' column.")
@@ -68,6 +72,5 @@ check_user_input <- function(gdp, unit_in, unit_out, source, verbose) {
   if (!is.logical(verbose)) {
     rlang::abort("Invalid 'verbose' argument. Has to be either TRUE or FALSE.")
   }
-
-  TRUE
+return(gdp)
 }

@@ -14,6 +14,12 @@ convertGDPpc <- function(gdppc, unit_in, unit_out, source = "wb_wdi", pop_source
   pop <- eval(rlang::sym(pop_source)) %>%
     dplyr::select(iso3c, year, `Population, total`)
 
+  return_mag <- FALSE
+  if (is.magpie(gdppc)){
+    return_mag=TRUE
+    gdppc <- mag2tibb(gdppc)
+    }
+
   gdp <- gdppc %>%
     dplyr::left_join(pop, by = c("iso3c", "year")) %>%
     dplyr::mutate(value = value * `Population, total`, .keep = "unused")
@@ -23,6 +29,11 @@ convertGDPpc <- function(gdppc, unit_in, unit_out, source = "wb_wdi", pop_source
   x <- x %>%
     dplyr::left_join(pop, by = c("iso3c", "year")) %>%
     dplyr::mutate(value = value / `Population, total`, .keep = "unused")
+
+  if (return_mag){
+    x <- as.magpie(x[,-1], spatial="iso3c", temporal="year")
+    if(any(is.na(x))){warning("NAs may have been generated for countries lacking conversion factors!")}
+  }
 
   return(x)
 }
