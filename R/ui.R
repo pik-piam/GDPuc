@@ -1,3 +1,11 @@
+# Abort and warn helpers
+abort <- function(x, .envir = parent.frame()) {
+  rlang::abort(glue::glue(x, .envir = .envir))
+}
+warn <- function(x, .envir = parent.frame()) {
+  rlang::warn(glue::glue(x, .envir = .envir))
+}
+
 # All console output must eventually go through cli_inform() so that
 # it can be turned on and off with 'GDPuc.verbose' when needed.
 cli_inform <- function(..., verbose = getOption("GDPuc.verbose", default = FALSE)) {

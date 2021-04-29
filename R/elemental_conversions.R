@@ -134,7 +134,7 @@ constant_LCU_base_x_2_current_LCU <- function(gdp, base_x, source, linked = FALS
   deflator <- if (linked) "GDP deflator: linked series" else "GDP deflator"
 
   gdp_deflator <- eval(rlang::sym(source)) %>%
-    dplyr::select(iso3c, year,rlang::sym(deflator))
+    dplyr::select(iso3c, year, rlang::sym(deflator))
 
   def_base_unkwown_at_x <- gdp_deflator %>%
     dplyr::filter(year == base_x) %>%
@@ -168,6 +168,10 @@ constant_LCU_base_x_2_constant_LCU_base_y <- function(gdp,
                                                       base_y,
                                                       source,
                                                       linked = FALSE) {
+  if (base_x == base_y) {
+    return(gdp)
+  }
+
   deflator <- if (linked) "GDP deflator: linked series" else "GDP deflator"
 
   gdps_LCU <- eval(rlang::sym(source)) %>%
