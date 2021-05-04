@@ -11,7 +11,7 @@ current_LCU_2_current_IntPPP <- function(gdp, source) {
 
   cli_elemental(from = "current LCU",
                 to = "current Int$PPP",
-                with = "PPP",
+                with = "PPP conversion factor",
                 unit = "(LCU per international $)",
                 val = dplyr::filter(PPP,
                                     iso3c %in% unique(gdp$iso3c),
@@ -87,7 +87,7 @@ current_IntPPP_2_current_LCU <- function(gdp, source) {
 
   cli_elemental(from = "current Int$PPP",
                 to = "current LCU",
-                with = "PPP",
+                with = "PPP conversion factor",
                 unit = "(LCU per international $)",
                 val = dplyr::filter(PPP,
                                     iso3c %in% unique(gdp$iso3c),
@@ -191,7 +191,7 @@ constant_LCU_base_x_2_constant_LCU_base_y <- function(gdp,
 
   cli_elemental(from = glue::glue("constant {base_x} LCU"),
                 to = glue::glue("constant {base_y} LCU"),
-                with = glue::glue("Base {base_x} {deflator} in {base_y}"),
+                with = glue::glue("{base_y} value of base {base_x} {deflator}"),
                 unit = glue::glue("(constant {base_y} LCU per constant {base_x} LCU)"),
                 val = dplyr::filter(def_base_x_at_y, iso3c %in% unique(gdp$iso3c)))
 
@@ -210,7 +210,7 @@ constant_LCU_2_constant_IntPPP <- function(gdp, base, source) {
 
   cli_elemental(from = glue::glue("constant {base} LCU"),
                 to = glue::glue("constant {base} Int$PPP"),
-                with = glue::glue("{base} PPP"),
+                with = glue::glue("{base} PPP conversion factor"),
                 unit = "(LCU per international $)",
                 val = dplyr::filter(PPP_base, iso3c %in% unique(gdp$iso3c)))
 
@@ -253,7 +253,7 @@ constant_IntPPP_2_constant_LCU <- function(gdp, base, source) {
 
   cli_elemental(from = glue::glue("constant {base} Int$PPP"),
                 to = glue::glue("constant {base} LCU"),
-                with = glue::glue("{base} PPP"),
+                with = glue::glue("{base} PPP conversion factor"),
                 unit = "(LCU per international $)",
                 val = dplyr::filter(PPP_base, iso3c %in% unique(gdp$iso3c)))
 
