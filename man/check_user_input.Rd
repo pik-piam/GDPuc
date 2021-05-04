@@ -17,7 +17,7 @@ country codes, years, and GDP values.}
 \item{source}{A string indicating the source database to use for conversion
 factors.}
 
-\item{with_regions}{Data-frame or tibble with region mapping}
+\item{with_regions}{NULL or a data-frame or tibble with region mapping}
 
 \item{verbose}{TRUE or FALSE}
 }

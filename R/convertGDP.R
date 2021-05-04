@@ -10,7 +10,7 @@
 #' @param unit_out A string with the desired output GDP unit.
 #' @param source A string indicating the source database to use for conversion
 #'   factors.
-#' @param with_regions Data-frame or tibble with region mapping
+#' @param with_regions NULL or a data-frame or tibble with region mapping
 #' @param verbose TRUE or FALSE
 #'
 #' @importFrom magrittr %>%

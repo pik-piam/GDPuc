@@ -12,7 +12,7 @@ transform_internal(x, gdp, with_regions)
 \item{gdp}{A tibble or data-frame with at least 3 columns containing iso3c
 country codes, years, and GDP values.}
 
-\item{with_regions}{Data-frame or tibble with region mapping}
+\item{with_regions}{NULL or a data-frame or tibble with region mapping}
 }
 \value{
 x, with the same type and names of gdp

@@ -45,6 +45,18 @@ check_user_input <- function(gdp, unit_in, unit_out, source, with_regions, verbo
   if (!source %in% c("imf_weo", "wb_wdi") & !exists(source, mode = "list")) {
     abort("Invalid 'source' argument. Has to be either 'imf_weo', 'wb_wdi' or valid custom source.")
   }
+  required_cols_in_source <- c(
+    "iso3c",
+    "year",
+    "GDP deflator",
+    "MER (LCU per US$)",
+    "GDP deflator: linked series",
+    "PPP conversion factor, GDP (LCU per international $)"
+  )
+  if (!all(required_cols_in_source %in% names(eval(rlang::sym(source))))) {
+    abort("Invalid 'source' argument. Has to contain at least following columns: \\
+          {paste(required_cols_in_source, collapse = '; ')}")
+  }
 
   # Check input parameter 'with_regions'
   if (!is.null(with_regions)) {
@@ -54,8 +66,8 @@ check_user_input <- function(gdp, unit_in, unit_out, source, with_regions, verbo
     if (!all(c("iso3c", "region") %in% colnames(with_regions))) {
       abort("Invalid 'with_regions' argument. Needs to have columns 'iso3c' and 'region'.")
     }
-    if (grepl("current", unit_in) || grepl("current", unit_out)) {
-      abort("'Current' GDP units are not compatible with regional aggregation.")
+    if (grepl("LCU", unit_in) || grepl("LCU", unit_out)) {
+      abort("'LCU' GDP units are not compatible with regional aggregation.")
     }
   }
 

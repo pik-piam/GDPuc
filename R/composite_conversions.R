@@ -44,7 +44,8 @@ current_IntPPP_2_constant_LCU_base_y <- function(gdp, base_y, source) {
 #' @inheritParams constant_LCU_base_x_2_constant_LCU_base_y
 current_IntPPP_2_constant_IntPPP_base_y <- function(gdp, base_y, source) {
   gdp %>%
-    current_IntPPP_2_constant_LCU_base_y(base_y, source) %>%
+    current_IntPPP_2_current_LCU(source) %>%
+    current_LCU_2_constant_LCU_base_y(base_y, source, linked = TRUE) %>%
     constant_LCU_2_constant_IntPPP(base = base_y, source)
 }
 
@@ -52,7 +53,8 @@ current_IntPPP_2_constant_IntPPP_base_y <- function(gdp, base_y, source) {
 #' @inheritParams constant_LCU_base_x_2_constant_LCU_base_y
 current_IntPPP_2_constant_USMER_base_y <- function(gdp, base_y, source) {
   gdp %>%
-    current_IntPPP_2_constant_LCU_base_y(base_y, source) %>%
+    current_IntPPP_2_current_LCU(source) %>%
+    current_LCU_2_constant_LCU_base_y(base_y, source) %>%
     constant_LCU_2_constant_USMER(base = base_y, source)
 }
 
@@ -74,7 +76,7 @@ current_USMER_2_current_IntPPP <- function(gdp, source) {
 current_USMER_2_constant_LCU_base_y <- function(gdp, base_y, source) {
   gdp %>%
     current_USMER_2_current_LCU(source) %>%
-    current_LCU_2_constant_LCU_base_y(base_y, source, linked = TRUE)
+    current_LCU_2_constant_LCU_base_y(base_y, source)
 }
 
 #' Convert from current US$MER to constant US$MER base y
@@ -85,11 +87,12 @@ current_USMER_2_constant_USMER_base_y <- function(gdp, base_y, source) {
     constant_LCU_2_constant_USMER(base = base_y, source)
 }
 
-#' Convert from current US$ME to constant Int$PPP base y
+#' Convert from current US$MER to constant Int$PPP base y
 #' @inheritParams constant_LCU_base_x_2_constant_LCU_base_y
 current_USMER_2_constant_IntPPP_base_y <- function(gdp, base_y, source) {
   gdp %>%
-    current_USMER_2_constant_LCU_base_y(base_y, source) %>%
+    current_USMER_2_current_LCU(source) %>%
+    current_LCU_2_constant_LCU_base_y(base_y, source) %>%
     constant_LCU_2_constant_IntPPP(base = base_y, source)
 }
 
@@ -118,7 +121,7 @@ constant_LCU_base_x_2_current_USMER <- function(gdp, base_x, source) {
 #' @inheritParams constant_LCU_base_x_2_constant_LCU_base_y
 constant_LCU_base_x_2_constant_IntPPP_base_y <- function(gdp, base_x, base_y, source) {
   gdp %>%
-    constant_LCU_base_x_2_constant_LCU_base_y(base_x, base_y, source, linked = TRUE) %>%
+    constant_LCU_base_x_2_constant_LCU_base_y(base_x, base_y, source) %>%
     constant_LCU_2_constant_IntPPP(base = base_y, source)
 }
 
@@ -141,6 +144,7 @@ constant_LCU_base_x_2_constant_USMER_base_y <- function(gdp, base_x, base_y, sou
 constant_IntPPP_base_x_2_current_LCU <- function(gdp, base_x, source) {
   gdp %>%
     constant_IntPPP_2_constant_LCU(base = base_x, source) %>%
+    # Not necessarily linked T
     constant_LCU_base_x_2_current_LCU(base_x, source, linked = TRUE)
 }
 
@@ -148,16 +152,9 @@ constant_IntPPP_base_x_2_current_LCU <- function(gdp, base_x, source) {
 #' @inheritParams constant_LCU_base_x_2_constant_LCU_base_y
 constant_IntPPP_base_x_2_current_USMER <- function(gdp, base_x, source) {
   gdp %>%
-    constant_IntPPP_base_x_2_current_LCU(base_x, source) %>%
-    current_LCU_2_current_USMER(source)
-}
-
-#' Convert constant Int$PPP series from one base year to another
-#' @inheritParams constant_LCU_base_x_2_constant_LCU_base_y
-constant_IntPPP_base_x_2_constant_IntPPP_base_y <- function(gdp, base_x, base_y, source) {
-  gdp %>%
     constant_IntPPP_2_constant_LCU(base = base_x, source) %>%
-    constant_LCU_base_x_2_constant_IntPPP_base_y(base_x, base_y, source)
+    constant_LCU_base_x_2_current_LCU(base_x, source) %>%
+    current_LCU_2_current_USMER(source)
 }
 
 #' Convert from constant Int$PPP in one base year to constant LCU of another
@@ -165,7 +162,16 @@ constant_IntPPP_base_x_2_constant_IntPPP_base_y <- function(gdp, base_x, base_y,
 constant_IntPPP_base_x_2_constant_LCU_base_y <- function(gdp, base_x, base_y, source) {
   gdp %>%
     constant_IntPPP_2_constant_LCU(base = base_x, source) %>%
-    constant_LCU_base_x_2_constant_LCU_base_y(base_x, base_y, source, linked = TRUE)
+    constant_LCU_base_x_2_constant_LCU_base_y(base_x, base_y, source)
+}
+
+#' Convert constant Int$PPP series from one base year to another
+#' @inheritParams constant_LCU_base_x_2_constant_LCU_base_y
+constant_IntPPP_base_x_2_constant_IntPPP_base_y <- function(gdp, base_x, base_y, source) {
+  gdp %>%
+    constant_IntPPP_2_constant_LCU(base = base_x, source) %>%
+    constant_LCU_base_x_2_constant_LCU_base_y(base_x, base_y, source) %>%
+    constant_LCU_2_constant_IntPPP(base = base_y, source)
 }
 
 #' Convert from constant Int$PPP in one base year to constant US$MER of another
@@ -194,7 +200,8 @@ constant_USMER_base_x_2_current_LCU <- function(gdp, base_x, source) {
 #' @inheritParams constant_LCU_base_x_2_constant_LCU_base_y
 constant_USMER_base_x_2_current_IntPPP <- function(gdp, base_x, source) {
   gdp %>%
-    constant_USMER_base_x_2_current_LCU(base_x, source) %>%
+    constant_USMER_2_constant_LCU(base = base_x, source) %>%
+    constant_LCU_base_x_2_current_LCU(base_x, source) %>%
     current_LCU_2_current_IntPPP(source)
 }
 
@@ -203,7 +210,8 @@ constant_USMER_base_x_2_current_IntPPP <- function(gdp, base_x, source) {
 constant_USMER_base_x_2_constant_USMER_base_y <- function(gdp, base_x, base_y, source) {
   gdp %>%
     constant_USMER_2_constant_LCU(base = base_x, source) %>%
-    constant_LCU_base_x_2_constant_USMER_base_y(base_x, base_y, source)
+    constant_LCU_base_x_2_constant_LCU_base_y(base_x, base_y, source) %>%
+    constant_LCU_2_constant_USMER(base = base_y, source)
 }
 
 #' Convert from constant US$MER in one base year to constant LCU of another
@@ -218,7 +226,8 @@ constant_USMER_base_x_2_constant_LCU_base_y <- function(gdp, base_x, base_y, sou
 #' @inheritParams constant_LCU_base_x_2_constant_LCU_base_y
 constant_USMER_base_x_2_constant_IntPPP_base_y <- function(gdp, base_x, base_y, source) {
   gdp %>%
-    constant_USMER_base_x_2_constant_LCU_base_y(base_x, base_y, source) %>%
+    constant_USMER_2_constant_LCU(base = base_x, source) %>%
+    constant_LCU_base_x_2_constant_LCU_base_y(base_x, base_y, source) %>%
     constant_LCU_2_constant_IntPPP(base = base_y, source)
 }
 

@@ -65,13 +65,15 @@ convertGDP(
 )
 ```
 
-Here, the `gdp` argument takes a tibble that contains, at least:
+Here, the `gdp` argument takes a tibble or a data-frame that contains, at least:
 
 -   a column with iso3c country codes, (ideally named "iso3c")
 -   a column with the year, (ideally named "year")
 -   a column named "value", with the gdp data 
 
-  
+A corresponding magpie object, see the [magclass](https://github.com/pik-piam/magclass) package, is also accepted.  
+
+
 Use the `source` argument to control the source of the underlying conversion factors (GDP deflators, MERs and PPPs). 
 There are 2 source options shipped with the package, with `wb_wdi` set as default, but custom sources are possible. 
 
@@ -80,7 +82,7 @@ convertGDP(
   gdp = gdp, 
   unit_in = "constant 2005 LCU", 
   unit_out = "constant 2017 Int$PPP",
-  source = "imf_weo"
+  source = "wb_wdi"
 )
 ```
 
@@ -133,7 +135,7 @@ options(cli.num_colors = 256L)
 asciicast::init_knitr_engine(echo_input = FALSE)
 ```
 
-```{asciicast example2}
+```{asciicast example_cli}
 library(GDPuc)
 gdp <- tibble::tibble(iso3c = "USA", year = 2010:2020, value = 100:110)
 x <- convertGDP(
@@ -143,4 +145,3 @@ x <- convertGDP(
   verbose = TRUE
 )
 ```
-

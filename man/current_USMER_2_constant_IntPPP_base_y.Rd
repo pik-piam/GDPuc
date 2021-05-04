@@ -2,7 +2,7 @@
 % Please edit documentation in R/composite_conversions.R
 \name{current_USMER_2_constant_IntPPP_base_y}
 \alias{current_USMER_2_constant_IntPPP_base_y}
-\title{Convert from current US$ME to constant Int$PPP base y}
+\title{Convert from current US$MER to constant Int$PPP base y}
 \usage{
 current_USMER_2_constant_IntPPP_base_y(gdp, base_y, source)
 }
@@ -16,5 +16,5 @@ country codes, years, and GDP values.}
 factors.}
 }
 \description{
-Convert from current US$ME to constant Int$PPP base y
+Convert from current US$MER to constant Int$PPP base y
 }

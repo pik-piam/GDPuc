@@ -10,7 +10,7 @@ disaggregate_regions(gdp, with_regions, weight_unit, weight_year, source)
 \item{gdp}{A tibble or data-frame with at least 3 columns containing iso3c
 country codes, years, and GDP values.}
 
-\item{with_regions}{Data-frame or tibble with region mapping}
+\item{with_regions}{NULL or a data-frame or tibble with region mapping}
 
 \item{weight_unit}{A string, either "PPP" or "MER}
 
