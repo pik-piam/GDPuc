@@ -43,14 +43,14 @@ check_user_input <- function(gdp, unit_in, unit_out, source, with_regions, verbo
 
   # Check input parameter 'source'
   if (!source %in% c("imf_weo", "wb_wdi") & !exists(source, mode = "list")) {
-    abort("Invalid 'source' argument. Has to be either 'imf_weo', 'wb_wdi' or valid custom source.")
+    abort("Invalid 'source' argument. Has to be either one of the internal sources, \\
+          or valid custom source.")
   }
   required_cols_in_source <- c(
     "iso3c",
     "year",
     "GDP deflator",
     "MER (LCU per US$)",
-    "GDP deflator: linked series",
     "PPP conversion factor, GDP (LCU per international $)"
   )
   if (!all(required_cols_in_source %in% names(eval(rlang::sym(source))))) {

@@ -4,7 +4,7 @@
 \alias{constant_LCU_base_x_2_current_LCU}
 \title{Convert from constant LCU base x to current LCU}
 \usage{
-constant_LCU_base_x_2_current_LCU(gdp, base_x, source, linked = FALSE)
+constant_LCU_base_x_2_current_LCU(gdp, base_x, source)
 }
 \arguments{
 \item{gdp}{A tibble or data-frame with at least 3 columns containing iso3c
@@ -14,9 +14,6 @@ country codes, years, and GDP values.}
 
 \item{source}{A string indicating the source database to use for conversion
 factors.}
-
-\item{linked}{A logical, use linked GDP deflator series or not. Defaults to
-not.}
 }
 \description{
 Convert from constant LCU base x to current LCU

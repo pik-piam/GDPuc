@@ -39,7 +39,6 @@ imf_weo <- readxl::read_xlsx(
     `GDP (current LCU)` = `GDP (current LCU)` * 1e+9,
     `GDP (current US$)` = `GDP (current US$)` * 1e+9,
     `GDP deflator` = `GDP deflator` / 100,
-    `GDP deflator: linked series` = `GDP deflator`,
     `GDP, PPP (current international $)` = `GDP, PPP (current international $)` * 1e+9,
     `MER (LCU per US$)` = `GDP (current LCU)` / `GDP (current US$)`,
     `Population, total` = `Population, total` * 1e+6
@@ -66,4 +65,11 @@ wb_wdi <- readr::read_csv(wdi_file, col_types = readr::cols(
                 `GDP deflator` = `GDP deflator (base year varies by country)` / 100,
                 `MER (LCU per US$)` = `DEC alternative conversion factor (LCU per US$)`)
 
-usethis::use_data(imf_weo, wb_wdi, internal = TRUE, overwrite = TRUE)
+wb_wdi_linked <- wb_wdi %>%
+  dplyr::select(iso3c,
+                year,
+                "GDP deflator" = `GDP deflator: linked series`,
+                `PPP conversion factor, GDP (LCU per international $)`,
+                `MER (LCU per US$)`)
+
+usethis::use_data(imf_weo, wb_wdi, wb_wdi_linked, internal = TRUE, overwrite = TRUE)

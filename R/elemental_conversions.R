@@ -45,11 +45,9 @@ current_LCU_2_current_USMER <- function(gdp, source) {
 
 #' Convert from current LCU to constant LCU base y
 #' @inheritParams constant_LCU_base_x_2_constant_LCU_base_y
-current_LCU_2_constant_LCU_base_y <- function(gdp, base_y, source, linked = FALSE) {
-  deflator_linked <- "GDP deflator: linked series"
-  deflator <- if (linked && deflator_linked %in% colnames(eval(rlang::sym(source)))) {
-    deflator_linked
-  } else "GDP deflator"
+current_LCU_2_constant_LCU_base_y <- function(gdp, base_y, source) {
+
+  deflator <-  "GDP deflator"
 
   gdp_deflator <- eval(rlang::sym(source)) %>%
     dplyr::select(iso3c, year, rlang::sym(deflator))
@@ -133,11 +131,9 @@ current_USMER_2_current_LCU <- function(gdp, source) {
 
 #' Convert from constant LCU base x to current LCU
 #' @inheritParams constant_LCU_base_x_2_constant_LCU_base_y
-constant_LCU_base_x_2_current_LCU <- function(gdp, base_x, source, linked = FALSE) {
-  deflator_linked <- "GDP deflator: linked series"
-  deflator <- if (linked && deflator_linked %in% colnames(eval(rlang::sym(source)))) {
-    deflator_linked
-  } else "GDP deflator"
+constant_LCU_base_x_2_current_LCU <- function(gdp, base_x, source) {
+
+  deflator <-  "GDP deflator"
 
   gdp_deflator <- eval(rlang::sym(source)) %>%
     dplyr::select(iso3c, year, rlang::sym(deflator))
@@ -165,23 +161,17 @@ constant_LCU_base_x_2_current_LCU <- function(gdp, base_x, source, linked = FALS
 #' Convert constant LCU series from one base year to another
 #' @param base_x A double, base year of incoming constant gdp series
 #' @param base_y A double, base year of outgoing constant gdp series
-#' @param linked A logical, use linked GDP deflator series or not. Defaults to
-#'   not.
 #' @inheritParams convertGDP
 #' @importFrom rlang !!
 constant_LCU_base_x_2_constant_LCU_base_y <- function(gdp,
                                                       base_x,
                                                       base_y,
-                                                      source,
-                                                      linked = FALSE) {
+                                                      source) {
   if (base_x == base_y) {
     return(gdp)
   }
 
-  deflator_linked <- "GDP deflator: linked series"
-  deflator <- if (linked && deflator_linked %in% colnames(eval(rlang::sym(source)))) {
-    deflator_linked
-  } else "GDP deflator"
+  deflator <-  "GDP deflator"
 
   gdps_LCU <- eval(rlang::sym(source)) %>%
     dplyr::select(iso3c, year, rlang::sym(deflator))

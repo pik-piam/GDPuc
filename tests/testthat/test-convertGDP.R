@@ -1,7 +1,7 @@
 test_that("convertGDP", {
   gdp_in <- wb_wdi %>%
     dplyr::filter(!is.na(`GDP, PPP (constant 2017 international $)`)) %>%
-    dplyr::select("iso3c", "year", "value" = `GDP: linked series (current LCU)`)
+    dplyr::select("iso3c", "year", "value" = `GDP (current LCU)`)
 
   gdp_conv <- convertGDP(gdp_in, "current LCU", "constant 2017 Int$PPP", "wb_wdi") %>%
     dplyr::filter(!is.na(value))
@@ -16,12 +16,12 @@ test_that("convertGDP", {
 test_that("convertGDP different column names", {
   gdp_in1 <- wb_wdi %>%
     dplyr::filter(!is.na(`GDP, PPP (constant 2017 international $)`)) %>%
-    dplyr::select("r"=iso3c, year, "value" = `GDP: linked series (current LCU)`)
+    dplyr::select("r"=iso3c, year, "value" = `GDP (current LCU)`)
   gdp_in1b <- dplyr::mutate(gdp_in1, r = "")
 
   gdp_in2 <- wb_wdi %>%
     dplyr::filter(!is.na(`GDP, PPP (constant 2017 international $)`)) %>%
-    dplyr::select(iso3c, "y" = year, "value" = `GDP: linked series (current LCU)`)
+    dplyr::select(iso3c, "y" = year, "value" = `GDP (current LCU)`)
   gdp_in2b <- dplyr::mutate(gdp_in2, y = "")
 
   expect_warning(suppressMessages(
@@ -146,3 +146,4 @@ test_that("convertGDP with regions", {
   expect_equal(gdp$iso3c, gdp_conv$iso3c)
   expect_true(gdp_conv2$value != gdp_conv$value)
 })
+
