@@ -24,18 +24,18 @@ test_that("convertGDP different column names", {
     dplyr::select(iso3c, "y" = year, "value" = `GDP (current LCU)`)
   gdp_in2b <- dplyr::mutate(gdp_in2, y = "")
 
-  expect_warning(suppressMessages(
+  expect_warning(
       convertGDP(gdp_in1, "current LCU", "constant 2017 Int$PPP", "wb_wdi")
-    ))
-  expect_error(suppressMessages(
+    )
+  expect_error(
       convertGDP(gdp_in1b, "current LCU", "constant 2017 Int$PPP", "wb_wdi")
-  ))
-  expect_warning(suppressMessages(
+  )
+  expect_warning(
     convertGDP(gdp_in2, "current LCU", "constant 2017 Int$PPP", "wb_wdi")
-  ))
-  expect_error(suppressMessages(
+  )
+  expect_error(
     convertGDP(gdp_in2b, "current LCU", "constant 2017 Int$PPP", "wb_wdi")
-  ))
+  )
 
   gdp_conv1 <- suppressWarnings(suppressMessages(
     convertGDP(gdp_in1, "current LCU", "constant 2017 Int$PPP", "wb_wdi") %>%

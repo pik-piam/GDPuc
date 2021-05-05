@@ -2,6 +2,9 @@ test_that("Abort with bad input", {
   gdp <- tibble::tibble("iso3c" = "EUR", "year" = 2010, "value2" = 100)
   expect_error(check_user_input(gdp))
 
+  gdp <- tibble::tibble("iso3c" = "EUR", "value" = 100)
+  expect_error(check_user_input(gdp))
+
   gdp <- "blabla"
   expect_error(check_user_input(gdp))
   gdp <- magclass::new.magpie()

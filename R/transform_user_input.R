@@ -9,14 +9,6 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions) {
   if (class(gdp)[1] == "magpie"){
     gdp <- mag2tibb(gdp)
   }
-  if (class(gdp)[1] == "data.frame") {
-    i_factors <- gdp %>%
-      dplyr::select(tidyselect::vars_select_helpers$where(is.factor)) %>%
-      colnames()
-    gdp <- gdp %>%
-      dplyr::mutate(dplyr::across(tidyselect::all_of(i_factors), as.character)) %>%
-      tibble::as_tibble()
-  }
 
   # Extract base years if they exist, and adjust string
   if (grepl("constant", unit_in)) {
@@ -34,7 +26,7 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions) {
   if (! "iso3c" %in% colnames(gdp)) {
     i_iso3c <- gdp %>%
       dplyr::select(tidyselect::vars_select_helpers$where(
-        ~ is.character(.x) & nchar(.x[[1]]) == 3
+        ~ (is.character(.x) || is.factor(.x)) && nchar(as.character(.x[[1]])) == 3
       )) %>%
       colnames()
 
@@ -158,20 +150,12 @@ transform_internal <- function(x, gdp, with_regions) {
     x <- magclass::as.magpie(x[,-1], spatial="iso3c", temporal="year")
     return(x)
   }
-  if (class(gdp)[1] == "data.frame"){
-    i_factors <- gdp %>%
-      dplyr::select(tidyselect::vars_select_helpers$where(is.factor)) %>%
-      colnames()
-    x <- x %>%
-      dplyr::mutate(dplyr::across(tidyselect::all_of(i_factors), as.factor)) %>%
-      as.data.frame()
-  }
 
   # Get original iso3c and year column names
   if (! "iso3c" %in% colnames(gdp)) {
     i_iso3c <- gdp %>%
       dplyr::select(tidyselect::vars_select_helpers$where(
-        ~ is.character(.x) & nchar(.x[[1]]) == 3
+        ~ (is.character(.x) || is.factor(.x)) && nchar(as.character(.x[[1]])) == 3
       )) %>%
       colnames()
     x <- x %>% dplyr::rename(!!rlang::sym(i_iso3c) := "iso3c")

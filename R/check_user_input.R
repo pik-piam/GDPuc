@@ -12,6 +12,9 @@ check_user_input <- function(gdp, unit_in, unit_out, source, with_regions, verbo
     if (! "value" %in% colnames(gdp)) {
       abort("Invalid 'gdp' argument. `gdp` does not have the required 'value' column.")
     }
+    if (length(gdp) < 3) {
+      abort("Invalid 'gdp' argument. `gdp` must have at least 3 columns.")
+    }
   } else if (class(gdp) == "magpie"){
     # Check for magclass package
     if (!requireNamespace("magclass", quietly = TRUE)) {
@@ -22,7 +25,7 @@ check_user_input <- function(gdp, unit_in, unit_out, source, with_regions, verbo
       abort("No year information in mag object!")
     }
   } else {
-    abort("Invalid 'gdp' argument. `gdp` is neither a data-frame, a tibble nor a 'magpie' object.")
+    abort("Invalid 'gdp' argument. `gdp` is neither a data-frame nor a 'magpie' object.")
   }
 
   # Check input parameters 'unit_in' and 'unit_out'
