@@ -5,6 +5,8 @@
 #' @return List
 transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions) {
 
+  . = NULL
+
   # Convert to tibble, if necessary
   if (class(gdp)[1] == "magpie"){
     gdp <- mag2tibb(gdp)
@@ -65,7 +67,7 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions) {
   if (!is.null(with_regions)) {
     weight_unit <- stringr::str_match(unit_in, "\\$(...)")[2]
     weight_year <- base_x
-    with_regions <- dplyr::rename(with_regions, "gdpuc_region" = region)
+    with_regions <- dplyr::rename(with_regions, "gdpuc_region" = .data$region)
     gdp <- disaggregate_regions(gdp, with_regions, weight_unit, weight_year, source)
   }
 
@@ -99,32 +101,37 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions) {
 #' @return A tibble with the values gdp at country level
 disaggregate_regions <- function (gdp, with_regions, weight_unit, weight_year, source) {
 
-  if(weight_unit == "PPP") {
-    share_var <- "GDP, PPP (constant 2017 international $)"
-    unit_in <- "constant 2017 Int$PPP"
+  # Get GDP variable from source object, with its unit
+  regex_var <- "GDP, PPP \\(constant .... international \\$\\)"
+  regex_year <- "GDP, PPP \\(constant (....) international \\$\\)"
+  share_var <- grep(regex_var, colnames(eval(rlang::sym(source))), value = TRUE)[1]
+  share_year <- stringr::str_match(share_var, regex_year)[,2]
+  unit_in <- paste("constant", share_year, "Int$PPP")
+
+  # Convert that variable to desired unit, and compute shares of GDP per region
+  if (weight_unit == "PPP") {
     unit_out <- paste("constant", weight_year, "Int$PPP")
   } else {
-    share_var <- "GDP (constant 2010 US$)"
-    unit_in <- "constant 2010 US$MER"
-    unit_out <-  paste("constant", weight_year, "US$MER")
+    unit_out <- paste("constant", weight_year, "US$MER")
   }
 
   shares <- eval(rlang::sym(source)) %>%
     dplyr::select("iso3c", "year", "value" = tidyselect::all_of(share_var)) %>%
     dplyr::left_join(with_regions, by = "iso3c") %>%
-    dplyr::filter(year == weight_year, !is.na(gdpuc_region)) %>%
+    dplyr::filter(.data$year == weight_year, !is.na(.data$gdpuc_region)) %>%
     convertGDP(unit_in, unit_out, source = source) %>%
-    dplyr::group_by(gdpuc_region) %>%
-    dplyr::mutate(share = value / sum(value, na.rm = TRUE), .keep = "unused") %>%
+    dplyr::group_by(.data$gdpuc_region) %>%
+    dplyr::mutate(share = .data$value / sum(.data$value, na.rm = TRUE), .keep = "unused") %>%
     dplyr::ungroup() %>%
-    dplyr::select(-year) %>%
+    dplyr::select(-.data$year) %>%
     suppressWarnings()
 
+  # Dissagregate regions
   gdp %>%
-    dplyr::rename("gdpuc_region" = iso3c) %>%
+    dplyr::rename("gdpuc_region" = .data$iso3c) %>%
     dplyr::right_join(with_regions, by = "gdpuc_region") %>%
     dplyr::left_join(shares, by = c("gdpuc_region", "iso3c")) %>%
-    dplyr::mutate(value = value * share, .keep = "unused")
+    dplyr::mutate(value = .data$value * .data$share, .keep = "unused")
 }
 
 
@@ -140,9 +147,9 @@ transform_internal <- function(x, gdp, with_regions) {
 
   if (!is.null(with_regions)) {
     x <- x %>%
-      dplyr::group_by(gdpuc_region, year) %>%
-      dplyr::summarise(value = sum(value, na.rm = TRUE)) %>%
-      dplyr::rename("iso3c" = gdpuc_region)
+      dplyr::group_by(.data$gdpuc_region, .data$year) %>%
+      dplyr::summarise(value = sum(.data$value, na.rm = TRUE)) %>%
+      dplyr::rename("iso3c" = .data$gdpuc_region)
   }
 
   # Transform into original gdp type

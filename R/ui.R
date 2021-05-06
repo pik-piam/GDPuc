@@ -18,7 +18,7 @@ cli_elemental <- function(from, to, with, unit, val) {
   names <- if ("year" %in% colnames(val)) {
     paste0(val$iso3c, ", ", val$year)
   } else val$iso3c
-  values <- dplyr::pull(val, length(val)) %>% setNames(names)
+  values <- dplyr::pull(val, length(val)) %>% stats::setNames(names)
 
   my_cli <- function() {
     cli::cli({

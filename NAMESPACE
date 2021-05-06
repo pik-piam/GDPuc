@@ -3,3 +3,5 @@
 export(convertGDP)
 importFrom(magrittr,"%>%")
 importFrom(rlang,"!!")
+importFrom(rlang,":=")
+importFrom(rlang,.data)

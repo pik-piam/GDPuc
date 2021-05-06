@@ -7,19 +7,19 @@
 #' @inheritParams convertGDP
 current_LCU_2_current_IntPPP <- function(gdp, source) {
   PPP <-  eval(rlang::sym(source)) %>%
-    dplyr::select(iso3c, year, `PPP conversion factor, GDP (LCU per international $)`)
+    dplyr::select("iso3c", "year", "PPP conversion factor, GDP (LCU per international $)")
 
   cli_elemental(from = "current LCU",
                 to = "current Int$PPP",
                 with = "PPP conversion factor",
                 unit = "(LCU per international $)",
                 val = dplyr::filter(PPP,
-                                    iso3c %in% unique(gdp$iso3c),
-                                    year %in% unique(gdp$year)))
+                                    .data$iso3c %in% unique(gdp$iso3c),
+                                    .data$year %in% unique(gdp$year)))
 
   gdp %>%
     dplyr::left_join(PPP, by = c("iso3c", "year")) %>%
-    dplyr::mutate(value = value / `PPP conversion factor, GDP (LCU per international $)`,
+    dplyr::mutate(value = .data$value / .data$`PPP conversion factor, GDP (LCU per international $)`,
                   .keep = "unused")
 }
 
@@ -27,19 +27,19 @@ current_LCU_2_current_IntPPP <- function(gdp, source) {
 #' @inheritParams convertGDP
 current_LCU_2_current_USMER <- function(gdp, source) {
   MER <-  eval(rlang::sym(source)) %>%
-    dplyr::select(iso3c, year, `MER (LCU per US$)`)
+    dplyr::select("iso3c", "year", "MER (LCU per US$)")
 
   cli_elemental(from = "current LCU",
                 to = "current US$MER",
                 with = "MER",
                 unit = "(LCU per US$)",
                 val = dplyr::filter(MER,
-                                    iso3c %in% unique(gdp$iso3c),
-                                    year %in% unique(gdp$year)))
+                                    .data$iso3c %in% unique(gdp$iso3c),
+                                    .data$year %in% unique(gdp$year)))
 
   gdp %>%
     dplyr::left_join(MER, by = c("iso3c", "year")) %>%
-    dplyr::mutate(value = value / `MER (LCU per US$)`,
+    dplyr::mutate(value = .data$value / .data$`MER (LCU per US$)`,
                   .keep = "unused")
 }
 
@@ -50,15 +50,15 @@ current_LCU_2_constant_LCU_base_y <- function(gdp, base_y, source) {
   deflator <-  "GDP deflator"
 
   gdp_deflator <- eval(rlang::sym(source)) %>%
-    dplyr::select(iso3c, year, rlang::sym(deflator))
+    dplyr::select("iso3c", "year", rlang::sym(deflator))
 
   def_base_unkwown_at_y <- gdp_deflator %>%
-    dplyr::filter(year == base_y) %>%
-    dplyr::select(iso3c, "GDP deflator in y" = rlang::sym(deflator))
+    dplyr::filter(.data$year == base_y) %>%
+    dplyr::select("iso3c", "GDP deflator in y" = rlang::sym(deflator))
 
   def_base_y <- gdp_deflator  %>%
     dplyr::left_join(def_base_unkwown_at_y, by = "iso3c") %>%
-    dplyr::mutate(!!rlang::sym(deflator) := !!rlang::sym(deflator) / `GDP deflator in y`,
+    dplyr::mutate(!!rlang::sym(deflator) := !!rlang::sym(deflator) / .data$`GDP deflator in y`,
                   .keep = "unused")
 
   cli_elemental(from = "current LCU",
@@ -66,12 +66,12 @@ current_LCU_2_constant_LCU_base_y <- function(gdp, base_y, source) {
                 with = glue::glue("Base {base_y} {deflator}"),
                 unit = glue::glue("(current LCU per contant {base_y} LCU)"),
                 val =  dplyr::filter(def_base_y,
-                                     iso3c %in% unique(gdp$iso3c),
-                                     year %in% unique(gdp$year)))
+                                     .data$iso3c %in% unique(gdp$iso3c),
+                                     .data$year %in% unique(gdp$year)))
 
   gdp %>%
     dplyr::left_join(def_base_y, by = c("iso3c", "year")) %>%
-    dplyr::mutate(value = value / !!rlang::sym(deflator), .keep = "unused")
+    dplyr::mutate(value = .data$value / !!rlang::sym(deflator), .keep = "unused")
 }
 
 #------------------------------------------------------------
@@ -83,19 +83,19 @@ current_LCU_2_constant_LCU_base_y <- function(gdp, base_y, source) {
 #' @inheritParams convertGDP
 current_IntPPP_2_current_LCU <- function(gdp, source) {
   PPP <-  eval(rlang::sym(source)) %>%
-    dplyr::select(iso3c, year, `PPP conversion factor, GDP (LCU per international $)`)
+    dplyr::select("iso3c", "year", "PPP conversion factor, GDP (LCU per international $)")
 
   cli_elemental(from = "current Int$PPP",
                 to = "current LCU",
                 with = "PPP conversion factor",
                 unit = "(LCU per international $)",
                 val = dplyr::filter(PPP,
-                                    iso3c %in% unique(gdp$iso3c),
-                                    year %in% unique(gdp$year)))
+                                    .data$iso3c %in% unique(gdp$iso3c),
+                                    .data$year %in% unique(gdp$year)))
 
   gdp %>%
     dplyr::left_join(PPP, by = c("iso3c", "year")) %>%
-    dplyr::mutate(value = value * `PPP conversion factor, GDP (LCU per international $)`,
+    dplyr::mutate(value = .data$value * .data$`PPP conversion factor, GDP (LCU per international $)`,
                   .keep = "unused")
 }
 
@@ -108,19 +108,19 @@ current_IntPPP_2_current_LCU <- function(gdp, source) {
 #' @inheritParams convertGDP
 current_USMER_2_current_LCU <- function(gdp, source) {
   MER <-  eval(rlang::sym(source)) %>%
-    dplyr::select(iso3c, year, `MER (LCU per US$)`)
+    dplyr::select("iso3c", "year", "MER (LCU per US$)")
 
   cli_elemental(from = "current US$MER",
                 to = "current LCU",
                 with = "MER",
                 unit = "(LCU per US$)",
                 val = dplyr::filter(MER,
-                                    iso3c %in% unique(gdp$iso3c),
-                                    year %in% unique(gdp$year)))
+                                    .data$iso3c %in% unique(gdp$iso3c),
+                                    .data$year %in% unique(gdp$year)))
 
   gdp %>%
     dplyr::left_join(MER, by = c("iso3c", "year")) %>%
-    dplyr::mutate(value = value * `MER (LCU per US$)`,
+    dplyr::mutate(value = .data$value * .data$`MER (LCU per US$)`,
                   .keep = "unused")
 }
 
@@ -136,33 +136,33 @@ constant_LCU_base_x_2_current_LCU <- function(gdp, base_x, source) {
   deflator <-  "GDP deflator"
 
   gdp_deflator <- eval(rlang::sym(source)) %>%
-    dplyr::select(iso3c, year, rlang::sym(deflator))
+    dplyr::select("iso3c", "year", rlang::sym(deflator))
 
   def_base_unkwown_at_x <- gdp_deflator %>%
-    dplyr::filter(year == base_x) %>%
-    dplyr::select(iso3c, "GDP deflator in x" = rlang::sym(deflator))
+    dplyr::filter(.data$year == base_x) %>%
+    dplyr::select("iso3c", "GDP deflator in x" = rlang::sym(deflator))
 
   def_base_x <- gdp_deflator  %>%
     dplyr::left_join(def_base_unkwown_at_x, by = "iso3c") %>%
-    dplyr::mutate(!!rlang::sym(deflator) := !!rlang::sym(deflator) / `GDP deflator in x`,
+    dplyr::mutate(!!rlang::sym(deflator) := !!rlang::sym(deflator) / .data$`GDP deflator in x`,
                   .keep = "unused")
 
   cli_elemental(from = glue::glue("constant {base_x} LCU"),
                 to = glue::glue("current LCU"),
                 with = glue::glue("Base {base_x} {deflator}"),
                 unit = glue::glue("(current LCU per constant {base_x} LCU)"),
-                val = dplyr::filter(def_base_x, iso3c %in% unique(gdp$iso3c)))
+                val = dplyr::filter(def_base_x, .data$iso3c %in% unique(gdp$iso3c)))
 
   gdp %>%
     dplyr::left_join(def_base_x, by = c("iso3c", "year")) %>%
-    dplyr::mutate(value = value * !!rlang::sym(deflator), .keep = "unused")
+    dplyr::mutate(value = .data$value * !!rlang::sym(deflator), .keep = "unused")
 }
 
 #' Convert constant LCU series from one base year to another
 #' @param base_x A double, base year of incoming constant gdp series
 #' @param base_y A double, base year of outgoing constant gdp series
 #' @inheritParams convertGDP
-#' @importFrom rlang !!
+#' @importFrom rlang !! := .data
 constant_LCU_base_x_2_constant_LCU_base_y <- function(gdp,
                                                       base_x,
                                                       base_y,
@@ -174,30 +174,30 @@ constant_LCU_base_x_2_constant_LCU_base_y <- function(gdp,
   deflator <-  "GDP deflator"
 
   gdps_LCU <- eval(rlang::sym(source)) %>%
-    dplyr::select(iso3c, year, rlang::sym(deflator))
+    dplyr::select("iso3c", "year", rlang::sym(deflator))
 
   def_base_unknown_at_x <- gdps_LCU %>%
-    dplyr::filter(year == base_x) %>%
-    dplyr::select(iso3c, "def" = rlang::sym(deflator))
+    dplyr::filter(.data$year == base_x) %>%
+    dplyr::select("iso3c", "def" = rlang::sym(deflator))
 
   def_base_x <- gdps_LCU  %>%
     dplyr::left_join(def_base_unknown_at_x, by = "iso3c") %>%
-    dplyr::mutate(!!rlang::sym(deflator) := !!rlang::sym(deflator) / def,
+    dplyr::mutate(!!rlang::sym(deflator) := !!rlang::sym(deflator) / .data$def,
                   .keep = "unused")
 
   def_base_x_at_y <- def_base_x %>%
-    dplyr::filter(year == base_y) %>%
-    dplyr::select(iso3c, "def" = rlang::sym(deflator))
+    dplyr::filter(.data$year == base_y) %>%
+    dplyr::select("iso3c", "def" = rlang::sym(deflator))
 
   cli_elemental(from = glue::glue("constant {base_x} LCU"),
                 to = glue::glue("constant {base_y} LCU"),
                 with = glue::glue("{base_y} value of base {base_x} {deflator}"),
                 unit = glue::glue("(constant {base_y} LCU per constant {base_x} LCU)"),
-                val = dplyr::filter(def_base_x_at_y, iso3c %in% unique(gdp$iso3c)))
+                val = dplyr::filter(def_base_x_at_y, .data$iso3c %in% unique(gdp$iso3c)))
 
   gdp %>%
     dplyr::left_join(def_base_x_at_y, by = "iso3c") %>%
-    dplyr::mutate(value = value * def, .keep = "unused")
+    dplyr::mutate(value = .data$value * .data$def, .keep = "unused")
 }
 
 #' Convert from constant LCU to constant Int$PPP
@@ -205,18 +205,18 @@ constant_LCU_base_x_2_constant_LCU_base_y <- function(gdp,
 #' @inheritParams convertGDP
 constant_LCU_2_constant_IntPPP <- function(gdp, base, source) {
   PPP_base <-  eval(rlang::sym(source)) %>%
-    dplyr::filter(year == base) %>%
-    dplyr::select(iso3c, `PPP conversion factor, GDP (LCU per international $)`)
+    dplyr::filter(.data$year == base) %>%
+    dplyr::select("iso3c", "PPP conversion factor, GDP (LCU per international $)")
 
   cli_elemental(from = glue::glue("constant {base} LCU"),
                 to = glue::glue("constant {base} Int$PPP"),
                 with = glue::glue("{base} PPP conversion factor"),
                 unit = "(LCU per international $)",
-                val = dplyr::filter(PPP_base, iso3c %in% unique(gdp$iso3c)))
+                val = dplyr::filter(PPP_base, .data$iso3c %in% unique(gdp$iso3c)))
 
   gdp %>%
     dplyr::left_join(PPP_base, by = "iso3c") %>%
-    dplyr::mutate(value = value / `PPP conversion factor, GDP (LCU per international $)`,
+    dplyr::mutate(value = .data$value / .data$`PPP conversion factor, GDP (LCU per international $)`,
                   .keep = "unused")
 }
 
@@ -224,18 +224,18 @@ constant_LCU_2_constant_IntPPP <- function(gdp, base, source) {
 #' @inheritParams constant_LCU_2_constant_IntPPP
 constant_LCU_2_constant_USMER <- function(gdp, base, source) {
   MER_base <-  eval(rlang::sym(source)) %>%
-    dplyr::filter(year == base) %>%
-    dplyr::select(iso3c, `MER (LCU per US$)`)
+    dplyr::filter(.data$year == base) %>%
+    dplyr::select("iso3c", "MER (LCU per US$)")
 
   cli_elemental(from = glue::glue("constant {base} LCU"),
                 to = glue::glue("constant {base} US$MER"),
                 with = glue::glue("{base} MER"),
                 unit = "(LCU per US$)",
-                val = dplyr::filter(MER_base, iso3c %in% unique(gdp$iso3c)))
+                val = dplyr::filter(MER_base, .data$iso3c %in% unique(gdp$iso3c)))
 
   gdp %>%
     dplyr::left_join(MER_base, by = "iso3c") %>%
-    dplyr::mutate(value = value / `MER (LCU per US$)`,
+    dplyr::mutate(value = .data$value / .data$`MER (LCU per US$)`,
                   .keep = "unused")
 }
 
@@ -248,18 +248,18 @@ constant_LCU_2_constant_USMER <- function(gdp, base, source) {
 #' @inheritParams constant_LCU_2_constant_IntPPP
 constant_IntPPP_2_constant_LCU <- function(gdp, base, source) {
   PPP_base <- eval(rlang::sym(source)) %>%
-    dplyr::filter(year == base) %>%
-    dplyr::select(iso3c, `PPP conversion factor, GDP (LCU per international $)`)
+    dplyr::filter(.data$year == base) %>%
+    dplyr::select("iso3c", "PPP conversion factor, GDP (LCU per international $)")
 
   cli_elemental(from = glue::glue("constant {base} Int$PPP"),
                 to = glue::glue("constant {base} LCU"),
                 with = glue::glue("{base} PPP conversion factor"),
                 unit = "(LCU per international $)",
-                val = dplyr::filter(PPP_base, iso3c %in% unique(gdp$iso3c)))
+                val = dplyr::filter(PPP_base, .data$iso3c %in% unique(gdp$iso3c)))
 
   gdp %>%
     dplyr::left_join(PPP_base, by = "iso3c") %>%
-    dplyr::mutate(value = value * `PPP conversion factor, GDP (LCU per international $)`,
+    dplyr::mutate(value = .data$value * .data$`PPP conversion factor, GDP (LCU per international $)`,
                   .keep = "unused")
 }
 
@@ -272,17 +272,17 @@ constant_IntPPP_2_constant_LCU <- function(gdp, base, source) {
 #' @inheritParams constant_LCU_2_constant_IntPPP
 constant_USMER_2_constant_LCU <- function(gdp, base, source) {
   MER_base <-  eval(rlang::sym(source)) %>%
-    dplyr::filter(year == base) %>%
-    dplyr::select(iso3c, `MER (LCU per US$)`)
+    dplyr::filter(.data$year == base) %>%
+    dplyr::select("iso3c", "MER (LCU per US$)")
 
   cli_elemental(from = glue::glue("constant {base} US$MER"),
                 to = glue::glue("constant {base} LCU"),
                 with = glue::glue("{base} MER"),
                 unit = "(LCU per US$)",
-                val = dplyr::filter(MER_base, iso3c %in% unique(gdp$iso3c)))
+                val = dplyr::filter(MER_base, .data$iso3c %in% unique(gdp$iso3c)))
 
   gdp %>%
     dplyr::left_join(MER_base, by = "iso3c") %>%
-    dplyr::mutate(value = value * `MER (LCU per US$)`,
+    dplyr::mutate(value = .data$value * .data$`MER (LCU per US$)`,
                   .keep = "unused")
 }
