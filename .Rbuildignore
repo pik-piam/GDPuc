@@ -8,3 +8,4 @@
 ^codecov\.yml$
 ^figure$
 ^\.buildlibrary$
+^.*\.zenodo.json$
