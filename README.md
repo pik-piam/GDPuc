@@ -67,9 +67,9 @@ A corresponding magpie object, see the
 accepted.
 
 Use the `source` argument to control the source of the underlying
-conversion factors (GDP deflators, MERs and PPPs). There are 2 source
-options shipped with the package, with `wb_wdi` set as default, but
-custom sources are possible.
+conversion factors (GDP deflators, MERs and PPPs). There are a couple of
+source options shipped with the package, with `wb_wdi` set as default,
+but custom sources are possible.
 
 ``` r
 convertGDP(
@@ -78,6 +78,14 @@ convertGDP(
   unit_out = "constant 2017 Int$PPP",
   source = "wb_wdi"
 )
+```
+
+Use `print_source_info` to print information on a specfic, or all
+available sources.
+
+``` r
+print_source_info()
+print_source_info("wb_wdi")
 ```
 
 Set the `verbose` argument to `TRUE` to print out the underlying
