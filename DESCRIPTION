@@ -1,6 +1,6 @@
 Package: GDPuc
 Title: Easily Convert GDP Data from One Unit to Another
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: 
     c(person(given = "Johannes",
              family = "Koch",
