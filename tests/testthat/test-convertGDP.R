@@ -70,7 +70,7 @@ test_that("convertGDP magpie object", {
 
 test_that("convertGDP data.frame object", {
   gdp_in <- data.frame("iso3c" = "USA", "year" = c(2001, 2002), "value" = 100:101)
-  gdp_conv <- convertGDP(gdp_in, "current LCU", "constant 2017 Int$PPP")
+  gdp_conv <- convertGDP(gdp_in, "constant 2005 US$MER", "constant 2015 US$MER")
 
   expect_s3_class(gdp_conv, "data.frame", exact = TRUE)
 })

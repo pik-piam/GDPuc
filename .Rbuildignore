@@ -7,3 +7,5 @@
 ^\.github$
 ^codecov\.yml$
 ^figure$
+^\.buildlibrary$
+^.*\.zenodo.json$

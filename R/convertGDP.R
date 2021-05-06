@@ -22,6 +22,7 @@ convertGDP <- function(gdp,
                        source = "wb_wdi",
                        with_regions = NULL,
                        verbose = FALSE) {
+  . = NULL
 
   # Check function arguments
   check_user_input(gdp, unit_in, unit_out, source, with_regions, verbose)
