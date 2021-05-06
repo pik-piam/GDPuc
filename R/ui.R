@@ -30,3 +30,17 @@ cli_elemental <- function(from, to, with, unit, val) {
   cli_inform(my_cli)
 }
 
+# Function called by print_source_info
+cli_source_info <- function(name, origin, date, html, note = NULL) {
+  cli::cli({
+    cli::cli_rule(left = "{name}")
+    cli::cli_alert("Origin: {origin}")
+    cli::cli_alert("Date: {date}")
+    cli::cli_alert("Html: {html}")
+    if(!is.null(note)) cli::cli_alert("Note: {note}")
+    cli::cli_rule()
+  })
+}
+
+
+
