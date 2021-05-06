@@ -14,8 +14,8 @@ test_that("Abort with bad input", {
   expect_error(check_user_input(gdp, unit_in = "blabla"))
   expect_error(check_user_input(gdp, unit_in = "current LCU", unit_out = 2))
 
-  unit_in = "current LCU"
-  unit_out = "current LCU"
+  unit_in = "current Int$PPP"
+  unit_out = "current US$MER"
 
   expect_error(check_user_input(gdp, unit_in, unit_out, source = "blabla"))
 
@@ -27,7 +27,15 @@ test_that("Abort with bad input", {
   with_regions = tibble::tibble("blabla" = "FRA", "region" = "USA")
   expect_error(check_user_input(gdp, unit_in, unit_out,  source = "wb_wdi", with_regions = with_regions))
   with_regions = tibble::tibble("iso3c" = "FRA", "region" = "USA")
-  expect_error(check_user_input(gdp, unit_in, unit_out,  source = "wb_wdi", with_regions = with_regions))
+  expect_error(check_user_input(gdp, unit_in, "current LCU",  source = "wb_wdi", with_regions = with_regions))
+  my_bad_source <- wb_wdi %>% dplyr::select(
+    "iso3c",
+    "year",
+    "GDP deflator",
+    "MER (LCU per US$)",
+    "PPP conversion factor, GDP (LCU per international $)"
+  )
+  expect_error(check_user_input(gdp, unit_in, unit_out,  source = "my_bad_source", with_regions = with_regions))
 
   expect_error(check_user_input(gdp, unit_in, unit_out,  source = "wb_wdi",
                                 with_regions = NULL, verbose = "blabla"))
