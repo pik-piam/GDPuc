@@ -80,7 +80,7 @@ convertGDP(
 )
 ```
 
-Use `print_source_info` to print information on a specfic, or all
+Use `print_source_info` to print information on a specific, or all
 available sources.
 
 ``` r

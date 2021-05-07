@@ -92,7 +92,7 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions) {
 
 
 
-#' Take gdp data at regional level and dissagregate to country level
+#' Take gdp data at regional level and disaggregate to country level
 #'
 #' @param weight_unit A string, either "PPP" or "MER
 #' @param weight_year An integer equal to the base_x year

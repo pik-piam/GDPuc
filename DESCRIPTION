@@ -1,5 +1,5 @@
 Package: GDPuc
-Title: Easily Convert GDP Data from One Unit to Another
+Title: Easily Convert GDP Data
 Version: 0.1.4
 Authors@R: 
     c(person(given = "Johannes",
@@ -12,7 +12,8 @@ Description: A function to convert GDP time series from one unit to another.
     PPP conversion factors. Conversion factors can easily be customized. 
     Conversion at a regional/aggregated level is also possible.
 License: GPL (>= 3)
-LazyData: true
+URL: https://github.com/johanneskoch94/GDPuc#readme
+BugReports: https://github.com/johanneskoch94/GDPuc/issues
 RoxygenNote: 7.1.1
 Depends: 
     R (>= 2.10)
@@ -35,3 +36,4 @@ Suggests:
 Config/testthat/edition: 3
 Encoding: UTF-8
 Date: 2021-05-07
+LazyData: true
