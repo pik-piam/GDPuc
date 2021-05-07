@@ -7,13 +7,22 @@
 current_LCU_2_constant_USMER_base_y(gdp, base_y, source)
 }
 \arguments{
-\item{gdp}{A tibble or data-frame with at least 3 columns containing iso3c
-country codes, years, and GDP values.}
+\item{gdp}{A tibble, data frame or magpie object, the latter of which
+ requires the \href{https://github.com/pik-piam/magclass}{magclass}
+ package to be installed. The data-frame needs to have at least 3 columns:
+ \itemize{
+   \item a character column with iso3c
+   (\href{https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3}{wikipedia}) country codes,
+   \item a numeric column with years,
+   \item a numeric column named "value" with GDP values.
+}}
 
 \item{base_y}{A double, base year of outgoing constant gdp series}
 
-\item{source}{A string indicating the source database to use for conversion
-factors.}
+\item{source}{A string indicating the name of data frame to use for conversion
+factors. Can be a custom data frame that exists in the calling environment, or
+one of the package internal ones. Use \code{\link{print_source_info}}() to learn
+about the available sources.}
 }
 \description{
 Convert from current LCU to constant US$MER base y

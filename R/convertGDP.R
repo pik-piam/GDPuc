@@ -1,20 +1,63 @@
-#' Convert GDP time series data from one unit to another
+#' Convert GDP data
 #'
-#' convertGDP converts GDP time series data from one unit to another, using GDP
+#' convertGDP() converts GDP time series data from one unit to another, using GDP
 #' deflators, market exchange rates (MERs) and purchasing power parity
-#' conversion factors (PPPs) from `source`.
+#' conversion factors (PPPs).
 #'
-#' @param gdp A tibble or data-frame with at least 3 columns containing iso3c
-#'   country codes, years, and GDP values.
-#' @param unit_in A string with the incoming GDP unit.
-#' @param unit_out A string with the desired output GDP unit.
-#' @param source A string indicating the source database to use for conversion
-#'   factors.
+#' When providing a custom source to the function, a certain format is required.
+#' The source object must be a data frame or tibble with at least the following columns:
+#' \itemize{
+#'    \item a character column named "iso3c" with iso3c
+#'     (\href{https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3}{wikipedia}) country codes,
+#'    \item a numeric column named "year" with years,
+#'    \item a numeric column named "GDP deflator" with values of the GDP deflator divided
+#'    by 100 (so that in the base year the GDP deflator is equal to 1, not 100).
+#'    The base year of the deflator can be any year, and can be country-specific.
+#'    \item a numeric column named "MER (LCU per US$)" with MER values,
+#'    \item a numeric column named "PPP conversion factor, GDP (LCU per international $)"
+#'    wit PPP exchange rate values.
+#'  }
+#'
+#' @param gdp A tibble, data frame or magpie object, the latter of which
+#'   requires the \href{https://github.com/pik-piam/magclass}{magclass}
+#'   package to be installed. The data-frame needs to have at least 3 columns:
+#'   \itemize{
+#'     \item a character column with iso3c
+#'     (\href{https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3}{wikipedia}) country codes,
+#'     \item a numeric column with years,
+#'     \item a numeric column named "value" with GDP values.
+#'  }
+#' @param unit_in A string with the incoming GDP unit, one of:
+#'   \itemize{
+#'     \item "current LCU"
+#'     \item "current Int$PPP"
+#'     \item "current US$MER"
+#'     \item "constant YYYY LCU"
+#'     \item "constant YYYY Int$PPP"
+#'     \item "constant YYYY US$MER"
+#'   }
+#'   where YYYY should be replaced with a year e.g. "2010" or "2017".
+#' @param unit_out A string with the incoming GDP unit, one of:
+#'   \itemize{
+#'     \item "current LCU"
+#'     \item "current Int$PPP"
+#'     \item "current US$MER"
+#'     \item "constant YYYY LCU"
+#'     \item "constant YYYY Int$PPP"
+#'     \item "constant YYYY US$MER"
+#'   }
+#'   where YYYY should be replaced with a year e.g. "2010" or "2017".
+#' @param source A string indicating the name of data frame to use for conversion
+#'   factors. Can be a custom data frame that exists in the calling environment, or
+#'   one of the package internal ones. Use \code{\link{print_source_info}}() to learn
+#'   about the available sources.
 #' @param with_regions NULL or a data-frame or tibble with region mapping
-#' @param verbose TRUE or FALSE
-#'
+#' @param verbose TRUE or FALSE. A flag to turn verbosity on or off. Overrules
+#'   the GDPuc.verbose option, if it is set.
+#' @return The gdp argument, with the values in the "value" column, converted to unit_out.
+#' @seealso The \href{https://github.com/vincentarelbundock/countrycode}{countrycode}
+#'   package to convert country codes.
 #' @importFrom magrittr %>%
-#' @return A tibble with 3 columns
 #' @export
 convertGDP <- function(gdp,
                        unit_in,
