@@ -57,7 +57,7 @@ check_user_input <- function(gdp, unit_in, unit_out, source, with_regions, verbo
     "PPP conversion factor, GDP (LCU per international $)"
   )
   if (!all(required_cols_in_source %in% colnames(eval(rlang::sym(source))))) {
-    abort("Invalid 'source' argument. Has to contain at least following columns: \\
+    abort("Invalid 'source' argument. Required columns are: \\
           {paste(required_cols_in_source, collapse = '; ')}")
   }
 

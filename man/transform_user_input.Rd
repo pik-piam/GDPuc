@@ -7,15 +7,42 @@
 transform_user_input(gdp, unit_in, unit_out, source, with_regions)
 }
 \arguments{
-\item{gdp}{A tibble or data-frame with at least 3 columns containing iso3c
-country codes, years, and GDP values.}
+\item{gdp}{A tibble, data frame or magpie object, the latter of which
+ requires the \href{https://github.com/pik-piam/magclass}{magclass}
+ package to be installed. The data-frame needs to have at least 3 columns:
+ \itemize{
+   \item a character column with iso3c
+   (\href{https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3}{wikipedia}) country codes,
+   \item a numeric column with years,
+   \item a numeric column named "value" with GDP values.
+}}
 
-\item{unit_in}{A string with the incoming GDP unit.}
+\item{unit_in}{A string with the incoming GDP unit, one of:
+\itemize{
+  \item "current LCU"
+  \item "current Int$PPP"
+  \item "current US$MER"
+  \item "constant YYYY LCU"
+  \item "constant YYYY Int$PPP"
+  \item "constant YYYY US$MER"
+}
+where YYYY should be replaced with a year e.g. "2010" or "2017".}
 
-\item{unit_out}{A string with the desired output GDP unit.}
+\item{unit_out}{A string with the incoming GDP unit, one of:
+\itemize{
+  \item "current LCU"
+  \item "current Int$PPP"
+  \item "current US$MER"
+  \item "constant YYYY LCU"
+  \item "constant YYYY Int$PPP"
+  \item "constant YYYY US$MER"
+}
+where YYYY should be replaced with a year e.g. "2010" or "2017".}
 
-\item{source}{A string indicating the source database to use for conversion
-factors.}
+\item{source}{A string indicating the name of data frame to use for conversion
+factors. Can be a custom data frame that exists in the calling environment, or
+one of the package internal ones. Use \code{\link{print_source_info}}() to learn
+about the available sources.}
 
 \item{with_regions}{NULL or a data-frame or tibble with region mapping}
 }

@@ -1,10 +1,15 @@
-#' Print information on sources to screen
+#' Print information on sources
 #'
-#' Print detailed information on sources to screen. Information includes the
+#' Print detailed information on sources to the screen. Information includes the
 #' name, origin, date, html-link and an associated note. Calling the function
 #' without any argument will print information on all available sources.
 #'
-#' @inheritParams convertGDP
+#' @param source The name of one of the internal sources:
+#'   \enumerate{
+#'     \item "wb_wdi"
+#'     \item "imf_weo"
+#'     \item "wb_wdi_linked"
+#'   }
 #' @export
 print_source_info <- function(source) {
   if (missing(source)) cli::cli_alert_info("Sources available:")

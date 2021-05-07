@@ -2,16 +2,20 @@
 % Please edit documentation in R/print_source_info.R
 \name{print_source_info}
 \alias{print_source_info}
-\title{Print information on sources to screen}
+\title{Print information on sources}
 \usage{
 print_source_info(source)
 }
 \arguments{
-\item{source}{A string indicating the source database to use for conversion
-factors.}
+\item{source}{The name of one of the internal sources:
+\enumerate{
+  \item "wb_wdi"
+  \item "imf_weo"
+  \item "wb_wdi_linked"
+}}
 }
 \description{
-Print detailed information on sources to screen. Information includes the
+Print detailed information on sources to the screen. Information includes the
 name, origin, date, html-link and an associated note. Calling the function
 without any argument will print information on all available sources.
 }
