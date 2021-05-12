@@ -44,7 +44,12 @@ factors. Can be a custom data frame that exists in the calling environment, or
 one of the package internal ones. Use \code{\link{print_source_info}}() to learn
 about the available sources.}
 
-\item{with_regions}{NULL or a data-frame or tibble with region mapping}
+\item{with_regions}{NULL or a data-frame. The data-frame should be "country to region
+mapping": one column named "iso3c" with iso3c country codes, and one column named
+"region" with region codes to which the countries belong. Any regions in the gdp
+object will then be disaggregated according to the region mapping and weighed by the
+GDP share of countries in that region in the year of the unit, converted on a country
+level, and re-aggregated before being returned.}
 }
 \value{
 List

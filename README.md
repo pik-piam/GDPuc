@@ -80,12 +80,12 @@ convertGDP(
 )
 ```
 
-Use `print_source_info` to print information on a specfic, or all
+Use `print_source_info` to print information on a specific, or all
 available sources.
 
 ``` r
-print_source_info()
 print_source_info("wb_wdi")
+print_source_info()
 ```
 
 Set the `verbose` argument to `TRUE` to print out the underlying
@@ -98,6 +98,25 @@ convertGDP(
   unit_in = "constant 2005 LCU", 
   unit_out = "constant 2017 Int$PPP",
   verbose = TRUE
+)
+```
+
+Use the `with_regions` argument to convert aggregated GDP data,
+e.g. regional-level data. The default value is `NULL`, but if passed a
+data-frame with a country-to-region mapping, then custom regional codons
+will be recognized. The data-frame should have two columns, one named
+“iso3c” with iso3c country codes, and one named “region” with the
+corresponding region codes. The conversion of regional values is then
+undertaken by disaggregating the regions to a country level (using the
+mapping and weighed by the GDP shares of countries within that region in
+the base year of `unit_in`).
+
+``` r
+convertGDP(
+  gdp = gdp, 
+  unit_in = "constant 2005 LCU", 
+  unit_out = "constant 2017 Int$PPP",
+  with_regions = my_mapping_data_frame
 )
 ```
 

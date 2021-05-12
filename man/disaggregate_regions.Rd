@@ -2,7 +2,7 @@
 % Please edit documentation in R/transform_user_input.R
 \name{disaggregate_regions}
 \alias{disaggregate_regions}
-\title{Take gdp data at regional level and dissagregate to country level}
+\title{Take gdp data at regional level and disaggregate to country level}
 \usage{
 disaggregate_regions(gdp, with_regions, weight_unit, weight_year, source)
 }
@@ -17,7 +17,12 @@ disaggregate_regions(gdp, with_regions, weight_unit, weight_year, source)
    \item a numeric column named "value" with GDP values.
 }}
 
-\item{with_regions}{NULL or a data-frame or tibble with region mapping}
+\item{with_regions}{NULL or a data-frame. The data-frame should be "country to region
+mapping": one column named "iso3c" with iso3c country codes, and one column named
+"region" with region codes to which the countries belong. Any regions in the gdp
+object will then be disaggregated according to the region mapping and weighed by the
+GDP share of countries in that region in the year of the unit, converted on a country
+level, and re-aggregated before being returned.}
 
 \item{weight_unit}{A string, either "PPP" or "MER}
 
@@ -32,5 +37,5 @@ about the available sources.}
 A tibble with the values gdp at country level
 }
 \description{
-Take gdp data at regional level and dissagregate to country level
+Take gdp data at regional level and disaggregate to country level
 }
