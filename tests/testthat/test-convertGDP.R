@@ -125,7 +125,7 @@ test_that("convertGDP missing conversion factors", {
 
 
 test_that("convertGDP with regions", {
-  gdp <- tibble::tibble("iso3c" = "EUR", "year" = 2010, "value" = 100)
+  gdp <- tibble::tibble("iso3c" = c("JPN", "EUR", "DEU"), "year" = 2010, "value" = 100)
   with_regions <- tibble::tibble("iso3c" = c("FRA", "ESP", "DEU"), "region" = "EUR")
 
   gdp_conv <- convertGDP(gdp,
@@ -144,6 +144,6 @@ test_that("convertGDP with regions", {
                           with_regions = with_regions)
 
   expect_equal(gdp$iso3c, gdp_conv$iso3c)
-  expect_true(gdp_conv2$value != gdp_conv$value)
+  expect_true(all(gdp_conv2$value != gdp_conv$value))
 })
 

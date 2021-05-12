@@ -63,12 +63,21 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions) {
   }
 
 
-  # Dissagregate to country level if with_regions is activated
-  if (!is.null(with_regions)) {
+  # Disaggregate to country level if with_regions is activated
+  if (!is.null(with_regions) && any(gdp$iso3c %in% with_regions$region)) {
+    # Separate real regions from county-regions
+    my_reg <- intersect(gdp$iso3c, unique(with_regions$region))
+    gdp_reg <- dplyr::filter(gdp, .data$iso3c %in% my_reg)
+    gdp <- dplyr::filter(gdp, ! .data$iso3c %in% my_reg)
+
+    # Disaggregate regions
     weight_unit <- stringr::str_match(unit_in, "\\$(...)")[2]
     weight_year <- base_x
     with_regions <- dplyr::rename(with_regions, "gdpuc_region" = .data$region)
-    gdp <- disaggregate_regions(gdp, with_regions, weight_unit, weight_year, source)
+    gdp_reg <- disaggregate_regions(gdp_reg, with_regions, weight_unit, weight_year, source)
+
+    # Bind original countries and countries from disaggregation (duplicates now possible)
+    gdp <- dplyr::bind_rows(gdp, gdp_reg)
   }
 
 
@@ -145,11 +154,20 @@ disaggregate_regions <- function (gdp, with_regions, weight_unit, weight_year, s
 #' @return x, with the same type and names of gdp
 transform_internal <- function(x, gdp, with_regions) {
 
-  if (!is.null(with_regions)) {
+  if (!is.null(with_regions) && any(gdp$iso3c %in% with_regions$region)) {
+    x_reg <-dplyr::filter(x, !is.na(.data$gdpuc_region))
     x <- x %>%
+      dplyr::filter(is.na(.data$gdpuc_region)) %>%
+      dplyr::select(-.data$gdpuc_region)
+
+    x_reg <- x_reg %>%
       dplyr::group_by(.data$gdpuc_region, .data$year) %>%
-      dplyr::summarise(value = sum(.data$value, na.rm = TRUE)) %>%
+      dplyr::summarise(value = sum(.data$value, na.rm = TRUE), .groups = "drop") %>%
       dplyr::rename("iso3c" = .data$gdpuc_region)
+
+    x <- x %>%
+      dplyr::bind_rows(x_reg) %>%
+      dplyr::arrange(factor(.data$iso3c, levels = unique(gdp$iso3c)))
   }
 
   # Transform into original gdp type
