@@ -1,0 +1,10 @@
+The GDPuc package as a whole is distributed under GPL 3.0.
+
+The GDPuc package includes data from:
+* the Wolrd Bank's World Development Indicators.
+
+The data is incorporated in the package internal data-objects
+* "wb_wdi", and
+* "wb_wdi_linked".
+
+Full copies of the license agreements associated with the data are included in `inst/data-licenses`.
