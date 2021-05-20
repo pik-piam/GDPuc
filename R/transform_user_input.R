@@ -26,13 +26,7 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions) {
 
   # Rename columns if necessary
   if (! "iso3c" %in% colnames(gdp)) {
-    i_iso3c <- gdp %>%
-      dplyr::select(tidyselect::vars_select_helpers$where(
-        ~ (is.character(.x) || is.factor(.x)) &&
-          all(nchar(as.character(.x)) == 3) &&
-          all(.x == toupper(.x))
-      )) %>%
-      colnames()
+    i_iso3c <- smart_select_iso3c(gdp)
 
     if (length(i_iso3c) != 1) {
       abort("Invalid 'gdp' argument. `gdp` has no 'iso3c' column, and no other \\
@@ -46,13 +40,7 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions) {
       dplyr::arrange("iso3c", 1)
   }
   if (! "year" %in% colnames(gdp)) {
-    i_year <- gdp %>%
-      dplyr::select(tidyselect::vars_select_helpers$where(
-        ~ is.numeric(.x) &&
-          all(!is.na(.x)) &&
-          all(nchar(as.character(.x)) == 4)
-      )) %>%
-      colnames()
+    i_year <- smart_select_year(gdp)
 
     if (length(i_year) != 1) {
       abort("Invalid 'gdp' argument. 'gdp' does not have the required \\
@@ -182,21 +170,38 @@ transform_internal <- function(x, gdp, with_regions) {
 
   # Get original iso3c and year column names
   if (! "iso3c" %in% colnames(gdp)) {
-    i_iso3c <- gdp %>%
-      dplyr::select(tidyselect::vars_select_helpers$where(
-        ~ (is.character(.x) || is.factor(.x)) && nchar(as.character(.x[[1]])) == 3
-      )) %>%
-      colnames()
+    i_iso3c <- smart_select_iso3c(gdp)
     x <- x %>% dplyr::rename(!!rlang::sym(i_iso3c) := "iso3c")
   }
   if (! "year" %in% colnames(gdp)) {
-    i_year <- gdp %>%
-      dplyr::select(tidyselect::vars_select_helpers$where(
-        ~ is.numeric(.x) & !is.na(.x[[1]]) & nchar(as.character(.x[[1]])) == 4
-      )) %>%
-      colnames()
+    i_year <- smart_select_year(gdp)
     x <- x %>% dplyr::rename(!!rlang::sym(i_year) := "year")
   }
 
   x
 }
+
+
+
+smart_select_iso3c <- function(gdp) {
+  gdp %>%
+    dplyr::select(tidyselect::vars_select_helpers$where(
+      ~ (is.character(.x) || is.factor(.x)) &&
+        all(nchar(as.character(.x)) == 3) &&
+        all(.x == toupper(.x))
+    )) %>%
+    colnames()
+}
+
+smart_select_year <- function(gdp) {
+  gdp %>%
+    dplyr::select(tidyselect::vars_select_helpers$where(
+      ~ is.numeric(.x) &&
+        all(!is.na(.x)) &&
+        all(nchar(as.character(.x)) == 4)
+    )) %>%
+    colnames()
+}
+
+
+
