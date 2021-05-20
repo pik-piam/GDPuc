@@ -28,11 +28,13 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions) {
   if (! "iso3c" %in% colnames(gdp)) {
     i_iso3c <- gdp %>%
       dplyr::select(tidyselect::vars_select_helpers$where(
-        ~ (is.character(.x) || is.factor(.x)) && nchar(as.character(.x[[1]])) == 3
+        ~ (is.character(.x) || is.factor(.x)) &&
+          all(nchar(as.character(.x)) == 3) &&
+          all(.x == toupper(.x))
       )) %>%
       colnames()
 
-    if (identical(i_iso3c, character(0))) {
+    if (length(i_iso3c) != 1) {
       abort("Invalid 'gdp' argument. `gdp` has no 'iso3c' column, and no other \\
                column could be identified in its stead.")
     }
@@ -46,11 +48,13 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions) {
   if (! "year" %in% colnames(gdp)) {
     i_year <- gdp %>%
       dplyr::select(tidyselect::vars_select_helpers$where(
-        ~ is.numeric(.x) & !is.na(.x[[1]]) & nchar(as.character(.x[[1]])) == 4
+        ~ is.numeric(.x) &&
+          all(!is.na(.x)) &&
+          all(nchar(as.character(.x)) == 4)
       )) %>%
       colnames()
 
-    if (identical(i_year, character(0))) {
+    if (length(i_year) != 1) {
       abort("Invalid 'gdp' argument. 'gdp' does not have the required \\
                'year' column, and no other column could be identified in its stead.")
     }
