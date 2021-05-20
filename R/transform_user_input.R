@@ -26,13 +26,9 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions) {
 
   # Rename columns if necessary
   if (! "iso3c" %in% colnames(gdp)) {
-    i_iso3c <- gdp %>%
-      dplyr::select(tidyselect::vars_select_helpers$where(
-        ~ (is.character(.x) || is.factor(.x)) && nchar(as.character(.x[[1]])) == 3
-      )) %>%
-      colnames()
+    i_iso3c <- smart_select_iso3c(gdp)
 
-    if (identical(i_iso3c, character(0))) {
+    if (length(i_iso3c) != 1) {
       abort("Invalid 'gdp' argument. `gdp` has no 'iso3c' column, and no other \\
                column could be identified in its stead.")
     }
@@ -44,13 +40,9 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions) {
       dplyr::arrange("iso3c", 1)
   }
   if (! "year" %in% colnames(gdp)) {
-    i_year <- gdp %>%
-      dplyr::select(tidyselect::vars_select_helpers$where(
-        ~ is.numeric(.x) & !is.na(.x[[1]]) & nchar(as.character(.x[[1]])) == 4
-      )) %>%
-      colnames()
+    i_year <- smart_select_year(gdp)
 
-    if (identical(i_year, character(0))) {
+    if (length(i_year) != 1) {
       abort("Invalid 'gdp' argument. 'gdp' does not have the required \\
                'year' column, and no other column could be identified in its stead.")
     }
@@ -154,8 +146,8 @@ disaggregate_regions <- function (gdp, with_regions, weight_unit, weight_year, s
 #' @return x, with the same type and names of gdp
 transform_internal <- function(x, gdp, with_regions) {
 
-  if (!is.null(with_regions) && any(gdp$iso3c %in% with_regions$region)) {
-    x_reg <-dplyr::filter(x, !is.na(.data$gdpuc_region))
+  if (!is.null(with_regions) && "gdpuc_region" %in% colnames(x)) {
+    x_reg <- dplyr::filter(x, !is.na(.data$gdpuc_region))
     x <- x %>%
       dplyr::filter(is.na(.data$gdpuc_region)) %>%
       dplyr::select(-.data$gdpuc_region)
@@ -165,9 +157,11 @@ transform_internal <- function(x, gdp, with_regions) {
       dplyr::summarise(value = sum(.data$value, na.rm = TRUE), .groups = "drop") %>%
       dplyr::rename("iso3c" = .data$gdpuc_region)
 
+    i_iso3c <- if (! "iso3c" %in% colnames(gdp)) smart_select_iso3c(gdp) else "iso3c"
+
     x <- x %>%
       dplyr::bind_rows(x_reg) %>%
-      dplyr::arrange(factor(.data$iso3c, levels = unique(gdp$iso3c)))
+      dplyr::arrange(factor(.data$iso3c, levels = unique(gdp[[i_iso3c]])))
   }
 
   # Transform into original gdp type
@@ -178,21 +172,38 @@ transform_internal <- function(x, gdp, with_regions) {
 
   # Get original iso3c and year column names
   if (! "iso3c" %in% colnames(gdp)) {
-    i_iso3c <- gdp %>%
-      dplyr::select(tidyselect::vars_select_helpers$where(
-        ~ (is.character(.x) || is.factor(.x)) && nchar(as.character(.x[[1]])) == 3
-      )) %>%
-      colnames()
+    i_iso3c <- smart_select_iso3c(gdp)
     x <- x %>% dplyr::rename(!!rlang::sym(i_iso3c) := "iso3c")
   }
   if (! "year" %in% colnames(gdp)) {
-    i_year <- gdp %>%
-      dplyr::select(tidyselect::vars_select_helpers$where(
-        ~ is.numeric(.x) & !is.na(.x[[1]]) & nchar(as.character(.x[[1]])) == 4
-      )) %>%
-      colnames()
+    i_year <- smart_select_year(gdp)
     x <- x %>% dplyr::rename(!!rlang::sym(i_year) := "year")
   }
 
   x
 }
+
+
+
+smart_select_iso3c <- function(gdp) {
+  gdp %>%
+    dplyr::select(tidyselect::vars_select_helpers$where(
+      ~ (is.character(.x) || is.factor(.x)) &&
+        all(nchar(as.character(.x)) == 3) &&
+        all(.x == toupper(.x))
+    )) %>%
+    colnames()
+}
+
+smart_select_year <- function(gdp) {
+  gdp %>%
+    dplyr::select(tidyselect::vars_select_helpers$where(
+      ~ is.numeric(.x) &&
+        all(!is.na(.x)) &&
+        all(nchar(as.character(.x)) == 4)
+    )) %>%
+    colnames()
+}
+
+
+

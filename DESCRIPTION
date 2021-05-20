@@ -1,6 +1,6 @@
 Package: GDPuc
 Title: Easily Convert GDP Data
-Version: 0.1.5
+Version: 0.1.8
 Authors@R: 
     c(person(given = "Johannes",
              family = "Koch",
@@ -35,5 +35,5 @@ Suggests:
     magclass
 Config/testthat/edition: 3
 Encoding: UTF-8
-Date: 2021-05-12
+Date: 2021-05-20
 LazyData: true

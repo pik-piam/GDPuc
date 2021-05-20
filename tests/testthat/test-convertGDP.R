@@ -126,6 +126,7 @@ test_that("convertGDP missing conversion factors", {
 
 test_that("convertGDP with regions", {
   gdp <- tibble::tibble("iso3c" = c("JPN", "EUR", "DEU"), "year" = 2010, "value" = 100)
+  gdp2 <- tibble::tibble("region" = c("JPN", "EUR", "DEU"), "period" = 2010, "value" = 100)
   with_regions <- tibble::tibble("iso3c" = c("FRA", "ESP", "DEU"), "region" = "EUR")
 
   gdp_conv <- convertGDP(gdp,
@@ -133,17 +134,25 @@ test_that("convertGDP with regions", {
                          unit_out = "constant 2017 Int$PPP",
                          with_regions = with_regions)
 
-  gdp_conv_b <- convertGDP(gdp,
-                         unit_in = "constant 2017 Int$PPP",
-                         unit_out = "constant 2017 Int$PPP",
-                         with_regions = with_regions)
+  gdp_conv2 <- suppressWarnings(suppressWarnings(
+    convertGDP(gdp2,
+               unit_in = "constant 2015 Int$PPP",
+               unit_out = "constant 2017 Int$PPP",
+               with_regions = with_regions)
+  ))
 
-  gdp_conv2 <- convertGDP(gdp,
+  gdp_conv_b <- convertGDP(gdp,
+                           unit_in = "constant 2017 Int$PPP",
+                           unit_out = "constant 2017 Int$PPP",
+                           with_regions = with_regions)
+
+  gdp_conv3 <- convertGDP(gdp,
                           unit_in = "constant 2015 US$MER",
                           unit_out = "constant 2017 Int$PPP",
                           with_regions = with_regions)
 
   expect_equal(gdp$iso3c, gdp_conv$iso3c)
-  expect_true(all(gdp_conv2$value != gdp_conv$value))
+  expect_equal(gdp_conv$value, gdp_conv2$value)
+  expect_true(all(gdp_conv3$value != gdp_conv$value))
 })
 
