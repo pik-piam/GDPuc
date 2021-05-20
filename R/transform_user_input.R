@@ -146,8 +146,8 @@ disaggregate_regions <- function (gdp, with_regions, weight_unit, weight_year, s
 #' @return x, with the same type and names of gdp
 transform_internal <- function(x, gdp, with_regions) {
 
-  if (!is.null(with_regions) && any(gdp$iso3c %in% with_regions$region)) {
-    x_reg <-dplyr::filter(x, !is.na(.data$gdpuc_region))
+  if (!is.null(with_regions) && "gdpuc_region" %in% colnames(x)) {
+    x_reg <- dplyr::filter(x, !is.na(.data$gdpuc_region))
     x <- x %>%
       dplyr::filter(is.na(.data$gdpuc_region)) %>%
       dplyr::select(-.data$gdpuc_region)
@@ -157,9 +157,11 @@ transform_internal <- function(x, gdp, with_regions) {
       dplyr::summarise(value = sum(.data$value, na.rm = TRUE), .groups = "drop") %>%
       dplyr::rename("iso3c" = .data$gdpuc_region)
 
+    i_iso3c <- if (! "iso3c" %in% colnames(gdp)) smart_select_iso3c(gdp) else "iso3c"
+
     x <- x %>%
       dplyr::bind_rows(x_reg) %>%
-      dplyr::arrange(factor(.data$iso3c, levels = unique(gdp$iso3c)))
+      dplyr::arrange(factor(.data$iso3c, levels = unique(gdp[[i_iso3c]])))
   }
 
   # Transform into original gdp type
