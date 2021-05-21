@@ -4,7 +4,7 @@
 \alias{transform_user_input}
 \title{Transform user input for package internal use}
 \usage{
-transform_user_input(gdp, unit_in, unit_out, source, with_regions)
+transform_user_input(gdp, unit_in, unit_out, source, with_regions, replace_NAs)
 }
 \arguments{
 \item{gdp}{A tibble, data frame or magpie object, the latter of which
@@ -39,10 +39,7 @@ where YYYY should be replaced with a year e.g. "2010" or "2017".}
 }
 where YYYY should be replaced with a year e.g. "2010" or "2017".}
 
-\item{source}{A string indicating the name of data frame to use for conversion
-factors. Can be a custom data frame that exists in the calling environment, or
-one of the package internal ones. Use \code{\link{print_source_info}}() to learn
-about the available sources.}
+\item{source}{Quosure of the source argument. See \code{\link[rlang:quosure]{rlang:quosure}}.}
 
 \item{with_regions}{NULL or a data-frame. The data-frame should be "country to region
 mapping": one column named "iso3c" with iso3c country codes, and one column named
@@ -50,6 +47,13 @@ mapping": one column named "iso3c" with iso3c country codes, and one column name
 object will then be disaggregated according to the region mapping and weighed by the
 GDP share of countries in that region in the year of the unit, converted on a country
 level, and re-aggregated before being returned.}
+
+\item{replace_NAs}{NULL or 1 or "regional_average". Should countries for which
+conversion factors are missing, have their NA-conversion factors replaced with 1 or
+with a regional average? The default is no. If 1, then the conversion factors will be
+set to 1, and essentially, no conversion will take place. If "regional_average" then,
+the regional average of the region to which the country belongs to will be used. This
+requires a region-mapping to be passed to the function, see the with_regions argument.}
 }
 \value{
 List

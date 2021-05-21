@@ -21,10 +21,10 @@ constant_USMER_base_x_2_constant_LCU_base_y(gdp, base_x, base_y, source)
 
 \item{base_y}{A double, base year of outgoing constant gdp series}
 
-\item{source}{A string indicating the name of data frame to use for conversion
-factors. Can be a custom data frame that exists in the calling environment, or
-one of the package internal ones. Use \code{\link{print_source_info}}() to learn
-about the available sources.}
+\item{source}{A data frame to use for conversion factors. Can be a custom data-frame
+that exists in the calling environment, or one of the package internal ones. The
+name of the data-frame may also be passed as a string, e.g. "my_source".
+Use \code{\link{print_source_info}}() to learn about the available sources.}
 }
 \description{
 Convert from constant US$MER in one base year to constant LCU of another

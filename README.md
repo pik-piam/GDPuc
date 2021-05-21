@@ -9,7 +9,7 @@
 [![codecov](https://codecov.io/gh/johanneskoch94/GDPuc/branch/main/graph/badge.svg?token=3GHXFQXARX)](https://codecov.io/gh/johanneskoch94/GDPuc)
 <!-- badges: end -->
 
-GDPuc (a.k.a. GDP unit-conversion) provides a single function to convert
+GDPuc (a.k.a. GDP unit-conversion) provides a simple function to convert
 GDP time-series data from one unit to another. All common GDP units are
 supported, i.e.:
 
@@ -101,6 +101,8 @@ convertGDP(
 )
 ```
 
+## Further options
+
 Use the `with_regions` argument to convert aggregated GDP data,
 e.g. regional-level data. The default value is `NULL`, but if passed a
 data-frame with a country-to-region mapping, then custom regional codons
@@ -117,6 +119,30 @@ convertGDP(
   unit_in = "constant 2005 LCU", 
   unit_out = "constant 2017 Int$PPP",
   with_regions = my_mapping_data_frame
+)
+```
+
+Use the `replace_NAs` argument to replace missing conversion factors;
+either with 1 (so essentially no conversion) or with regional
+GDP-weighted averages. The default value is `NULL`, and missing
+conversion factors will lead to NAs. If set to `1`, then no conversion
+will take place, but no NAs will be created either. To use regional
+GDP-weighted averages, set the argument to “regional\_averages”.
+
+``` r
+convertGDP(
+  gdp = gdp, 
+  unit_in = "constant 2005 LCU", 
+  unit_out = "constant 2017 Int$PPP",
+  replace_NAs = 1
+)
+
+convertGDP(
+  gdp = gdp, 
+  unit_in = "constant 2005 LCU", 
+  unit_out = "constant 2017 Int$PPP",
+  with_regions = my_mapping_data_frame,
+  replace_NAs = "regional_averages"
 )
 ```
 

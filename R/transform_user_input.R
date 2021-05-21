@@ -1,9 +1,9 @@
 #' Transform user input for package internal use
 #'
-#' @inheritParams convertGDP
+#' @inheritParams check_user_input
 #'
 #' @return List
-transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions) {
+transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions, replace_NAs) {
 
   . = NULL
 
@@ -54,6 +54,19 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions) {
       dplyr::arrange("year", 2)
   }
 
+  # Evaluate source
+  q <- source
+  q_expr <- rlang::quo_get_expr(q)
+  q_env <- rlang::quo_get_env(q)
+  source_name <- as.character(q_expr)
+  if (is.character(q_expr)) {
+    q <- rlang::quo_set_expr(q, rlang::sym(q_expr))
+  }
+  if (!exists(source_name, q_env)) {
+    q <- rlang::quo_set_env(q, rlang::current_env())
+  }
+  source <- rlang::eval_tidy(q)
+
 
   # Disaggregate to country level if with_regions is activated
   if (!is.null(with_regions) && any(gdp$iso3c %in% with_regions$region)) {
@@ -72,24 +85,109 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions) {
     gdp <- dplyr::bind_rows(gdp, gdp_reg)
   }
 
+  # Need this to check for existence of base_y and base_x
+  this_e <- environment()
+
+  # Use different source if required
+  if (!is.null(replace_NAs)) {
+
+    # Create adapted source object
+    source_adapted <- source %>%
+      # Add any iso3c-year combinations from gdp, not available in source
+      dplyr::bind_rows(gdp %>%
+                         {if("gdpuc_region" %in% colnames(with_regions)) {
+                           dplyr::filter(., is.na(.data$gdpuc_region))
+                           } else {.} } %>%
+                         dplyr::select(.data$iso3c, .data$year) %>%
+                         dplyr::anti_join(source, by = c("iso3c", "year"))) %>%
+      # Add any missing iso3c-base_y combinations, if base_y exists
+      {if (exists("base_y", envir = this_e, inherits = FALSE)) {
+        h1 <- .
+        dplyr::bind_rows(., expand.grid("iso3c" = unique(gdp$iso3c), "year" = base_y) %>%
+                           tibble::as_tibble() %>%
+                           dplyr::anti_join(h1, by = c("iso3c", "year")))
+      } else . }
+
+    if (replace_NAs == 1) {
+      source_adapted <- source_adapted %>%
+        # Mutate the 3 important columns
+        dplyr::rowwise() %>%
+        dplyr::mutate(dplyr::across(.cols = c(.data$`GDP deflator`,
+                                              .data$`MER (LCU per US$)`,
+                                              .data$`PPP conversion factor, GDP (LCU per international $)`),
+                                    ~ if (is.na(.x)) {1} else {.x})) %>%
+        dplyr::ungroup()
+    }
+
+    if (replace_NAs == "regional_average") {
+      # Get GDP variable from source object, with its unit
+      regex_var <- "GDP, PPP \\(constant .... international \\$\\)"
+      weight_var <- grep(regex_var, colnames(source), value = TRUE)[1]
+
+      # Rename, if necessary
+      if(!"gdpuc_region" %in% colnames(with_regions)) {
+        with_regions <- dplyr::rename(with_regions, "gdpuc_region" = .data$region)
+      }
+
+      reg_averages <- source_adapted %>%
+        dplyr::full_join(with_regions, by = "iso3c") %>%
+        dplyr::group_by(.data$gdpuc_region, .data$year) %>%
+        dplyr::mutate(dplyr::across(.cols = c(.data$`GDP deflator`,
+                                              .data$`MER (LCU per US$)`,
+                                              .data$`PPP conversion factor, GDP (LCU per international $)`),
+                                    ~ sum(.x * eval(rlang::sym(weight_var)) /
+                                            sum(eval(rlang::sym(weight_var)), na.rm = TRUE),
+                                          na.rm = TRUE),
+                                    .names = "ra_{.col}")) %>%
+        dplyr::ungroup() %>%
+        dplyr::select(.data$iso3c, .data$year, dplyr::starts_with("ra_"))
+
+      source_adapted <- source_adapted %>%
+        # Join the regional averages
+        dplyr::left_join(reg_averages, by = c("iso3c", "year")) %>%
+        # Mutate the 3 important columns
+        dplyr::rowwise() %>%
+        dplyr::mutate(dplyr::across(.cols = c(.data$`GDP deflator`,
+                                              .data$`MER (LCU per US$)`,
+                                              .data$`PPP conversion factor, GDP (LCU per international $)`),
+                                    ~ if (is.na(.x))
+                                      {eval(rlang::sym(paste0("ra_", dplyr::cur_column())))}
+                                    else {.x}),
+                      .keep = "unused") %>%
+        dplyr::ungroup()
+    }
+
+    source_name <- paste0(source_name, "_adapted")
+    source <- source_adapted
+  }
 
   # Check availability of required conversion factors in source
-  if (length(intersect(unique(gdp$year), unique(eval(rlang::sym(source))$year))) == 0) {
-    abort("No information in source {crayon::bold(source)} for years in 'gdp'.")
+  if (length(intersect(unique(gdp$year), unique(source$year))) == 0) {
+    abort("No information in source {crayon::bold(source_name)} for years in 'gdp'.")
   }
-  if (length(intersect(unique(gdp$iso3c), unique(eval(rlang::sym(source))$iso3c))) == 0 ) {
-    abort("No information in source {crayon::bold(source)} for countries in 'gdp'.")
+  if (length(intersect(unique(gdp$iso3c), unique(source$iso3c))) == 0 ) {
+    abort("No information in source {crayon::bold(source_name)} for countries in 'gdp'.")
   }
 
-  this_e <- environment()
   out <- list("gdp" = gdp,
               "unit_in" = unit_in,
-              "unit_out" = unit_out) %>%
+              "unit_out" = unit_out,
+              "source" = source,
+              "source_name" = source_name) %>%
     {if (exists("base_x", envir = this_e, inherits = FALSE)) c(., "base_x" = base_x) else .} %>%
     {if (exists("base_y", envir = this_e, inherits = FALSE)) c(., "base_y" = base_y) else .}
 
   return(out)
 }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -105,7 +203,7 @@ disaggregate_regions <- function (gdp, with_regions, weight_unit, weight_year, s
   # Get GDP variable from source object, with its unit
   regex_var <- "GDP, PPP \\(constant .... international \\$\\)"
   regex_year <- "GDP, PPP \\(constant (....) international \\$\\)"
-  share_var <- grep(regex_var, colnames(eval(rlang::sym(source))), value = TRUE)[1]
+  share_var <- grep(regex_var, colnames(source), value = TRUE)[1]
   share_year <- stringr::str_match(share_var, regex_year)[,2]
   unit_in <- paste("constant", share_year, "Int$PPP")
 
@@ -116,7 +214,7 @@ disaggregate_regions <- function (gdp, with_regions, weight_unit, weight_year, s
     unit_out <- paste("constant", weight_year, "US$MER")
   }
 
-  shares <- eval(rlang::sym(source)) %>%
+  shares <- source %>%
     dplyr::select("iso3c", "year", "value" = tidyselect::all_of(share_var)) %>%
     dplyr::left_join(with_regions, by = "iso3c") %>%
     dplyr::filter(.data$year == weight_year, !is.na(.data$gdpuc_region)) %>%
@@ -203,6 +301,10 @@ smart_select_year <- function(gdp) {
         all(nchar(as.character(.x)) == 4)
     )) %>%
     colnames()
+}
+
+get_source_name <- function(source) {
+
 }
 
 
