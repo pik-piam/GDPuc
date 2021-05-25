@@ -159,8 +159,8 @@ test_that("convertGDP with regions", {
 
 test_that("convertGDP replace missing conversion factors", {
   # wb_wi does not have info for AIA, so AIA is used for testing here
-
-  gdp <- tidyr::expand_grid("iso3c" = c("AIA", "USA", "EUR"), "year" = c(2010, 3010), "value" = 100)
+  gdp <- tidyr::expand_grid("iso3c" = c("AIA", "FRA", "DEU", "USA", "EUR"), "year" = c(2010, 3010),
+                            "SSP" = c("SSP1", "SSP2"), "value" = 100)
   gdp2 <- tidyr::expand_grid("iso3c" = c("AIA", "USA"), "year" = c(2010, 3010), "value" = 100)
   with_regions <- tibble::tibble("iso3c" = c("FRA", "ESP", "DEU", "BEL", "AIA"), "region" = "EUR")
 

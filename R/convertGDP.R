@@ -78,7 +78,7 @@ convertGDP <- function(gdp,
                        replace_NAs = NULL,
                        verbose = FALSE) {
   # Avoid NOTE in check
-  . = NULL
+  . <- NULL
   # Capture the source argument as quosure
   source <- rlang::enquo(source)
 
@@ -105,8 +105,8 @@ convertGDP <- function(gdp,
   f <- paste0(internal$unit_in, "_2_", internal$unit_out) %>%
     stringr::str_replace_all(c(
       " " = "_",
-      "_YYYY"="",
-      "\\$"=""
+      "_YYYY" = "",
+      "\\$" = ""
     ))
 
   # Get list of function arguments
@@ -122,7 +122,7 @@ convertGDP <- function(gdp,
   # Call function
   x <- do.call(f, a)
 
-  if(any(is.na(x$value) & !is.na(internal$gdp$value))) {
+  if (any(is.na(x$value) & !is.na(internal$gdp$value))) {
     warn("NAs have been generated for countries lacking conversion factors!")
   }
 

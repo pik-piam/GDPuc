@@ -35,13 +35,13 @@ check_gdp <- function(gdp) {
     if (length(gdp) < 3) {
       abort("Invalid 'gdp' argument. `gdp` must have at least 3 columns.")
     }
-  } else if (class(gdp) == "magpie"){
+  } else if (class(gdp) == "magpie") {
     # Check for magclass package
     if (!requireNamespace("magclass", quietly = TRUE)) {
       abort("Missing 'magclass' package. Please install 'magclass' to convert magpie objects.")
     }
     # Check if there is years info
-    if(is.null(magclass::getYears(gdp))){
+    if (is.null(magclass::getYears(gdp))) {
       abort("No year information in mag object!")
     }
   } else {

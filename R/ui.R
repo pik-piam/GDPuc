@@ -37,10 +37,7 @@ cli_source_info <- function(name, origin, date, html, note = NULL) {
     cli::cli_alert("Origin: {origin}")
     cli::cli_alert("Date: {date}")
     cli::cli_alert("Html: {html}")
-    if(!is.null(note)) cli::cli_alert("Note: {note}")
+    if (!is.null(note)) cli::cli_alert("Note: {note}")
     cli::cli_rule()
   })
 }
-
-
-
