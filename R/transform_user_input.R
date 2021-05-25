@@ -1,25 +1,24 @@
 #' Transform user input for package internal use
 #'
-#' @inheritParams convertGDP
+#' @inheritParams check_user_input
 #'
 #' @return List
-transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions) {
-
-  . = NULL
+transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions, replace_NAs) {
+  . <- NULL
 
   # Convert to tibble, if necessary
-  if (class(gdp)[1] == "magpie"){
+  if (class(gdp)[1] == "magpie") {
     gdp <- mag2tibb(gdp)
   }
 
   # Extract base years if they exist, and adjust string
   if (grepl("constant", unit_in)) {
-    base_x <- stringr::str_match(unit_in, "constant (....)")[,2] %>% as.double()
+    base_x <- stringr::str_match(unit_in, "constant (....)")[, 2] %>% as.double()
     unit_in <- sub(base_x, "YYYY", unit_in) %>%
       paste0(" base x")
   }
   if (grepl("constant", unit_out)) {
-    base_y <- stringr::str_match(unit_out, "constant (....)")[,2] %>% as.double()
+    base_y <- stringr::str_match(unit_out, "constant (....)")[, 2] %>% as.double()
     unit_out <- sub(base_y, "YYYY", unit_out) %>%
       paste0(" base y")
   }
@@ -27,113 +26,74 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions) {
   # Rename columns if necessary
   if (! "iso3c" %in% colnames(gdp)) {
     i_iso3c <- smart_select_iso3c(gdp)
-
     if (length(i_iso3c) != 1) {
       abort("Invalid 'gdp' argument. `gdp` has no 'iso3c' column, and no other \\
                column could be identified in its stead.")
     }
-
     warn("No 'iso3c' column in 'gdp' argument. Using '{i_iso3c}' column instead.")
-
-    gdp <- gdp %>%
-      dplyr::rename("iso3c" = !!rlang::sym(i_iso3c)) %>%
-      dplyr::arrange("iso3c", 1)
+    gdp <- dplyr::rename(gdp, "iso3c" = !!rlang::sym(i_iso3c))
   }
   if (! "year" %in% colnames(gdp)) {
     i_year <- smart_select_year(gdp)
-
     if (length(i_year) != 1) {
       abort("Invalid 'gdp' argument. 'gdp' does not have the required \\
                'year' column, and no other column could be identified in its stead.")
     }
-
     warn("No 'year' column in 'gdp' argument. Using '{i_year}' column instead.")
-
-    gdp <- gdp %>%
-      dplyr::rename("year" = !!rlang::sym(i_year)) %>%
-      dplyr::arrange("year", 2)
+    gdp <- dplyr::rename(gdp, "year" = !!rlang::sym(i_year))
   }
 
+  # Evaluate source
+  q <- source
+  q_expr <- rlang::quo_get_expr(q)
+  q_env <- rlang::quo_get_env(q)
+  source_name <- as.character(q_expr)
+  if (is.character(q_expr)) {
+    q <- rlang::quo_set_expr(q, rlang::sym(q_expr))
+  }
+  if (!exists(source_name, q_env)) {
+    q <- rlang::quo_set_env(q, rlang::current_env())
+  }
+  source <- rlang::eval_tidy(q)
 
-  # Disaggregate to country level if with_regions is activated
-  if (!is.null(with_regions) && any(gdp$iso3c %in% with_regions$region)) {
-    # Separate real regions from county-regions
-    my_reg <- intersect(gdp$iso3c, unique(with_regions$region))
-    gdp_reg <- dplyr::filter(gdp, .data$iso3c %in% my_reg)
-    gdp <- dplyr::filter(gdp, ! .data$iso3c %in% my_reg)
 
-    # Disaggregate regions
-    weight_unit <- stringr::str_match(unit_in, "\\$(...)")[2]
-    weight_year <- base_x
-    with_regions <- dplyr::rename(with_regions, "gdpuc_region" = .data$region)
-    gdp_reg <- disaggregate_regions(gdp_reg, with_regions, weight_unit, weight_year, source)
-
-    # Bind original countries and countries from disaggregation (duplicates now possible)
-    gdp <- dplyr::bind_rows(gdp, gdp_reg)
+  # If a region mapping is available and a region code (that isn't a
+  # country-region) is detected, replace the region with the countries it
+  # comprises.
+  if (!is.null(with_regions) &&
+      any(gdp$iso3c %in% with_regions$region & !gdp$iso3c %in% with_regions$iso3c)) {
+    gdp <- replace_regions_with_countries(gdp, unit_in, base_x, with_regions, source)
   }
 
+  # Need this to check for existence of base_y and base_x
+  this_e <- environment()
+
+  # Use different source if required
+  if (!is.null(replace_NAs)) {
+    b <- if (exists("base_y", envir = this_e, inherits = FALSE)) base_y else NULL
+    source <- adapt_source(gdp, base_y = b, source, with_regions, replace_NAs)
+    source_name <- paste0(source_name, "_adapted")
+  }
 
   # Check availability of required conversion factors in source
-  if (length(intersect(unique(gdp$year), unique(eval(rlang::sym(source))$year))) == 0) {
-    abort("No information in source {crayon::bold(source)} for years in 'gdp'.")
+  if (length(intersect(unique(gdp$year), unique(source$year))) == 0) {
+    abort("No information in source {crayon::bold(source_name)} for years in 'gdp'.")
   }
-  if (length(intersect(unique(gdp$iso3c), unique(eval(rlang::sym(source))$iso3c))) == 0 ) {
-    abort("No information in source {crayon::bold(source)} for countries in 'gdp'.")
+  if (length(intersect(unique(gdp$iso3c), unique(source$iso3c))) == 0) {
+    abort("No information in source {crayon::bold(source_name)} for countries in 'gdp'.")
   }
 
-  this_e <- environment()
   out <- list("gdp" = gdp,
               "unit_in" = unit_in,
-              "unit_out" = unit_out) %>%
+              "unit_out" = unit_out,
+              "source" = source,
+              "source_name" = source_name) %>%
     {if (exists("base_x", envir = this_e, inherits = FALSE)) c(., "base_x" = base_x) else .} %>%
     {if (exists("base_y", envir = this_e, inherits = FALSE)) c(., "base_y" = base_y) else .}
 
   return(out)
 }
 
-
-
-#' Take gdp data at regional level and disaggregate to country level
-#'
-#' @param weight_unit A string, either "PPP" or "MER
-#' @param weight_year An integer equal to the base_x year
-#' @inheritParams convertGDP
-#'
-#' @return A tibble with the values gdp at country level
-disaggregate_regions <- function (gdp, with_regions, weight_unit, weight_year, source) {
-
-  # Get GDP variable from source object, with its unit
-  regex_var <- "GDP, PPP \\(constant .... international \\$\\)"
-  regex_year <- "GDP, PPP \\(constant (....) international \\$\\)"
-  share_var <- grep(regex_var, colnames(eval(rlang::sym(source))), value = TRUE)[1]
-  share_year <- stringr::str_match(share_var, regex_year)[,2]
-  unit_in <- paste("constant", share_year, "Int$PPP")
-
-  # Convert that variable to desired unit, and compute shares of GDP per region
-  if (weight_unit == "PPP") {
-    unit_out <- paste("constant", weight_year, "Int$PPP")
-  } else {
-    unit_out <- paste("constant", weight_year, "US$MER")
-  }
-
-  shares <- eval(rlang::sym(source)) %>%
-    dplyr::select("iso3c", "year", "value" = tidyselect::all_of(share_var)) %>%
-    dplyr::left_join(with_regions, by = "iso3c") %>%
-    dplyr::filter(.data$year == weight_year, !is.na(.data$gdpuc_region)) %>%
-    convertGDP(unit_in, unit_out, source = source) %>%
-    dplyr::group_by(.data$gdpuc_region) %>%
-    dplyr::mutate(share = .data$value / sum(.data$value, na.rm = TRUE), .keep = "unused") %>%
-    dplyr::ungroup() %>%
-    dplyr::select(-.data$year) %>%
-    suppressWarnings()
-
-  # Dissagregate regions
-  gdp %>%
-    dplyr::rename("gdpuc_region" = .data$iso3c) %>%
-    dplyr::right_join(with_regions, by = "gdpuc_region") %>%
-    dplyr::left_join(shares, by = c("gdpuc_region", "iso3c")) %>%
-    dplyr::mutate(value = .data$value * .data$share, .keep = "unused")
-}
 
 
 
@@ -153,7 +113,7 @@ transform_internal <- function(x, gdp, with_regions) {
       dplyr::select(-.data$gdpuc_region)
 
     x_reg <- x_reg %>%
-      dplyr::group_by(.data$gdpuc_region, .data$year) %>%
+      dplyr::group_by(dplyr::across(c(-.data$iso3c, -.data$value))) %>%
       dplyr::summarise(value = sum(.data$value, na.rm = TRUE), .groups = "drop") %>%
       dplyr::rename("iso3c" = .data$gdpuc_region)
 
@@ -165,45 +125,20 @@ transform_internal <- function(x, gdp, with_regions) {
   }
 
   # Transform into original gdp type
-  if (class(gdp)[1] == "magpie"){
-    x <- magclass::as.magpie(x[,-1], spatial="iso3c", temporal="year")
+  if (class(gdp)[1] == "magpie") {
+    x <- magclass::as.magpie(x[, -1], spatial = "iso3c", temporal = "year")
     return(x)
   }
 
   # Get original iso3c and year column names
   if (! "iso3c" %in% colnames(gdp)) {
     i_iso3c <- smart_select_iso3c(gdp)
-    x <- x %>% dplyr::rename(!!rlang::sym(i_iso3c) := "iso3c")
+    x <- dplyr::rename(x, !!rlang::sym(i_iso3c) := "iso3c")
   }
   if (! "year" %in% colnames(gdp)) {
     i_year <- smart_select_year(gdp)
-    x <- x %>% dplyr::rename(!!rlang::sym(i_year) := "year")
+    x <- dplyr::rename(x, !!rlang::sym(i_year) := "year")
   }
 
   x
 }
-
-
-
-smart_select_iso3c <- function(gdp) {
-  gdp %>%
-    dplyr::select(tidyselect::vars_select_helpers$where(
-      ~ (is.character(.x) || is.factor(.x)) &&
-        all(nchar(as.character(.x)) == 3) &&
-        all(.x == toupper(.x))
-    )) %>%
-    colnames()
-}
-
-smart_select_year <- function(gdp) {
-  gdp %>%
-    dplyr::select(tidyselect::vars_select_helpers$where(
-      ~ is.numeric(.x) &&
-        all(!is.na(.x)) &&
-        all(nchar(as.character(.x)) == 4)
-    )) %>%
-    colnames()
-}
-
-
-

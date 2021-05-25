@@ -3,7 +3,7 @@ test_that("convertGDP", {
     dplyr::filter(!is.na(`GDP, PPP (constant 2017 international $)`)) %>%
     dplyr::select("iso3c", "year", "value" = `GDP (current LCU)`)
 
-  gdp_conv <- convertGDP(gdp_in, "current LCU", "constant 2017 Int$PPP", "wb_wdi") %>%
+  gdp_conv <- convertGDP(gdp_in, "current LCU", "constant 2017 Int$PPP") %>%
     dplyr::filter(!is.na(value))
 
   gdp_out <- wb_wdi %>%
@@ -25,24 +25,24 @@ test_that("convertGDP different column names", {
   gdp_in2b <- dplyr::mutate(gdp_in2, y = "")
 
   expect_warning(
-      convertGDP(gdp_in1, "current LCU", "constant 2017 Int$PPP", "wb_wdi")
+      convertGDP(gdp_in1, "current LCU", "constant 2017 Int$PPP", wb_wdi)
     )
   expect_error(
-      convertGDP(gdp_in1b, "current LCU", "constant 2017 Int$PPP", "wb_wdi")
+      convertGDP(gdp_in1b, "current LCU", "constant 2017 Int$PPP", wb_wdi)
   )
   expect_warning(
-    convertGDP(gdp_in2, "current LCU", "constant 2017 Int$PPP", "wb_wdi")
+    convertGDP(gdp_in2, "current LCU", "constant 2017 Int$PPP", wb_wdi)
   )
   expect_error(
-    convertGDP(gdp_in2b, "current LCU", "constant 2017 Int$PPP", "wb_wdi")
+    convertGDP(gdp_in2b, "current LCU", "constant 2017 Int$PPP", wb_wdi)
   )
 
   gdp_conv1 <- suppressWarnings(suppressMessages(
-    convertGDP(gdp_in1, "current LCU", "constant 2017 Int$PPP", "wb_wdi") %>%
+    convertGDP(gdp_in1, "current LCU", "constant 2017 Int$PPP", wb_wdi) %>%
       dplyr::filter(!is.na(value))
   ))
   gdp_conv2 <- suppressWarnings(suppressMessages(
-    convertGDP(gdp_in2, "current LCU", "constant 2017 Int$PPP", "wb_wdi") %>%
+    convertGDP(gdp_in2, "current LCU", "constant 2017 Int$PPP", wb_wdi) %>%
       dplyr::filter(!is.na(value))
   ))
 
@@ -156,3 +156,46 @@ test_that("convertGDP with regions", {
   expect_true(all(gdp_conv3$value != gdp_conv$value))
 })
 
+
+test_that("convertGDP replace missing conversion factors", {
+  # wb_wi does not have info for AIA, so AIA is used for testing here
+  gdp <- tidyr::expand_grid("iso3c" = c("AIA", "FRA", "DEU", "USA", "EUR"), "year" = c(2010, 3010),
+                            "SSP" = c("SSP1", "SSP2"), "value" = 100)
+  gdp2 <- tidyr::expand_grid("iso3c" = c("AIA", "USA"), "year" = c(2010, 3010), "value" = 100)
+  with_regions <- tibble::tibble("iso3c" = c("FRA", "ESP", "DEU", "BEL", "AIA"), "region" = "EUR")
+
+  expect_warning(convertGDP(gdp, "constant 2010 US$MER", "constant 2011 Int$PPP"))
+  expect_error(convertGDP(gdp, "constant 2010 US$MER", "constant 2011 Int$PPP", replace_NAs = FALSE))
+  expect_error(convertGDP(gdp, "constant 2010 US$MER", "constant 2011 Int$PPP", replace_NAs = "regional_average"))
+
+  gdp_conv <- suppressWarnings(
+    convertGDP(gdp,
+               unit_in = "constant 2005 Int$PPP",
+               unit_out = "constant 2005 US$MER")
+  )
+
+  gdp_conv2 <- convertGDP(gdp,
+                          unit_in = "constant 2005 Int$PPP",
+                          unit_out = "constant 2005 US$MER",
+                          replace_NAs = 1)
+
+  gdp_conv3 <- convertGDP(gdp,
+                          unit_in = "constant 2005 Int$PPP",
+                          unit_out = "constant 2005 US$MER",
+                          with_regions = with_regions,
+                          replace_NAs = "regional_average")
+
+  gdp_conv4 <- convertGDP(gdp2,
+                          unit_in = "constant 2005 Int$PPP",
+                          unit_out = "constant 2005 US$MER",
+                          with_regions = with_regions,
+                          replace_NAs = "regional_average")
+
+  expect_true(any(is.na(gdp_conv$value)))
+  expect_true(!any(is.na(gdp_conv2$value)))
+  expect_true(!any(is.na(gdp_conv3$value)))
+
+  expect_equal(gdp$iso3c, gdp_conv2$iso3c)
+  expect_equal(gdp$iso3c, gdp_conv3$iso3c)
+  expect_equal(gdp2$iso3c, gdp_conv4$iso3c)
+})

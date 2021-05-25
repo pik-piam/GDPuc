@@ -6,7 +6,7 @@
 #' Convert from current LCU to current Int$PPP
 #' @inheritParams convertGDP
 current_LCU_2_current_IntPPP <- function(gdp, source) {
-  PPP <-  eval(rlang::sym(source)) %>%
+  PPP <-  source %>%
     dplyr::select("iso3c", "year", "PPP conversion factor, GDP (LCU per international $)")
 
   cli_elemental(from = "current LCU",
@@ -26,7 +26,7 @@ current_LCU_2_current_IntPPP <- function(gdp, source) {
 #' Convert from current LCU to current US$MER
 #' @inheritParams convertGDP
 current_LCU_2_current_USMER <- function(gdp, source) {
-  MER <-  eval(rlang::sym(source)) %>%
+  MER <-  source %>%
     dplyr::select("iso3c", "year", "MER (LCU per US$)")
 
   cli_elemental(from = "current LCU",
@@ -49,7 +49,7 @@ current_LCU_2_constant_LCU_base_y <- function(gdp, base_y, source) {
 
   deflator <-  "GDP deflator"
 
-  gdp_deflator <- eval(rlang::sym(source)) %>%
+  gdp_deflator <- source %>%
     dplyr::select("iso3c", "year", rlang::sym(deflator))
 
   def_base_unkwown_at_y <- gdp_deflator %>%
@@ -82,7 +82,7 @@ current_LCU_2_constant_LCU_base_y <- function(gdp, base_y, source) {
 #' Convert from current Int$PPP to current LCU
 #' @inheritParams convertGDP
 current_IntPPP_2_current_LCU <- function(gdp, source) {
-  PPP <-  eval(rlang::sym(source)) %>%
+  PPP <-  source %>%
     dplyr::select("iso3c", "year", "PPP conversion factor, GDP (LCU per international $)")
 
   cli_elemental(from = "current Int$PPP",
@@ -107,7 +107,7 @@ current_IntPPP_2_current_LCU <- function(gdp, source) {
 #' Convert from current US$MER to current LCU
 #' @inheritParams convertGDP
 current_USMER_2_current_LCU <- function(gdp, source) {
-  MER <-  eval(rlang::sym(source)) %>%
+  MER <-  source %>%
     dplyr::select("iso3c", "year", "MER (LCU per US$)")
 
   cli_elemental(from = "current US$MER",
@@ -135,7 +135,7 @@ constant_LCU_base_x_2_current_LCU <- function(gdp, base_x, source) {
 
   deflator <-  "GDP deflator"
 
-  gdp_deflator <- eval(rlang::sym(source)) %>%
+  gdp_deflator <- source %>%
     dplyr::select("iso3c", "year", rlang::sym(deflator))
 
   def_base_unkwown_at_x <- gdp_deflator %>%
@@ -173,7 +173,7 @@ constant_LCU_base_x_2_constant_LCU_base_y <- function(gdp,
 
   deflator <-  "GDP deflator"
 
-  gdps_LCU <- eval(rlang::sym(source)) %>%
+  gdps_LCU <- source %>%
     dplyr::select("iso3c", "year", rlang::sym(deflator))
 
   def_base_unknown_at_x <- gdps_LCU %>%
@@ -204,7 +204,7 @@ constant_LCU_base_x_2_constant_LCU_base_y <- function(gdp,
 #' @param base A double, the base year of incoming and outgoing constant GDP
 #' @inheritParams convertGDP
 constant_LCU_2_constant_IntPPP <- function(gdp, base, source) {
-  PPP_base <-  eval(rlang::sym(source)) %>%
+  PPP_base <-  source %>%
     dplyr::filter(.data$year == base) %>%
     dplyr::select("iso3c", "PPP conversion factor, GDP (LCU per international $)")
 
@@ -223,7 +223,7 @@ constant_LCU_2_constant_IntPPP <- function(gdp, base, source) {
 #' Convert from constant LCU to constant US$MER
 #' @inheritParams constant_LCU_2_constant_IntPPP
 constant_LCU_2_constant_USMER <- function(gdp, base, source) {
-  MER_base <-  eval(rlang::sym(source)) %>%
+  MER_base <-  source %>%
     dplyr::filter(.data$year == base) %>%
     dplyr::select("iso3c", "MER (LCU per US$)")
 
@@ -247,7 +247,7 @@ constant_LCU_2_constant_USMER <- function(gdp, base, source) {
 #' Convert from constant Int$PPP to constant LCU
 #' @inheritParams constant_LCU_2_constant_IntPPP
 constant_IntPPP_2_constant_LCU <- function(gdp, base, source) {
-  PPP_base <- eval(rlang::sym(source)) %>%
+  PPP_base <- source %>%
     dplyr::filter(.data$year == base) %>%
     dplyr::select("iso3c", "PPP conversion factor, GDP (LCU per international $)")
 
@@ -271,7 +271,7 @@ constant_IntPPP_2_constant_LCU <- function(gdp, base, source) {
 #' Convert from constant US$MER to constant LCU
 #' @inheritParams constant_LCU_2_constant_IntPPP
 constant_USMER_2_constant_LCU <- function(gdp, base, source) {
-  MER_base <-  eval(rlang::sym(source)) %>%
+  MER_base <-  source %>%
     dplyr::filter(.data$year == base) %>%
     dplyr::select("iso3c", "MER (LCU per US$)")
 

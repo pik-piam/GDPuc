@@ -19,10 +19,10 @@ constant_IntPPP_2_constant_LCU(gdp, base, source)
 
 \item{base}{A double, the base year of incoming and outgoing constant GDP}
 
-\item{source}{A string indicating the name of data frame to use for conversion
-factors. Can be a custom data frame that exists in the calling environment, or
-one of the package internal ones. Use \code{\link{print_source_info}}() to learn
-about the available sources.}
+\item{source}{A data frame to use for conversion factors. Can be a custom data-frame
+that exists in the calling environment, or one of the package internal ones. The
+name of the data-frame may also be passed as a string, e.g. "my_source".
+Use \code{\link{print_source_info}}() to learn about the available sources.}
 }
 \description{
 Convert from constant Int$PPP to constant LCU

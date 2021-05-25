@@ -47,16 +47,22 @@
 #'     \item "constant YYYY US$MER"
 #'   }
 #'   where YYYY should be replaced with a year e.g. "2010" or "2017".
-#' @param source A string indicating the name of data frame to use for conversion
-#'   factors. Can be a custom data frame that exists in the calling environment, or
-#'   one of the package internal ones. Use \code{\link{print_source_info}}() to learn
-#'   about the available sources.
+#' @param source A data frame to use for conversion factors. Can be a custom data-frame
+#'   that exists in the calling environment, or one of the package internal ones. The
+#'   name of the data-frame may also be passed as a string, e.g. "my_source".
+#'   Use \code{\link{print_source_info}}() to learn about the available sources.
 #' @param with_regions NULL or a data-frame. The data-frame should be "country to region
 #'   mapping": one column named "iso3c" with iso3c country codes, and one column named
 #'   "region" with region codes to which the countries belong. Any regions in the gdp
 #'   object will then be disaggregated according to the region mapping and weighed by the
 #'   GDP share of countries in that region in the year of the unit, converted on a country
 #'   level, and re-aggregated before being returned.
+#' @param replace_NAs NULL or 1 or "regional_average". Should countries for which
+#'   conversion factors are missing, have their NA-conversion factors replaced with 1 or
+#'   with a regional average? The default is no. If 1, then the conversion factors will be
+#'   set to 1, and essentially, no conversion will take place. If "regional_average" then,
+#'   the regional average of the region to which the country belongs to will be used. This
+#'   requires a region-mapping to be passed to the function, see the with_regions argument.
 #' @param verbose TRUE or FALSE. A flag to turn verbosity on or off. Overrules
 #'   the GDPuc.verbose option, if it is set.
 #' @return The gdp argument, with the values in the "value" column, converted to unit_out.
@@ -69,11 +75,15 @@ convertGDP <- function(gdp,
                        unit_out,
                        source = "wb_wdi",
                        with_regions = NULL,
+                       replace_NAs = NULL,
                        verbose = FALSE) {
-  . = NULL
+  # Avoid NOTE in check
+  . <- NULL
+  # Capture the source argument as quosure
+  source <- rlang::enquo(source)
 
   # Check function arguments
-  check_user_input(gdp, unit_in, unit_out, source, with_regions, verbose)
+  check_user_input(gdp, unit_in, unit_out, source, with_regions, replace_NAs, verbose)
 
   # Set verbose option, if necessary
   if (verbose != getOption("GDPuc.verbose", default = FALSE)) {
@@ -89,30 +99,30 @@ convertGDP <- function(gdp,
   }
 
   # Transform user input for internal use, while performing some last consistency checks
-  internal <- transform_user_input(gdp, unit_in, unit_out, source, with_regions)
+  internal <- transform_user_input(gdp, unit_in, unit_out, source, with_regions, replace_NAs)
 
   # Get appropriate function
   f <- paste0(internal$unit_in, "_2_", internal$unit_out) %>%
     stringr::str_replace_all(c(
       " " = "_",
-      "_YYYY"="",
-      "\\$"=""
+      "_YYYY" = "",
+      "\\$" = ""
     ))
 
   # Get list of function arguments
-  a <- list("gdp" = internal$gdp, "source" = source) %>%
+  a <- list("gdp" = internal$gdp, "source" = internal$source) %>%
     {if ("base_x" %in% names(internal)) c(., "base_x" = internal$base_x) else .} %>%
     {if ("base_y" %in% names(internal)) c(., "base_y" = internal$base_y) else .}
 
 
   cli_inform(function() cli::cli_alert_info(
-    "Converting GDP with conversion factors from {crayon::blue(source)}:")
+    "Converting GDP with conversion factors from {crayon::blue(internal$source_name)}:")
   )
 
   # Call function
   x <- do.call(f, a)
 
-  if(any(is.na(x$value) & !is.na(internal$gdp$value))) {
+  if (any(is.na(x$value) & !is.na(internal$gdp$value))) {
     warn("NAs have been generated for countries lacking conversion factors!")
   }
 
