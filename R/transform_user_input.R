@@ -126,7 +126,8 @@ transform_internal <- function(x, gdp, with_regions) {
 
   # Transform into original gdp type
   if (class(gdp)[1] == "magpie") {
-    x <- magclass::as.magpie(x[, -1], spatial = "iso3c", temporal = "year")
+    x <- magclass::as.magpie(x, spatial = "iso3c", temporal = "year")
+    magclass::getSets(x) <- magclass::getSets(gdp)
     return(x)
   }
 
