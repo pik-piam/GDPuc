@@ -5,9 +5,10 @@
 #' @param gdp A magclass object with gdp or gdppc data
 #' @return A tibble
 mag2tibb <- function(gdp) {
-  gdp <- tibble::as_tibble(magclass::as.data.frame(gdp))
-  colnames(gdp) <- tolower(colnames(gdp))
-  colnames(gdp)[colnames(gdp) == "region"] <- "iso3c"
-  gdp$year <- as.integer(as.character(gdp$year))
-  return(gdp)
+  gdp %>%
+    magclass::as.data.frame() %>%
+    tibble::as_tibble() %>%
+    dplyr::select(-.data$Cell) %>%
+    dplyr::rename("iso3c" = "Region", "year" = "Year", "value" = "Value") %>%
+    dplyr::mutate(year = as.integer(as.character(.data$year)))
 }
