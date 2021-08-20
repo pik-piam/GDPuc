@@ -1,10 +1,10 @@
-#' @title mag2tibb
+#' @title mag_2_tibb
 #' @description   Converts magclass object into tibble with colnames required
 #'   for convertGDP.
 #'
 #' @param gdp A magclass object with gdp or gdppc data
 #' @return A tibble
-mag2tibb <- function(gdp) {
+mag_2_tibb <- function(gdp) {
   gdp %>%
     magclass::as.data.frame() %>%
     tibble::as_tibble() %>%

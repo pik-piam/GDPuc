@@ -8,7 +8,7 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions, r
 
   # Convert to tibble, if necessary
   if (class(gdp)[1] == "magpie") {
-    gdp <- mag2tibb(gdp)
+    gdp <- mag_2_tibb(gdp)
   }
 
   # Extract base years if they exist, and adjust string

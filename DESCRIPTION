@@ -1,6 +1,6 @@
 Package: GDPuc
 Title: Easily Convert GDP Data
-Version: 0.1.10
+Version: 0.2.1
 Authors@R: 
     c(person(given = "Johannes",
              family = "Koch",
@@ -26,7 +26,8 @@ Imports:
     crayon,
     magrittr,
     rlang,
-    tibble
+    tibble,
+    lifecycle
 Suggests: 
     tidyr,
     readxl,
@@ -35,5 +36,6 @@ Suggests:
     magclass
 Config/testthat/edition: 3
 Encoding: UTF-8
-Date: 2021-06-03
+Date: 2021-08-20
 LazyData: true
+Roxygen: list(markdown = TRUE)

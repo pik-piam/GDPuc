@@ -36,7 +36,7 @@ test_that("current_LCU_2_constant_USMER_base_y", {
 test_that("current_IntPPP_2_current_USMER", {
   gdp_in <- wb_wdi %>%
     dplyr::filter(!is.na(`GDP (current US$)`)) %>%
-    # Convert the PPP current series from one bases on the linked LCU series
+    # Convert the PPP current series from one based on the linked LCU series
     # to one based on the standard LCU series
     dplyr::mutate(value = `GDP, PPP (current international $)` *
                     `GDP deflator (base year varies by country)` /
@@ -72,7 +72,7 @@ test_that("current_IntPPP_2_constant_LCU_base_y", {
     gdp_in <- wb_wdi %>%
       dplyr::filter(iso3c %in% my_countries,
                     !is.na(`GDP (constant LCU)`)) %>%
-      # Convert the PPP current series from one bases on the linked LCU series
+      # Convert the PPP current series from one based on the linked LCU series
       # to one based on the standard LCU series
       dplyr::mutate(value = `GDP, PPP (current international $)` *
                       `GDP deflator (base year varies by country)` /
@@ -96,7 +96,7 @@ test_that("current_IntPPP_2_constant_LCU_base_y", {
 test_that("current_IntPPP_2_constant_IntPPP", {
   gdp_in <- wb_wdi %>%
     dplyr::filter(!is.na(`GDP, PPP (constant 2017 international $)`)) %>%
-    # Convert the PPP current series from one bases on the linked LCU series
+    # Convert the PPP current series from one based on the linked LCU series
     # to one based on the standard LCU series
     dplyr::mutate(value = `GDP, PPP (current international $)` *
                     `GDP deflator (base year varies by country)` /
@@ -117,7 +117,7 @@ test_that("current_IntPPP_2_constant_IntPPP", {
 test_that("current_IntPPP_2_constant_USMER", {
   gdp_in <- wb_wdi %>%
     dplyr::filter(!is.na(`GDP (constant 2010 US$)`))  %>%
-    # Convert the PPP current series from one bases on the linked LCU series
+    # Convert the PPP current series from one based on the linked LCU series
     # to one based on the standard LCU series
     dplyr::mutate(value = `GDP, PPP (current international $)` *
                     `GDP deflator (base year varies by country)` /
@@ -367,6 +367,20 @@ test_that("constant_IntPPP_base_x_2_current_USMER", {
   expect_equal(gdp_conv, gdp_out)
 })
 
+test_that("constant_IntPPP_base_x_2_current_IntPPP", {
+  gdp_in <- wb_wdi %>%
+    dplyr::filter(!is.na(`GDP, PPP (current international $)`)) %>%
+    dplyr::select("iso3c", "year", "value" = `GDP, PPP (constant 2017 international $)`)
+
+  gdp_conv <- constant_IntPPP_base_x_2_current_IntPPP(gdp_in, 2017, wb_wdi_linked) %>%
+    dplyr::filter(!is.na(value))
+
+  gdp_out <- wb_wdi %>%
+    dplyr::right_join(gdp_conv, by = c("iso3c", "year")) %>%
+    dplyr::select("iso3c", "year", "value" = `GDP, PPP (current international $)`)
+
+  expect_equal(gdp_conv, gdp_out)
+})
 
 test_that("constant_IntPPP_base_x_2_constant_LCU_base_y", {
   country_base_years <- wb_wdi %>%
@@ -450,6 +464,22 @@ test_that("constant_USMER_base_x_2_current_IntPPP", {
     dplyr::mutate(value = `GDP, PPP (current international $)` *
                     `GDP deflator (base year varies by country)` /
                     `GDP deflator: linked series (base year varies by country)`) %>%
+    dplyr::select("iso3c", "year", "value")
+
+  expect_equal(gdp_conv, gdp_out)
+})
+
+test_that("constant_USMER_base_x_2_current_USMER", {
+  gdp_in <- wb_wdi %>%
+    dplyr::filter(!is.na(`GDP (current US$)`)) %>%
+    dplyr::select("iso3c", "year", "value" = `GDP (constant 2010 US$)`)
+
+  gdp_conv <- constant_USMER_base_x_2_current_USMER(gdp_in, 2010, wb_wdi) %>%
+    dplyr::filter(!is.na(value))
+
+  gdp_out <- wb_wdi %>%
+    dplyr::right_join(gdp_conv, by = c("iso3c", "year")) %>%
+    dplyr::mutate(value = `GDP (current US$)`) %>%
     dplyr::select("iso3c", "year", "value")
 
   expect_equal(gdp_conv, gdp_out)
