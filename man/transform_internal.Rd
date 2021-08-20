@@ -10,13 +10,13 @@ transform_internal(x, gdp, with_regions)
 \item{x}{A tibble, the result of the internal conversion}
 
 \item{gdp}{A tibble, data frame or magpie object, the latter of which
- requires the \href{https://github.com/pik-piam/magclass}{magclass}
- package to be installed. The data-frame needs to have at least 3 columns:
- \itemize{
-   \item a character column with iso3c
-   (\href{https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3}{wikipedia}) country codes,
-   \item a numeric column with years,
-   \item a numeric column named "value" with GDP values.
+requires the \href{https://github.com/pik-piam/magclass}{magclass}
+package to be installed. The data-frame needs to have at least 3 columns:
+\itemize{
+\item a character column with iso3c
+(\href{https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3}{wikipedia}) country codes,
+\item a numeric column with years,
+\item a numeric column named "value" with GDP values.
 }}
 
 \item{with_regions}{NULL or a data-frame. The data-frame should be "country to region

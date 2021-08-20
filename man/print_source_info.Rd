@@ -9,12 +9,13 @@ print_source_info(source)
 \arguments{
 \item{source}{The name of one of the internal sources:
 \enumerate{
-  \item "wb_wdi"
-  \item "imf_weo"
-  \item "wb_wdi_linked"
+\item "wb_wdi"
+\item "wb_wdi_linked"
 }}
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
 Print detailed information on sources to the screen. Information includes the
 name, origin, date, html-link and an associated note. Calling the function
 without any argument will print information on all available sources.

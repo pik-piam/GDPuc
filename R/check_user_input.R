@@ -2,7 +2,7 @@
 #'
 #' check_user_input performs some checks on the function arguments.
 #'
-#' @param source Quosure of the source argument. See \code{\link[rlang:quosure]{rlang:quosure}}.
+#' @param source Quosure of the source argument. See [`rlang:quosure()`][rlang::quosure].
 #' @inheritParams convertGDP
 #'
 #' @return TRUE or an Error

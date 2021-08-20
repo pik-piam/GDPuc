@@ -75,4 +75,7 @@ wb_wdi_linked <- wb_wdi %>%
                 `PPP conversion factor, GDP (LCU per international $)`,
                 `MER (LCU per US$)`)
 
-usethis::use_data(imf_weo, wb_wdi, wb_wdi_linked, internal = TRUE, overwrite = TRUE)
+#usethis::use_data(imf_weo, wb_wdi, wb_wdi_linked, internal = TRUE, overwrite = TRUE)
+
+# For now, IMF is removed due to copyright issues
+usethis::use_data(wb_wdi, wb_wdi_linked, internal = TRUE, overwrite = TRUE)

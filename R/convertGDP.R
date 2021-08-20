@@ -1,14 +1,18 @@
 #' Convert GDP data
 #'
+#' @description
+#' `r lifecycle::badge("stable")`
+#'
 #' convertGDP() converts GDP time series data from one unit to another, using GDP
 #' deflators, market exchange rates (MERs) and purchasing power parity
 #' conversion factors (PPPs).
 #'
+#' @details
 #' When providing a custom source to the function, a certain format is required.
 #' The source object must be a data frame or tibble with at least the following columns:
 #' \itemize{
 #'    \item a character column named "iso3c" with iso3c
-#'     (\href{https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3}{wikipedia}) country codes,
+#'     ([wikipedia](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3)) country codes,
 #'    \item a numeric column named "year" with years,
 #'    \item a numeric column named "GDP deflator" with values of the GDP deflator divided
 #'    by 100 (so that in the base year the GDP deflator is equal to 1, not 100).
@@ -19,11 +23,11 @@
 #'  }
 #'
 #' @param gdp A tibble, data frame or magpie object, the latter of which
-#'   requires the \href{https://github.com/pik-piam/magclass}{magclass}
+#'   requires the [magclass](https://github.com/pik-piam/magclass)
 #'   package to be installed. The data-frame needs to have at least 3 columns:
 #'   \itemize{
 #'     \item a character column with iso3c
-#'     (\href{https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3}{wikipedia}) country codes,
+#'     ([wikipedia](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3)) country codes,
 #'     \item a numeric column with years,
 #'     \item a numeric column named "value" with GDP values.
 #'  }
@@ -50,14 +54,15 @@
 #' @param source A data frame to use for conversion factors. Can be a custom data-frame
 #'   that exists in the calling environment, or one of the package internal ones. The
 #'   name of the data-frame may also be passed as a string, e.g. "my_source".
-#'   Use \code{\link{print_source_info}}() to learn about the available sources.
+#'   Use [print_source_info()]() to learn about the available sources.
 #' @param with_regions NULL or a data-frame. The data-frame should be "country to region
 #'   mapping": one column named "iso3c" with iso3c country codes, and one column named
 #'   "region" with region codes to which the countries belong. Any regions in the gdp
 #'   object will then be disaggregated according to the region mapping and weighed by the
 #'   GDP share of countries in that region in the year of the unit, converted on a country
 #'   level, and re-aggregated before being returned.
-#' @param replace_NAs NULL or 1 or "regional_average". Should countries for which
+#' @param replace_NAs `r lifecycle::badge("maturing")`
+#'   NULL or 1 or "regional_average". Should countries for which
 #'   conversion factors are missing, have their NA-conversion factors replaced with 1 or
 #'   with a regional average? The default is no. If 1, then the conversion factors will be
 #'   set to 1, and essentially, no conversion will take place. If "regional_average" then,
@@ -66,7 +71,7 @@
 #' @param verbose TRUE or FALSE. A flag to turn verbosity on or off. Overrules
 #'   the GDPuc.verbose option, if it is set.
 #' @return The gdp argument, with the values in the "value" column, converted to unit_out.
-#' @seealso The \href{https://github.com/vincentarelbundock/countrycode}{countrycode}
+#' @seealso The [countrycode](https://github.com/vincentarelbundock/countrycode)
 #'   package to convert country codes.
 #' @importFrom magrittr %>%
 #' @export

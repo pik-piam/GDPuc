@@ -8,13 +8,13 @@ constant_IntPPP_base_x_2_current_USMER(gdp, base_x, source)
 }
 \arguments{
 \item{gdp}{A tibble, data frame or magpie object, the latter of which
- requires the \href{https://github.com/pik-piam/magclass}{magclass}
- package to be installed. The data-frame needs to have at least 3 columns:
- \itemize{
-   \item a character column with iso3c
-   (\href{https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3}{wikipedia}) country codes,
-   \item a numeric column with years,
-   \item a numeric column named "value" with GDP values.
+requires the \href{https://github.com/pik-piam/magclass}{magclass}
+package to be installed. The data-frame needs to have at least 3 columns:
+\itemize{
+\item a character column with iso3c
+(\href{https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3}{wikipedia}) country codes,
+\item a numeric column with years,
+\item a numeric column named "value" with GDP values.
 }}
 
 \item{base_x}{A double, base year of incoming constant gdp series}
@@ -22,7 +22,7 @@ constant_IntPPP_base_x_2_current_USMER(gdp, base_x, source)
 \item{source}{A data frame to use for conversion factors. Can be a custom data-frame
 that exists in the calling environment, or one of the package internal ones. The
 name of the data-frame may also be passed as a string, e.g. "my_source".
-Use \code{\link{print_source_info}}() to learn about the available sources.}
+Use \url{print_source_info()} to learn about the available sources.}
 }
 \description{
 Convert from constant Int$PPP base year x to current US$MER

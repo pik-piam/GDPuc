@@ -156,6 +156,15 @@ constant_IntPPP_base_x_2_current_USMER <- function(gdp, base_x, source) {
     current_LCU_2_current_USMER(source)
 }
 
+#' Convert from constant Int$PPP base year x to current Int$PPP
+#' @inheritParams constant_LCU_base_x_2_constant_LCU_base_y
+constant_IntPPP_base_x_2_current_IntPPP <- function(gdp, base_x, source) {
+  gdp %>%
+    constant_IntPPP_2_constant_LCU(base = base_x, source) %>%
+    constant_LCU_base_x_2_current_LCU(base_x, source) %>%
+    current_LCU_2_current_IntPPP(source)
+}
+
 #' Convert from constant Int$PPP in one base year to constant LCU of another
 #' @inheritParams constant_LCU_base_x_2_constant_LCU_base_y
 constant_IntPPP_base_x_2_constant_LCU_base_y <- function(gdp, base_x, base_y, source) {
@@ -202,6 +211,15 @@ constant_USMER_base_x_2_current_IntPPP <- function(gdp, base_x, source) {
     constant_USMER_2_constant_LCU(base = base_x, source) %>%
     constant_LCU_base_x_2_current_LCU(base_x, source) %>%
     current_LCU_2_current_IntPPP(source)
+}
+
+#' Convert from constant US$MER base year x to current US$MER
+#' @inheritParams constant_LCU_base_x_2_constant_LCU_base_y
+constant_USMER_base_x_2_current_USMER <- function(gdp, base_x, source) {
+  gdp %>%
+    constant_USMER_2_constant_LCU(base = base_x, source) %>%
+    constant_LCU_base_x_2_current_LCU(base_x, source) %>%
+    current_LCU_2_current_USMER(source)
 }
 
 #' Convert constant US$MER series from one base year to another
