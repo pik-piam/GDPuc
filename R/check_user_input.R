@@ -32,6 +32,9 @@ check_gdp <- function(gdp) {
     if (! "value" %in% colnames(gdp)) {
       abort("Invalid 'gdp' argument. `gdp` does not have the required 'value' column.")
     }
+    if (!is.numeric(gdp$value)) {
+      abort("Invalid 'gdp' argument. The 'value' column is not numeric.")
+    }
     if (length(gdp) < 3) {
       abort("Invalid 'gdp' argument. `gdp` must have at least 3 columns.")
     }
