@@ -3,9 +3,7 @@ test_that("multiplication works", {
   expect_message(
     expect_message(
       expect_message(
-        expect_message(
-          print_source_info()
-        )
+         print_source_info()
       )
     )
   )
