@@ -69,7 +69,7 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions, r
   this_e <- environment()
 
   # Use different source if required
-  if (!is.null(replace_NAs)) {
+  if (!is.null(replace_NAs) && replace_NAs != 0) {
     b <- if (exists("base_y", envir = this_e, inherits = FALSE)) base_y else NULL
     source <- adapt_source(gdp, base_y = b, source, with_regions, replace_NAs)
     source_name <- paste0(source_name, "_adapted")

@@ -135,8 +135,8 @@ check_with_regions <- function(unit_in, unit_out, source, with_regions) {
 # Check input parameter 'replace_NAs'
 check_replace_NAs <- function(with_regions, replace_NAs) {
   if (!is.null(replace_NAs)) {
-    if (!replace_NAs %in% c(1, "regional_average")) {
-      abort("Invalid 'replace_NAs' argument. Has to be either NULL, 1, or regional_average.")
+    if (!replace_NAs %in% c(0, 1, "regional_average")) {
+      abort("Invalid 'replace_NAs' argument. Has to be either NULL, 0, 1, or regional_average.")
     }
     if (replace_NAs == "regional_average" && is.null(with_regions)) {
       abort("Using 'regional_average' requires a region mapping. The 'with_regions' argument \\
