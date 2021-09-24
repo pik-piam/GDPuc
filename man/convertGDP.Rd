@@ -36,7 +36,7 @@ package to be installed. The data-frame needs to have at least 3 columns:
 }
 where YYYY should be replaced with a year e.g. "2010" or "2017".}
 
-\item{unit_out}{A string with the incoming GDP unit, one of:
+\item{unit_out}{A string with the outgoing GDP unit, one of:
 \itemize{
 \item "current LCU"
 \item "current Int$PPP"
@@ -60,12 +60,13 @@ GDP share of countries in that region in the year of the unit, converted on a co
 level, and re-aggregated before being returned.}
 
 \item{replace_NAs}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#maturing}{\figure{lifecycle-maturing.svg}{options: alt='[Maturing]'}}}{\strong{[Maturing]}}
-NULL or 1 or "regional_average". Should countries for which
-conversion factors are missing, have their NA-conversion factors replaced with 1 or
-with a regional average? The default is no. If 1, then the conversion factors will be
-set to 1, and essentially, no conversion will take place. If "regional_average" then,
-the regional average of the region to which the country belongs to will be used. This
-requires a region-mapping to be passed to the function, see the with_regions argument.}
+NULL, 0, 1 or "regional_average". Should countries for which conversion factors are
+missing, have their NA-conversion factors replaced with 1 or with a regional average?
+The default is no. If 0, then resulting NAs are simply replaced with 0. If 1, then the
+missing conversion factors will be set to 1, and essentially, no conversion will take
+place. If "regional_average" then, the regional average of the region to which the country
+belongs to will be used. This requires a region-mapping to be passed to the function,
+see the with_regions argument.}
 
 \item{verbose}{TRUE or FALSE. A flag to turn verbosity on or off. Overrules
 the GDPuc.verbose option, if it is set.}

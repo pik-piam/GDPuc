@@ -183,15 +183,20 @@ test_that("convertGDP replace missing conversion factors", {
   gdp_conv2 <- convertGDP(gdp,
                           unit_in = "constant 2005 Int$PPP",
                           unit_out = "constant 2005 US$MER",
-                          replace_NAs = 1)
+                          replace_NAs = 0)
 
   gdp_conv3 <- convertGDP(gdp,
+                          unit_in = "constant 2005 Int$PPP",
+                          unit_out = "constant 2005 US$MER",
+                          replace_NAs = 1)
+
+  gdp_conv4 <- convertGDP(gdp,
                           unit_in = "constant 2005 Int$PPP",
                           unit_out = "constant 2005 US$MER",
                           with_regions = with_regions,
                           replace_NAs = "regional_average")
 
-  gdp_conv4 <- convertGDP(gdp2,
+  gdp_conv5 <- convertGDP(gdp2,
                           unit_in = "constant 2005 Int$PPP",
                           unit_out = "constant 2005 US$MER",
                           with_regions = with_regions,
@@ -200,8 +205,10 @@ test_that("convertGDP replace missing conversion factors", {
   expect_true(any(is.na(gdp_conv$value)))
   expect_true(!any(is.na(gdp_conv2$value)))
   expect_true(!any(is.na(gdp_conv3$value)))
+  expect_true(!any(is.na(gdp_conv4$value)))
 
   expect_equal(gdp$iso3c, gdp_conv2$iso3c)
   expect_equal(gdp$iso3c, gdp_conv3$iso3c)
-  expect_equal(gdp2$iso3c, gdp_conv4$iso3c)
+  expect_equal(gdp$iso3c, gdp_conv4$iso3c)
+  expect_equal(gdp2$iso3c, gdp_conv5$iso3c)
 })

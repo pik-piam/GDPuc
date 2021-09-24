@@ -1,6 +1,6 @@
 Package: GDPuc
 Title: Easily Convert GDP Data
-Version: 0.2.3
+Version: 0.3.0
 Authors@R: 
     c(person(given = "Johannes",
              family = "Koch",
@@ -14,7 +14,7 @@ Description: A function to convert GDP time series from one unit to another.
 License: GPL (>= 3)
 URL: https://github.com/johanneskoch94/GDPuc#readme
 BugReports: https://github.com/johanneskoch94/GDPuc/issues
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Depends: 
     R (>= 2.10)
 Imports: 
@@ -36,7 +36,6 @@ Suggests:
     magclass
 Config/testthat/edition: 3
 Encoding: UTF-8
-Date: 2021-09-02
+Date: 2021-09-24
 LazyData: true
 Roxygen: list(markdown = TRUE)
-ValidationKey: 434056
