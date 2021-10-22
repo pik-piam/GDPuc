@@ -1,6 +1,10 @@
+* Re-submitting, to check if the error on win persists. Can't find anything wrong.
+
 ## Test environments
-*
-*
+* os: windows-latest, r: 'release'
+* os: macOS-latest, r: 'release'
+* os: ubuntu-20.04, r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"
+* os: ubuntu-20.04, r: 'devel', rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"
 
 ## R CMD check results
 

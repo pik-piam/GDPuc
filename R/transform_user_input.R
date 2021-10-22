@@ -1,8 +1,4 @@
-#' Transform user input for package internal use
-#'
-#' @inheritParams check_user_input
-#'
-#' @return List
+# Transform user input for package internal use
 transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions, replace_NAs) {
   . <- NULL
 
@@ -98,12 +94,7 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions, r
 
 
 
-#' Transform user input for package internal use
-#'
-#' @param x A tibble, the result of the internal conversion
-#' @inheritParams convertGDP
-#'
-#' @return x, with the same type and names of gdp
+# Transform user input for package internal use
 transform_internal <- function(x, gdp, with_regions) {
 
   if (!is.null(with_regions) && "gdpuc_region" %in% colnames(x)) {

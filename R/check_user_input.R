@@ -1,11 +1,7 @@
-#' Make sure that user input is valid
-#'
-#' check_user_input performs some checks on the function arguments.
-#'
-#' @param source Quosure of the source argument. See [`rlang:quosure()`][rlang::quosure].
-#' @inheritParams convertGDP
-#'
-#' @return TRUE or an Error
+# Make sure that user input is valid
+#
+# check_user_input performs some checks on the function arguments.
+# @return TRUE or an Error
 check_user_input <- function(gdp, unit_in, unit_out, source, with_regions, replace_NAs, verbose) {
 
   # Check the gdp argument

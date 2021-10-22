@@ -1,3 +1,3 @@
-# GDPuc 0.1.4
+# GDPuc 0.5.0
 
 First public release.
