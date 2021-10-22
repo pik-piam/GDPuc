@@ -18,14 +18,14 @@ print_source_info <- function(source) {
   if (missing(source) || source == "wb_wdi") {
     cli_source_info(name = "wb_wdi",
                     origin = "The World Bank's World Development Indicator Database",
-                    date = "Downloaded on the 6 of May 2021",
+                    date = "Downloaded on the 22 of Oktober 2021",
                     html = "https://databank.worldbank.org/source/world-development-indicators",
                     note = "Uses the standard deflator.")
   }
   if (missing(source) || source == "wb_wdi_linked") {
     cli_source_info(name = "wb_wdi_linked",
                     origin = "The World Bank's World Development Indicator Database",
-                    date = "Downloaded on the 6 of May 2021",
+                    date = "Downloaded on the 22 of Oktober 2021",
                     html = "https://databank.worldbank.org/source/world-development-indicators",
                     note = "Uses the linked deflator.")
   }
