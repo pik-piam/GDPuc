@@ -75,8 +75,7 @@ check_source <- function(source) {
   source_name <- as.character(q_expr)
   internal_sources <- c(
     "wb_wdi",
-    "wb_wdi_linked",
-    "imf_weo"
+    "wb_wdi_linked"
   )
   if (!source_name %in% internal_sources && !exists(source_name, q_env)) {
     abort("Invalid 'source' argument. Has to be either one of the internal sources, \\

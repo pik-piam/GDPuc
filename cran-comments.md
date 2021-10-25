@@ -1,4 +1,4 @@
-* Re-submitting, to check if the error on win persists. Can't find anything wrong.
+* Re-submitting, after having fixed invalid URL and URIs.
 
 ## Test environments
 * os: windows-latest, r: 'release'
