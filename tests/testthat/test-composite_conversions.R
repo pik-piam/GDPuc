@@ -162,6 +162,7 @@ test_that("current_USMER_2_current_IntPPP", {
 
 test_that("current_USMER_2_constant_USMER", {
   gdp_in <- wb_wdi %>%
+    dplyr::filter(!is.na(`GDP (constant 2010 US$)`)) %>%
     dplyr::select("iso3c", "year", "value" = `GDP (current US$)`)
 
   gdp_conv <- current_USMER_2_constant_USMER_base_y(gdp_in, 2010, wb_wdi) %>%

@@ -52,9 +52,9 @@
 #'   }
 #'   where YYYY should be replaced with a year e.g. "2010" or "2017".
 #' @param source A data frame to use for conversion factors. Can be a custom data-frame
-#'   that exists in the calling environment, or one of the package internal ones. The
-#'   name of the data-frame may also be passed as a string, e.g. "my_source".
-#'   Use [print_source_info()]() to learn about the available sources.
+#'   that exists in the calling environment, or one of the package internal ones.
+#'   Use [print_source_info()](https://johanneskoch94.github.io/GDPuc/reference/print_source_info.html)
+#'   to learn about the available sources.
 #' @param with_regions NULL or a data-frame. The data-frame should be "country to region
 #'   mapping": one column named "iso3c" with iso3c country codes, and one column named
 #'   "region" with region codes to which the countries belong. Any regions in the gdp

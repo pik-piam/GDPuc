@@ -1,3 +1,4 @@
+# 
 adapt_source <- function(gdp, base_y, source, with_regions, replace_NAs) {
   . <- NULL
   # Create adapted source object

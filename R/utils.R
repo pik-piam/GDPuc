@@ -17,3 +17,12 @@ smart_select_year <- function(gdp) {
     )) %>%
     colnames()
 }
+
+mag_2_tibb <- function(gdp) {
+  gdp %>%
+    magclass::as.data.frame() %>%
+    tibble::as_tibble() %>%
+    dplyr::select(-.data$Cell) %>%
+    dplyr::rename("iso3c" = "Region", "year" = "Year", "value" = "Value") %>%
+    dplyr::mutate(year = as.integer(as.character(.data$year)))
+}

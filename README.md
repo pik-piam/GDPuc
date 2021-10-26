@@ -5,8 +5,12 @@
 
 <!-- badges: start -->
 
+[![CRAN
+status](https://www.r-pkg.org/badges/version/GDPuc)](https://CRAN.R-project.org/package=GDPuc)
 [![R-CMD-check](https://github.com/johanneskoch94/GDPuc/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/johanneskoch94/GDPuc/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://codecov.io/gh/johanneskoch94/GDPuc/branch/main/graph/badge.svg?token=3GHXFQXARX)](https://codecov.io/gh/johanneskoch94/GDPuc)
+[![codecov](https://codecov.io/gh/johanneskoch94/GDPuc/branch/main/graph/badge.svg?token=3GHXFQXARX)](https://app.codecov.io/gh/johanneskoch94/GDPuc)
+![Lifecycle:
+stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)
 
 <!-- badges: end -->
 
@@ -26,16 +30,11 @@ Here “YYYY” is a placeholder for a year, e.g. “2010” or “2015”, and
 
 ## Installation
 
-There currently only exists the development version on github.
-
-Open a R session on your machine and use the `remotes` package to
-install GDPuc.
-
 ``` r
-# Install remotes if necessary:
-install.packages("remotes")
+# Install from CRAN
+install.packages("GDPuc")
 
-# Install GDPuc from github:
+# Or the development version from GitHub
 remotes::install_github("johanneskoch94/GDPuc")
 ```
 

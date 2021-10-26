@@ -3,8 +3,7 @@
 #------------------------------------------------------------
 # Unit_in = current_LCU
 
-#' Convert from current LCU to current Int$PPP
-#' @inheritParams convertGDP
+# Convert from current LCU to current Int$PPP
 current_LCU_2_current_IntPPP <- function(gdp, source) {
   PPP <-  source %>%
     dplyr::select("iso3c", "year", "PPP conversion factor, GDP (LCU per international $)")
@@ -23,8 +22,7 @@ current_LCU_2_current_IntPPP <- function(gdp, source) {
                   .keep = "unused")
 }
 
-#' Convert from current LCU to current US$MER
-#' @inheritParams convertGDP
+# Convert from current LCU to current US$MER
 current_LCU_2_current_USMER <- function(gdp, source) {
   MER <-  source %>%
     dplyr::select("iso3c", "year", "MER (LCU per US$)")
@@ -43,8 +41,7 @@ current_LCU_2_current_USMER <- function(gdp, source) {
                   .keep = "unused")
 }
 
-#' Convert from current LCU to constant LCU base y
-#' @inheritParams constant_LCU_base_x_2_constant_LCU_base_y
+# Convert from current LCU to constant LCU base y
 current_LCU_2_constant_LCU_base_y <- function(gdp, base_y, source) {
 
   deflator <-  "GDP deflator"
@@ -79,8 +76,7 @@ current_LCU_2_constant_LCU_base_y <- function(gdp, base_y, source) {
 #------------------------------------------------------------
 # Unit_in = current_IntPPP
 
-#' Convert from current Int$PPP to current LCU
-#' @inheritParams convertGDP
+# Convert from current Int$PPP to current LCU
 current_IntPPP_2_current_LCU <- function(gdp, source) {
   PPP <-  source %>%
     dplyr::select("iso3c", "year", "PPP conversion factor, GDP (LCU per international $)")
@@ -104,8 +100,7 @@ current_IntPPP_2_current_LCU <- function(gdp, source) {
 #------------------------------------------------------------
 # Unit_in = current_USMER
 
-#' Convert from current US$MER to current LCU
-#' @inheritParams convertGDP
+# Convert from current US$MER to current LCU
 current_USMER_2_current_LCU <- function(gdp, source) {
   MER <-  source %>%
     dplyr::select("iso3c", "year", "MER (LCU per US$)")
@@ -129,8 +124,7 @@ current_USMER_2_current_LCU <- function(gdp, source) {
 #------------------------------------------------------------
 # Unit_in = constant_LCU
 
-#' Convert from constant LCU base x to current LCU
-#' @inheritParams constant_LCU_base_x_2_constant_LCU_base_y
+# Convert from constant LCU base x to current LCU
 constant_LCU_base_x_2_current_LCU <- function(gdp, base_x, source) {
 
   deflator <-  "GDP deflator"
@@ -158,11 +152,7 @@ constant_LCU_base_x_2_current_LCU <- function(gdp, base_x, source) {
     dplyr::mutate(value = .data$value * !!rlang::sym(deflator), .keep = "unused")
 }
 
-#' Convert constant LCU series from one base year to another
-#' @param base_x A double, base year of incoming constant gdp series
-#' @param base_y A double, base year of outgoing constant gdp series
-#' @inheritParams convertGDP
-#' @importFrom rlang !! := .data
+# Convert constant LCU series from one base year to another
 constant_LCU_base_x_2_constant_LCU_base_y <- function(gdp,
                                                       base_x,
                                                       base_y,
@@ -200,9 +190,7 @@ constant_LCU_base_x_2_constant_LCU_base_y <- function(gdp,
     dplyr::mutate(value = .data$value * .data$def, .keep = "unused")
 }
 
-#' Convert from constant LCU to constant Int$PPP
-#' @param base A double, the base year of incoming and outgoing constant GDP
-#' @inheritParams convertGDP
+# Convert from constant LCU to constant Int$PPP
 constant_LCU_2_constant_IntPPP <- function(gdp, base, source) {
   PPP_base <-  source %>%
     dplyr::filter(.data$year == base) %>%
@@ -220,8 +208,7 @@ constant_LCU_2_constant_IntPPP <- function(gdp, base, source) {
                   .keep = "unused")
 }
 
-#' Convert from constant LCU to constant US$MER
-#' @inheritParams constant_LCU_2_constant_IntPPP
+# Convert from constant LCU to constant US$MER
 constant_LCU_2_constant_USMER <- function(gdp, base, source) {
   MER_base <-  source %>%
     dplyr::filter(.data$year == base) %>%
@@ -244,8 +231,7 @@ constant_LCU_2_constant_USMER <- function(gdp, base, source) {
 #------------------------------------------------------------
 # Unit_in = constant_IntPPP
 
-#' Convert from constant Int$PPP to constant LCU
-#' @inheritParams constant_LCU_2_constant_IntPPP
+# Convert from constant Int$PPP to constant LCU
 constant_IntPPP_2_constant_LCU <- function(gdp, base, source) {
   PPP_base <- source %>%
     dplyr::filter(.data$year == base) %>%
@@ -268,8 +254,7 @@ constant_IntPPP_2_constant_LCU <- function(gdp, base, source) {
 #------------------------------------------------------------
 # Unit_in = constant_USMER
 
-#' Convert from constant US$MER to constant LCU
-#' @inheritParams constant_LCU_2_constant_IntPPP
+# Convert from constant US$MER to constant LCU
 constant_USMER_2_constant_LCU <- function(gdp, base, source) {
   MER_base <-  source %>%
     dplyr::filter(.data$year == base) %>%
