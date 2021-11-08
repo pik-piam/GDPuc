@@ -72,7 +72,14 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions, r
   }
 
   # Check availability of required conversion factors in source
-  if (length(intersect(unique(gdp$year), unique(source$year))) == 0) {
+  # The helper is used here to check in the case of constant-to-constant conversion
+  helper <- if(exists("base_y", envir = this_e, inherits = FALSE) &&
+               exists("base_x", envir = this_e, inherits = FALSE)) {
+    length(intersect(c(base_x, base_y), unique(source$year))) == 0
+  } else {
+    length(intersect(unique(gdp$year), unique(source$year))) == 0
+  }
+  if (helper) {
     abort("No information in source {crayon::bold(source_name)} for years in 'gdp'.")
   }
   if (length(intersect(unique(gdp$iso3c), unique(source$iso3c))) == 0) {
