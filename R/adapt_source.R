@@ -1,4 +1,4 @@
-# 
+#
 adapt_source <- function(gdp, base_y, source, with_regions, replace_NAs) {
   . <- NULL
   # Create adapted source object
@@ -47,9 +47,7 @@ adapt_source <- function(gdp, base_y, source, with_regions, replace_NAs) {
         .data$`GDP deflator`,
         .data$`MER (LCU per US$)`,
         .data$`PPP conversion factor, GDP (LCU per international $)`),
-        ~ sum(.x * eval(rlang::sym(weight_var)) /
-                sum(eval(rlang::sym(weight_var)), na.rm = TRUE),
-              na.rm = TRUE),
+        ~ sum(.x * eval(rlang::sym(weight_var)) /sum(eval(rlang::sym(weight_var)), na.rm = TRUE), na.rm = TRUE),
         .names = "ra_{.col}")) %>%
       dplyr::ungroup() %>%
       dplyr::select(.data$iso3c, .data$year, dplyr::starts_with("ra_"))

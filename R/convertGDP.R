@@ -51,8 +51,8 @@
 #'     \item "constant YYYY US$MER"
 #'   }
 #'   where YYYY should be replaced with a year e.g. "2010" or "2017".
-#' @param source A data frame to use for conversion factors. Can be a custom data-frame
-#'   that exists in the calling environment, or one of the package internal ones.
+#' @param source A data frame, or the name of a data frame, to use for conversion factors.
+#'   Can be a custom data-frame that exists in the calling environment, or one of the package internal ones.
 #'   Use [print_source_info()](https://johanneskoch94.github.io/GDPuc/reference/print_source_info.html)
 #'   to learn about the available sources.
 #' @param with_regions NULL or a data-frame. The data-frame should be "country to region
@@ -71,7 +71,12 @@
 #'   see the with_regions argument.
 #' @param verbose TRUE or FALSE. A flag to turn verbosity on or off. Overrules
 #'   the GDPuc.verbose option, if it is set.
-#' @return The gdp argument, with the values in the "value" column, converted to unit_out.
+#' @param return_cfs TRUE or FALSE. Set to TRUE to additionally return a tibble with the conversion factors
+#'   used. In that case a list is returned with the converted GDP under "result", and the conversion factors
+#'   used under "cfs".
+#' @return The gdp argument, with the values in the "value" column, converted to unit_out. If the argument
+#'   return_cfs is TRUE, then a list is returned with the converted GDP under "result", and the conversion
+#'   factors used under "cfs".
 #' @seealso The [countrycode](https://github.com/vincentarelbundock/countrycode)
 #'   package to convert country codes.
 #' @importFrom magrittr %>%
@@ -82,14 +87,19 @@ convertGDP <- function(gdp,
                        source = "wb_wdi",
                        with_regions = NULL,
                        replace_NAs = NULL,
-                       verbose = FALSE) {
-  # Avoid NOTE in check
+                       verbose = FALSE,
+                       return_cfs = FALSE) {
+  # Save all function arguments as list
+  arg <- as.list(environment())
+
+  # Avoid NOTE in package check for CRAN
   . <- NULL
+
   # Capture the source argument as quosure
   source <- rlang::enquo(source)
 
   # Check function arguments
-  check_user_input(gdp, unit_in, unit_out, source, with_regions, replace_NAs, verbose)
+  check_user_input(gdp, unit_in, unit_out, source, with_regions, replace_NAs, verbose, return_cfs)
 
   # Set verbose option, if necessary
   if (verbose != getOption("GDPuc.verbose", default = FALSE)) {
@@ -136,5 +146,9 @@ convertGDP <- function(gdp,
   # Return with original type and names
   x <- transform_internal(x, gdp, with_regions)
 
-  return(x)
+  if (return_cfs) {
+    return(list("result" = x, "cfs" = do.call(get_conversion_factors, arg[1:6])))
+  } else {
+    return(x)
+  }
 }
