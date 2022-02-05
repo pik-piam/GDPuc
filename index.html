@@ -23,6 +23,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -35,18 +37,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">GDPuc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.2</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
@@ -56,7 +52,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/johanneskoch94/GDPuc/">
+  <a href="https://github.com/johanneskoch94/GDPuc/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -73,9 +69,9 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="gdpuc" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#gdpuc" class="anchor"></a>GDPuc</h1></div>
+<div class="section level1">
+<div class="page-header"><h1 id="gdpuc">GDPuc<a class="anchor" aria-label="anchor" href="#gdpuc"></a>
+</h1></div>
 <!-- badges: start -->
 
 <!-- badges: end -->
@@ -89,22 +85,22 @@
 <li>constant YYYY Int$PPP</li>
 </ul>
 <p>Here “YYYY” is a placeholder for a year, e.g. “2010” or “2015”, and “LCU” stands for Local Currency Unit.</p>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Install from CRAN</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"GDPuc"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"GDPuc"</span><span class="op">)</span>
 
 <span class="co"># Or the development version from GitHub</span>
 <span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"johanneskoch94/GDPuc"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="usage" class="section level2">
-<h2 class="hasAnchor">
-<a href="#usage" class="anchor"></a>Usage</h2>
+<div class="section level2">
+<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+</h2>
 <p>Load the package.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/johanneskoch94/GDPuc#readme">GDPuc</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/johanneskoch94/GDPuc#readme" class="external-link">GDPuc</a></span><span class="op">)</span></code></pre></div>
 <p>The main function of the package is <code>convertGDP</code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/convertGDP.html">convertGDP</a></span><span class="op">(</span>
@@ -118,10 +114,10 @@
 <li>a column with the year, (ideally named “year”)</li>
 <li>a column named “value”, with the gdp data</li>
 </ul>
-<p>A corresponding magpie object, see the <a href="https://github.com/pik-piam/magclass">magclass</a> package, is also accepted.</p>
-<div id="source" class="section level4">
-<h4 class="hasAnchor">
-<a href="#source" class="anchor"></a>source</h4>
+<p>A corresponding magpie object, see the <a href="https://github.com/pik-piam/magclass" class="external-link">magclass</a> package, is also accepted.</p>
+<div class="section level4">
+<h4 id="source">source<a class="anchor" aria-label="anchor" href="#source"></a>
+</h4>
 <p>Use the <code>source</code> argument to control the source of the underlying conversion factors (GDP deflators, MERs and PPPs). There are two source options shipped with the package, <code>wb_wdi</code> and <code>wb_wdi_linked</code> (with <code>wb_wdi</code> set as the default), but custom sources are possible. A custom source can be any tibble with columns:</p>
 <ul>
 <li>“iso3c” (character),</li>
@@ -138,9 +134,9 @@
   source <span class="op">=</span> <span class="st">"wb_wdi"</span>
 <span class="op">)</span></code></pre></div>
 </div>
-<div id="verbose" class="section level4">
-<h4 class="hasAnchor">
-<a href="#verbose" class="anchor"></a>verbose</h4>
+<div class="section level4">
+<h4 id="verbose">verbose<a class="anchor" aria-label="anchor" href="#verbose"></a>
+</h4>
 <p>Set the <code>verbose</code> argument to <code>TRUE</code> to print out the underlying conversion steps and factors. The verbosity can also be controlled via the option <code>"GDPuc.verbose"</code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/convertGDP.html">convertGDP</a></span><span class="op">(</span>
@@ -151,12 +147,12 @@
 <span class="op">)</span></code></pre></div>
 </div>
 </div>
-<div id="further-arguments" class="section level2">
-<h2 class="hasAnchor">
-<a href="#further-arguments" class="anchor"></a>Further arguments</h2>
-<div id="with_regions" class="section level4">
-<h4 class="hasAnchor">
-<a href="#with_regions" class="anchor"></a>with_regions</h4>
+<div class="section level2">
+<h2 id="further-arguments">Further arguments<a class="anchor" aria-label="anchor" href="#further-arguments"></a>
+</h2>
+<div class="section level4">
+<h4 id="with_regions">with_regions<a class="anchor" aria-label="anchor" href="#with_regions"></a>
+</h4>
 <p>Use the <code>with_regions</code> argument to convert aggregated GDP data, e.g. regional-level data. The default value is <code>NULL</code>, but if passed a data-frame with a country-to-region mapping, then custom regional codons will be recognized. The data-frame should have two columns, one named “iso3c” with iso3c country codes, and one named “region” with the corresponding region codes. The conversion of regional values is then undertaken by disaggregating the regions to a country level (using the mapping and weighed by the GDP shares of countries within that region in the base year of <code>unit_in</code>).</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/convertGDP.html">convertGDP</a></span><span class="op">(</span>
@@ -166,9 +162,9 @@
   with_regions <span class="op">=</span> <span class="va">my_mapping_data_frame</span>
 <span class="op">)</span></code></pre></div>
 </div>
-<div id="replace_nas" class="section level4">
-<h4 class="hasAnchor">
-<a href="#replace_nas" class="anchor"></a>replace_NAs</h4>
+<div class="section level4">
+<h4 id="replace_nas">replace_NAs<a class="anchor" aria-label="anchor" href="#replace_nas"></a>
+</h4>
 <p>Use the <code>replace_NAs</code> argument to replace missing conversion factors; either with 1 (so essentially no conversion) or with regional GDP-weighted averages. The default value is <code>NULL</code>, and missing conversion factors will lead to NAs. If set to <code>1</code>, then no conversion will take place, but no NAs will be created either. To use regional GDP-weighted averages, set the argument to “regional_averages”.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/convertGDP.html">convertGDP</a></span><span class="op">(</span>
@@ -187,9 +183,9 @@
 <span class="op">)</span></code></pre></div>
 </div>
 </div>
-<div id="looking-at-the-available-sources" class="section level2">
-<h2 class="hasAnchor">
-<a href="#looking-at-the-available-sources" class="anchor"></a>Looking at the available sources</h2>
+<div class="section level2">
+<h2 id="looking-at-the-available-sources">Looking at the available sources<a class="anchor" aria-label="anchor" href="#looking-at-the-available-sources"></a>
+</h2>
 <p>Use <code>print_source_info</code> to print information on a specific, or all available sources.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/print_source_info.html">print_source_info</a></span><span class="op">(</span><span class="st">"wb_wdi"</span><span class="op">)</span>
@@ -198,18 +194,18 @@
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">GDPuc</span><span class="fu">:::</span><span class="va">wb_wdi</span></code></pre></div>
 </div>
-<div id="examples" class="section level2">
-<h2 class="hasAnchor">
-<a href="#examples" class="anchor"></a>Examples</h2>
+<div class="section level2">
+<h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
+</h2>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/johanneskoch94/GDPuc#readme">GDPuc</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/johanneskoch94/GDPuc#readme" class="external-link">GDPuc</a></span><span class="op">)</span>
 
-<span class="va">gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>
+<span class="va">gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>
   iso3c <span class="op">=</span> <span class="st">"USA"</span>, 
   year <span class="op">=</span> <span class="fl">2010</span><span class="op">:</span><span class="fl">2014</span>, 
   value <span class="op">=</span> <span class="fl">100</span><span class="op">:</span><span class="fl">104</span>
 <span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">gdp</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">gdp</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 5 × 3</span>
 <span class="co">#&gt;   iso3c  year value</span>
 <span class="co">#&gt;   &lt;chr&gt; &lt;int&gt; &lt;int&gt;</span>
@@ -266,9 +262,9 @@
 <span class="co">#&gt; → Note: Uses the standard deflator.</span>
 <span class="co">#&gt; ────────────────────────────────────────────────────────────────────────────────</span></code></pre></div>
 </div>
-<div id="conversion-method" class="section level2">
-<h2 class="hasAnchor">
-<a href="#conversion-method" class="anchor"></a>Conversion method</h2>
+<div class="section level2">
+<h2 id="conversion-method">Conversion method<a class="anchor" aria-label="anchor" href="#conversion-method"></a>
+</h2>
 <p>This package makes us of country-specific GDP deflators, Market Exchange Rates (MER), and Purchasing Power Parity (PPP) conversion factors to convert GDP values. Setting the <code>verbose</code> argument to <code>TRUE</code> should make the conversion process transparent and allow you to analyze the individual steps taken. All conversion functions were successfully tested on the World Bank’s World Development Indicator (WDI) data: given any 2 WDI GDP series, <code>convertGDP</code> will reliably convert the one to the other.</p>
 <p>That being said, converting GDP series can be complex and the use of this package should not absolve one of thinking carefully on what conversion is being done and how. When using the provided <code>wd_wdi</code> source, this specifically concerns conversions using PPPs and MERs together.<br>
 That is because the PPP conversion factors provided by the World Bank are based off of linked GDP deflators, while the MERs are not. That means, that converting the World Bank’s current international dollar PPP series into LCU, will result in the “GDP: linked series (current LCU)”, while converting the current US dollar MER series into LCU, will result in the “GDP (current LCU)” series. Therefore, when linked and non-lined GDP deflators differ (which they do more often for developing countries, and in general the further into the past one looks), converting from current IntPPP to current USMER will not result in the exact same series as given in the WDI data.</p>
@@ -278,48 +274,58 @@ That is because the PPP conversion factors provided by the World Bank are based 
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=GDPuc">https://​cloud.r-project.org/​package=GDPuc</a>
-</li>
-<li>Browse source code at <br><a href="https://github.com/johanneskoch94/GDPuc/">https://​github.com/​johanneskoch94/​GDPuc/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/johanneskoch94/GDPuc/issues">https://​github.com/​johanneskoch94/​GDPuc/​issues</a>
-</li>
+<li><a href="https://cloud.r-project.org/package=GDPuc" class="external-link">View on CRAN</a></li>
+<li><a href="https://github.com/johanneskoch94/GDPuc/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/johanneskoch94/GDPuc/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
 <li><small>GPL (&gt;= 3)</small></li>
 </ul>
 </div>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing GDPuc</a></li>
+</ul>
+</div>
+
 <div class="developers">
-<h2>Developers</h2>
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Johannes Koch <br><small class="roles"> Author, maintainer </small>  </li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://CRAN.R-project.org/package=GDPuc"><img src="https://www.r-pkg.org/badges/version/GDPuc" alt="CRAN status"></a></li>
-<li><a href="https://github.com/johanneskoch94/GDPuc/actions/workflows/R-CMD-check.yaml"><img src="https://github.com/johanneskoch94/GDPuc/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://app.codecov.io/gh/johanneskoch94/GDPuc"><img src="https://codecov.io/gh/johanneskoch94/GDPuc/branch/main/graph/badge.svg?token=3GHXFQXARX" alt="codecov"></a></li>
+<li><a href="https://CRAN.R-project.org/package=GDPuc" class="external-link"><img src="https://www.r-pkg.org/badges/version/GDPuc" alt="CRAN status"></a></li>
+<li><a href="https://github.com/johanneskoch94/GDPuc/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/johanneskoch94/GDPuc/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://app.codecov.io/gh/johanneskoch94/GDPuc" class="external-link"><img src="https://codecov.io/gh/johanneskoch94/GDPuc/branch/main/graph/badge.svg?token=3GHXFQXARX" alt="codecov"></a></li>
 </ul>
 </div>
-</div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Johannes Koch.</p>
+  <p></p>
+<p>Developed by Johannes Koch.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
@@ -327,6 +333,8 @@ That is because the PPP conversion factors provided by the World Bank are based 
 
   
 
+
+  
 
   </body>
 </html>
