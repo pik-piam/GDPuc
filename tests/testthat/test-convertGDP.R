@@ -168,9 +168,12 @@ test_that("convertGDP replace missing conversion factors", {
   gdp <- tidyr::expand_grid("iso3c" = c("AIA", "FRA", "DEU", "USA", "EUR"), "year" = c(2010, 3010),
                             "SSP" = c("SSP1", "SSP2"), "value" = 100)
   gdp2 <- tidyr::expand_grid("iso3c" = c("AIA", "USA"), "year" = c(2010, 3010), "value" = 100)
-  with_regions <- tibble::tibble("iso3c" = c("FRA", "ESP", "DEU", "BEL", "AIA"), "region" = "EUR")
 
-  expect_warning(convertGDP(gdp, "constant 2010 US$MER", "constant 2011 Int$PPP"))
+  with_regions <- tibble::tibble("iso3c" = c("FRA", "ESP", "DEU", "BEL", "AIA"), "region" = "EUR") %>%
+    dplyr::bind_rows(tibble::tibble("iso3c" = "USA", "region" = "USA"))
+
+  expect_warning(object = convertGDP(gdp, "constant 2010 US$MER", "constant 2011 Int$PPP"),
+                 regexp = "NAs have been generated for countries lacking conversion factors!")
   expect_error(convertGDP(gdp, "constant 2010 US$MER", "constant 2011 Int$PPP", replace_NAs = FALSE))
   expect_error(convertGDP(gdp, "constant 2010 US$MER", "constant 2011 Int$PPP", replace_NAs = "regional_average"))
 

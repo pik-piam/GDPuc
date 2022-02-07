@@ -11,7 +11,8 @@ convertGDP(
   source = "wb_wdi",
   with_regions = NULL,
   replace_NAs = NULL,
-  verbose = FALSE
+  verbose = FALSE,
+  return_cfs = FALSE
 )
 }
 \arguments{
@@ -47,8 +48,8 @@ where YYYY should be replaced with a year e.g. "2010" or "2017".}
 }
 where YYYY should be replaced with a year e.g. "2010" or "2017".}
 
-\item{source}{A data frame to use for conversion factors. Can be a custom data-frame
-that exists in the calling environment, or one of the package internal ones.
+\item{source}{A data frame, or the name of a data frame, to use for conversion factors.
+Can be a custom data-frame that exists in the calling environment, or one of the package internal ones.
 Use \href{https://johanneskoch94.github.io/GDPuc/reference/print_source_info.html}{print_source_info()}
 to learn about the available sources.}
 
@@ -70,9 +71,15 @@ see the with_regions argument.}
 
 \item{verbose}{TRUE or FALSE. A flag to turn verbosity on or off. Overrules
 the GDPuc.verbose option, if it is set.}
+
+\item{return_cfs}{TRUE or FALSE. Set to TRUE to additionally return a tibble with the conversion factors
+used. In that case a list is returned with the converted GDP under "result", and the conversion factors
+used under "cfs".}
 }
 \value{
-The gdp argument, with the values in the "value" column, converted to unit_out.
+The gdp argument, with the values in the "value" column, converted to unit_out. If the argument
+return_cfs is TRUE, then a list is returned with the converted GDP under "result", and the conversion
+factors used under "cfs".
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

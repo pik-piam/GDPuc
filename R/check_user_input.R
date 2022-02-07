@@ -2,7 +2,7 @@
 #
 # check_user_input performs some checks on the function arguments.
 # @return TRUE or an Error
-check_user_input <- function(gdp, unit_in, unit_out, source, with_regions, replace_NAs, verbose) {
+check_user_input <- function(gdp, unit_in, unit_out, source, with_regions, replace_NAs, verbose, return_cfs) {
 
   # Check the gdp argument
   check_gdp(gdp)
@@ -16,6 +16,8 @@ check_user_input <- function(gdp, unit_in, unit_out, source, with_regions, repla
   check_replace_NAs(with_regions, replace_NAs)
   # Check the verbose argument
   check_verbose(verbose)
+  # Check the return_cfs argument
+  check_return_cfs(return_cfs)
 
   TRUE
 }
@@ -26,13 +28,13 @@ check_user_input <- function(gdp, unit_in, unit_out, source, with_regions, repla
 check_gdp <- function(gdp) {
   if (is.data.frame(gdp)) {
     if (! "value" %in% colnames(gdp)) {
-      abort("Invalid 'gdp' argument. `gdp` does not have the required 'value' column.")
+      abort("Invalid 'gdp' argument. 'gdp' does not have the required 'value' column.")
     }
     if (!is.numeric(gdp$value)) {
       abort("Invalid 'gdp' argument. The 'value' column is not numeric.")
     }
     if (length(gdp) < 3) {
-      abort("Invalid 'gdp' argument. `gdp` must have at least 3 columns.")
+      abort("Invalid 'gdp' argument. 'gdp' must have at least 3 columns.")
     }
   } else if (class(gdp) == "magpie") {
     # Check for magclass package
@@ -41,10 +43,10 @@ check_gdp <- function(gdp) {
     }
     # Check if there is years info
     if (is.null(magclass::getYears(gdp))) {
-      abort("No year information in mag object!")
+      abort("Invalid 'gdp' argument. No year information in magpie object.")
     }
   } else {
-    abort("Invalid 'gdp' argument. `gdp` is neither a data-frame nor a 'magpie' object.")
+    abort("Invalid 'gdp' argument. 'gdp' is neither a data-frame nor a 'magpie' object.")
   }
 }
 
@@ -72,23 +74,34 @@ check_source <- function(source) {
   q <- source
   q_expr <- rlang::quo_get_expr(q)
   q_env <- rlang::quo_get_env(q)
-  source_name <- as.character(q_expr)
-  internal_sources <- c(
-    "wb_wdi",
-    "wb_wdi_linked"
-  )
-  if (!source_name %in% internal_sources && !exists(source_name, q_env)) {
-    abort("Invalid 'source' argument. Has to be either one of the internal sources, \\
-          or valid custom source. Use print_source_info() for information on \\
-          available sources.")
+
+  if (!any(is.data.frame(q_expr), is.character(q_expr))) {
+    abort("Invalid 'source' argument. 'source' is neither a data frame nor a charater.")
   }
 
+  # If the source was passed as a character, it should be referring to either custom data frame
+  # that exists in q_env, or a package internal one.
   if (is.character(q_expr)) {
+    internal_sources <- c(
+      "wb_wdi",
+      "wb_wdi_linked"
+    )
+    if (!q_expr %in% internal_sources && !exists(q_expr, q_env)) {
+      abort("Invalid 'source' argument. Has to be either one of the internal sources, \\
+          or valid custom source. Use print_source_info() for information on \\
+          available sources.")
+    }
+
+    # Pass the underlying data frame as expr to q
     q <- rlang::quo_set_expr(q, rlang::sym(q_expr))
+
+    # If q_expr is wb_wdi, and a data frame of that name does not exist it q_env, then it's refering
+    # to the package internal source.
+    if (!exists(q_expr, q_env)) {
+      q <- rlang::quo_set_env(q, rlang::current_env())
+    }
   }
-  if (!exists(source_name, q_env)) {
-    q <- rlang::quo_set_env(q, rlang::current_env())
-  }
+
   source <- rlang::eval_tidy(q)
 
   required_cols_in_source <- c(
@@ -144,5 +157,12 @@ check_replace_NAs <- function(with_regions, replace_NAs) {
 check_verbose <- function(verbose) {
   if (!is.logical(verbose)) {
     abort("Invalid 'verbose' argument. Has to be either TRUE or FALSE.")
+  }
+}
+
+# Check input parameter 'return_cfs'
+check_return_cfs <- function(return_cfs) {
+  if (!is.logical(return_cfs)) {
+    abort("Invalid 'return_cfs' argument. Has to be either TRUE or FALSE.")
   }
 }
