@@ -31,13 +31,16 @@ Imports:
     lifecycle
 Suggests: 
     covr,
+    knitr,
     magclass,
     purrr,
     readxl,
     testthat (>= 3.0.0),
     tidyr,
-    WDI
+    WDI,
+    rmarkdown
 Config/testthat/edition: 3
 Encoding: UTF-8
 Date: 2022-02-07
 Roxygen: list(markdown = TRUE)
+VignetteBuilder: knitr
