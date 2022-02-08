@@ -20,7 +20,7 @@ conversion factors (PPPs)."><!-- mathjax --><script src="https://cdnjs.cloudflar
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">GDPuc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.7.0</span>
       </span>
     </div>
 
@@ -120,7 +120,7 @@ package to be installed. The data-frame needs to have at least 3 columns:</p><ul
 <li><p>"constant YYYY US$MER"</p></li>
 </ul><p>where YYYY should be replaced with a year e.g. "2010" or "2017".</p></dd>
 <dt>source</dt>
-<dd><p>A string referring to a package internal data fram containing the conversion factors, or
+<dd><p>A string referring to a package internal data frame containing the conversion factors, or
 a data-frame that exists in the calling environment.
 Use <a href="https://johanneskoch94.github.io/GDPuc/reference/print_source_info.html">print_source_info()</a>
 to learn about the available sources.</p></dd>
@@ -138,7 +138,7 @@ For the extrapolation, the closest 5 data points are used.</p></li>
 <li><p>"regional_average": missing conversion factors in the source object are replaced with
 the regional average of the region to which the country belongs. This requires a region-mapping to
 be passed to the function, see the with_regions argument.</p></li>
-<li><p>"linear_regional_average": cmissing conversion factors in the source object will be linearly
+<li><p>"linear_regional_average": missing conversion factors in the source object will be linearly
 inter- and extrapolated, and when impossible (e.g. when no data at all is available for a country) set
 to the regional GDP-weighted averages. This also requires a region-mapping to
 be passed to the function, see the with_regions argument.</p></li>
