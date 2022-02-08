@@ -2,8 +2,12 @@ pandoc: 2.7.3
 pkgdown: 2.0.2
 pkgdown_sha: ~
 articles:
-  cutom_source: cutom_source.html
-last_built: 2022-02-07T10:12Z
+  handle_NAs: handle_NAs.html
+  magpie: magpie.html
+  source: source.html
+  verbose: verbose.html
+  with_regions: with_regions.html
+last_built: 2022-02-08T15:28Z
 urls:
   reference: https://johanneskoch94.github.io/GDPuc/reference
   article: https://johanneskoch94.github.io/GDPuc/articles

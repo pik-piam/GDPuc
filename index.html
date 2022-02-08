@@ -54,7 +54,19 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/cutom_source.html">Using a custom set of conversion factors</a>
+      <a href="articles/handle_NAs.html">Handling missing conversion factors</a>
+    </li>
+    <li>
+      <a href="articles/magpie.html">Converting magpie objects</a>
+    </li>
+    <li>
+      <a href="articles/source.html">Choosing conversion factors</a>
+    </li>
+    <li>
+      <a href="articles/verbose.html">Geting information on the conversion process</a>
+    </li>
+    <li>
+      <a href="articles/with_regions.html">Converting regional GDP data</a>
     </li>
   </ul>
 </li>
@@ -87,16 +99,8 @@
 <!-- badges: start -->
 
 <!-- badges: end -->
-<p>GDPuc (a.k.a. the GDP unit-converter) provides a simple function to convert GDP time-series data from one unit to another. All common GDP units are supported, i.e.:</p>
-<ul>
-<li>current LCU</li>
-<li>current US$MER</li>
-<li>current Int$PPP</li>
-<li>constant YYYY LCU</li>
-<li>constant YYYY US$MER</li>
-<li>constant YYYY Int$PPP</li>
-</ul>
-<p>Here “YYYY” is a placeholder for a year, e.g. “2010” or “2015”, and “LCU” stands for Local Currency Unit.</p>
+<p>GDPuc (a.k.a. the GDP unit-converter) provides a simple function to convert GDP time-series data from one unit to another.</p>
+<p><strong>To note:</strong> The default conversion parameters are from the World Bank’s World Development Indicators (WDI) database (see <a href="https://databank.worldbank.org/source/world-development-indicators" class="external-link">link</a>). The current parameters are from <strong>October 2021</strong>, with the next update planned for October 2022.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -116,108 +120,39 @@
 <p>The main function of the package is <code>convertGDP</code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/convertGDP.html">convertGDP</a></span><span class="op">(</span>
-  gdp <span class="op">=</span> <span class="va">gdp</span>, 
+  gdp <span class="op">=</span> <span class="va">my_gdp</span>, 
   unit_in <span class="op">=</span> <span class="st">"constant 2005 LCU"</span>, 
   unit_out <span class="op">=</span> <span class="st">"constant 2017 Int$PPP"</span>
 <span class="op">)</span></code></pre></div>
 <p>Here, the <code>gdp</code> argument takes a tibble or a data-frame that contains, at least:</p>
 <ul>
-<li>a column with iso3c country codes, (ideally named “iso3c”)</li>
-<li>a column with the year, (ideally named “year”)</li>
-<li>a column named “value”, with the gdp data</li>
+<li>a column with iso3c country codes, (ideally named “iso3c”),</li>
+<li>a column with the year, (ideally named “year”),</li>
+<li>a column named “value”, with the gdp data.</li>
 </ul>
-<p>A corresponding magpie object, see the <a href="https://github.com/pik-piam/magclass" class="external-link">magclass</a> package, is also accepted.</p>
-<div class="section level4">
-<h4 id="source">source<a class="anchor" aria-label="anchor" href="#source"></a>
-</h4>
-<p>Use the <code>source</code> argument to control the source of the underlying conversion factors (GDP deflators, MERs and PPPs). There are two source options shipped with the package, <code>wb_wdi</code> and <code>wb_wdi_linked</code> (with <code>wb_wdi</code> set as the default), but custom sources are possible. A custom source can be any tibble with columns:</p>
+<p>The <code>unit_in</code> and <code>unit_out</code> arguments specify the incoming and outgoing GDP units. All common GDP units are supported, i.e.:</p>
 <ul>
-<li>“iso3c” (character),</li>
-<li>“year” (numeric),</li>
-<li>“GDP deflator” (numeric),</li>
-<li>“MER (LCU per US$)” (numeric),</li>
-<li>“PPP conversion factor, GDP (LCU per international $)” (numeric)</li>
+<li>current LCU</li>
+<li>current US$MER</li>
+<li>current Int$PPP</li>
+<li>constant YYYY LCU</li>
+<li>constant YYYY US$MER</li>
+<li>constant YYYY Int$PPP</li>
 </ul>
+<p>Here “YYYY” is a placeholder for a year, e.g. “2010” or “2015”, and “LCU” stands for Local Currency Unit.</p>
+</div>
+<div class="section level2">
+<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+</h2>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/convertGDP.html">convertGDP</a></span><span class="op">(</span>
-  gdp <span class="op">=</span> <span class="va">gdp</span>, 
-  unit_in <span class="op">=</span> <span class="st">"constant 2005 LCU"</span>, 
-  unit_out <span class="op">=</span> <span class="st">"constant 2017 Int$PPP"</span>,
-  source <span class="op">=</span> <span class="st">"wb_wdi"</span>
-<span class="op">)</span></code></pre></div>
-</div>
-<div class="section level4">
-<h4 id="verbose">verbose<a class="anchor" aria-label="anchor" href="#verbose"></a>
-</h4>
-<p>Set the <code>verbose</code> argument to <code>TRUE</code> to print out the underlying conversion steps and factors. The verbosity can also be controlled via the option <code>"GDPuc.verbose"</code>.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/convertGDP.html">convertGDP</a></span><span class="op">(</span>
-  gdp <span class="op">=</span> <span class="va">gdp</span>, 
-  unit_in <span class="op">=</span> <span class="st">"constant 2005 LCU"</span>, 
-  unit_out <span class="op">=</span> <span class="st">"constant 2017 Int$PPP"</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
-</div>
-</div>
-<div class="section level2">
-<h2 id="further-arguments">Further arguments<a class="anchor" aria-label="anchor" href="#further-arguments"></a>
-</h2>
-<div class="section level4">
-<h4 id="with_regions">with_regions<a class="anchor" aria-label="anchor" href="#with_regions"></a>
-</h4>
-<p>Use the <code>with_regions</code> argument to convert aggregated GDP data, e.g. regional-level data. The default value is <code>NULL</code>, but if passed a data-frame with a country-to-region mapping, then custom regional codons will be recognized. The data-frame should have two columns, one named “iso3c” with iso3c country codes, and one named “region” with the corresponding region codes. The conversion of regional values is then undertaken by disaggregating the regions to a country level (using the mapping and weighed by the GDP shares of countries within that region in the base year of <code>unit_in</code>).</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/convertGDP.html">convertGDP</a></span><span class="op">(</span>
-  gdp <span class="op">=</span> <span class="va">gdp</span>, 
-  unit_in <span class="op">=</span> <span class="st">"constant 2005 LCU"</span>, 
-  unit_out <span class="op">=</span> <span class="st">"constant 2017 Int$PPP"</span>,
-  with_regions <span class="op">=</span> <span class="va">my_mapping_data_frame</span>
-<span class="op">)</span></code></pre></div>
-</div>
-<div class="section level4">
-<h4 id="replace_nas">replace_NAs<a class="anchor" aria-label="anchor" href="#replace_nas"></a>
-</h4>
-<p>Use the <code>replace_NAs</code> argument to replace missing conversion factors; either with 1 (so essentially no conversion) or with regional GDP-weighted averages. The default value is <code>NULL</code>, and missing conversion factors will lead to NAs. If set to <code>1</code>, then no conversion will take place, but no NAs will be created either. To use regional GDP-weighted averages, set the argument to “regional_averages”.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/convertGDP.html">convertGDP</a></span><span class="op">(</span>
-  gdp <span class="op">=</span> <span class="va">gdp</span>, 
-  unit_in <span class="op">=</span> <span class="st">"constant 2005 LCU"</span>, 
-  unit_out <span class="op">=</span> <span class="st">"constant 2017 Int$PPP"</span>,
-  replace_NAs <span class="op">=</span> <span class="fl">1</span>
-<span class="op">)</span>
-
-<span class="fu"><a href="reference/convertGDP.html">convertGDP</a></span><span class="op">(</span>
-  gdp <span class="op">=</span> <span class="va">gdp</span>, 
-  unit_in <span class="op">=</span> <span class="st">"constant 2005 LCU"</span>, 
-  unit_out <span class="op">=</span> <span class="st">"constant 2017 Int$PPP"</span>,
-  with_regions <span class="op">=</span> <span class="va">my_mapping_data_frame</span>,
-  replace_NAs <span class="op">=</span> <span class="st">"regional_averages"</span>
-<span class="op">)</span></code></pre></div>
-</div>
-</div>
-<div class="section level2">
-<h2 id="looking-at-the-available-sources">Looking at the available sources<a class="anchor" aria-label="anchor" href="#looking-at-the-available-sources"></a>
-</h2>
-<p>Use <code>print_source_info</code> to print information on a specific, or all available sources.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/print_source_info.html">print_source_info</a></span><span class="op">(</span><span class="st">"wb_wdi"</span><span class="op">)</span>
-<span class="fu"><a href="reference/print_source_info.html">print_source_info</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p>Use the <code>:::</code> operator to take a closer look at the sources shipped with GDPuc.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">GDPuc</span><span class="fu">:::</span><span class="va">wb_wdi</span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
-</h2>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/johanneskoch94/GDPuc#readme" class="external-link">GDPuc</a></span><span class="op">)</span>
 
-<span class="va">gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>
+<span class="va">my_gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>
   iso3c <span class="op">=</span> <span class="st">"USA"</span>, 
   year <span class="op">=</span> <span class="fl">2010</span><span class="op">:</span><span class="fl">2014</span>, 
   value <span class="op">=</span> <span class="fl">100</span><span class="op">:</span><span class="fl">104</span>
 <span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">gdp</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">my_gdp</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 5 × 3</span>
 <span class="co">#&gt;   iso3c  year value</span>
 <span class="co">#&gt;   &lt;chr&gt; &lt;int&gt; &lt;int&gt;</span>
@@ -228,7 +163,7 @@
 <span class="co">#&gt; 5 USA    2014   104</span>
 
 <span class="fu"><a href="reference/convertGDP.html">convertGDP</a></span><span class="op">(</span>
-  gdp <span class="op">=</span> <span class="va">gdp</span>, 
+  gdp <span class="op">=</span> <span class="va">my_gdp</span>, 
   unit_in <span class="op">=</span> <span class="st">"constant 2005 LCU"</span>, 
   unit_out <span class="op">=</span> <span class="st">"constant 2017 Int$PPP"</span>
 <span class="op">)</span>
@@ -236,50 +171,21 @@
 <span class="co">#&gt;   iso3c  year value</span>
 <span class="co">#&gt;   &lt;chr&gt; &lt;int&gt; &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 USA    2010  123.</span>
-<span class="co">#&gt; 2 USA    2011  125.</span>
+<span class="co">#&gt; 2 USA    2011  124.</span>
 <span class="co">#&gt; 3 USA    2012  126.</span>
 <span class="co">#&gt; 4 USA    2013  127.</span>
 <span class="co">#&gt; 5 USA    2014  128.</span></code></pre></div>
-<p>Setting <code>verbose = TRUE</code> will additionally print the following information to the console:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/convertGDP.html">convertGDP</a></span><span class="op">(</span>
-  gdp <span class="op">=</span> <span class="va">gdp</span>, 
-  unit_in <span class="op">=</span> <span class="st">"constant 2005 LCU"</span>, 
-  unit_out <span class="op">=</span> <span class="st">"constant 2017 Int$PPP"</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span>
-<span class="co">#&gt; ℹ Converting GDP with conversion factors from wb_wdi:</span>
-<span class="co">#&gt; constant 2005 LCU → constant 2017 LCU</span>
-<span class="co">#&gt; 2017 value of base 2005 GDP deflator in (constant 2017 LCU per constant 2005</span>
-<span class="co">#&gt; LCU) used:</span>
-<span class="co">#&gt; USA: 1.23304244543521</span>
-<span class="co">#&gt; constant 2017 LCU → constant 2017 Int$PPP</span>
-<span class="co">#&gt; 2017 PPP conversion factor in (LCU per international $) used:</span>
-<span class="co">#&gt; USA: 1</span>
-<span class="co">#&gt; # A tibble: 5 × 3</span>
-<span class="co">#&gt;   iso3c  year value</span>
-<span class="co">#&gt;   &lt;chr&gt; &lt;int&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 USA    2010  123.</span>
-<span class="co">#&gt; 2 USA    2011  125.</span>
-<span class="co">#&gt; 3 USA    2012  126.</span>
-<span class="co">#&gt; 4 USA    2013  127.</span>
-<span class="co">#&gt; 5 USA    2014  128.</span></code></pre></div>
-<p>Print out information on the underlying <code>wb_wdi</code> source.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/print_source_info.html">print_source_info</a></span><span class="op">(</span><span class="st">"wb_wdi"</span><span class="op">)</span>
-<span class="co">#&gt; ── wb_wdi ──────────────────────────────────────────────────────────────────────</span>
-<span class="co">#&gt; → Origin: The World Bank's World Development Indicator Database</span>
-<span class="co">#&gt; → Date: Downloaded on the 6 of May 2021</span>
-<span class="co">#&gt; → Html: https://databank.worldbank.org/source/world-development-indicators</span>
-<span class="co">#&gt; → Note: Uses the standard deflator.</span>
-<span class="co">#&gt; ────────────────────────────────────────────────────────────────────────────────</span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="conversion-method">Conversion method<a class="anchor" aria-label="anchor" href="#conversion-method"></a>
+<h2 id="further-options">Further Options<a class="anchor" aria-label="anchor" href="#further-options"></a>
 </h2>
-<p>This package makes us of country-specific GDP deflators, Market Exchange Rates (MER), and Purchasing Power Parity (PPP) conversion factors to convert GDP values. Setting the <code>verbose</code> argument to <code>TRUE</code> should make the conversion process transparent and allow you to analyze the individual steps taken. All conversion functions were successfully tested on the World Bank’s World Development Indicator (WDI) data: given any 2 WDI GDP series, <code>convertGDP</code> will reliably convert the one to the other.</p>
-<p>That being said, converting GDP series can be complex and the use of this package should not absolve one of thinking carefully on what conversion is being done and how. When using the provided <code>wd_wdi</code> source, this specifically concerns conversions using PPPs and MERs together.<br>
-That is because the PPP conversion factors provided by the World Bank are based off of linked GDP deflators, while the MERs are not. That means, that converting the World Bank’s current international dollar PPP series into LCU, will result in the “GDP: linked series (current LCU)”, while converting the current US dollar MER series into LCU, will result in the “GDP (current LCU)” series. Therefore, when linked and non-lined GDP deflators differ (which they do more often for developing countries, and in general the further into the past one looks), converting from current IntPPP to current USMER will not result in the exact same series as given in the WDI data.</p>
+<p><code>convertGDP</code> has other arguments that allow you to:</p>
+<ul>
+<li><p>choose conversion factors (see <a href="https://johanneskoch94.github.io/GDPuc/articles/source.html">“Choosing conversion factors”</a>)</p></li>
+<li><p>print out information on the conversion process and/or return the conversion factors used (see <a href="https://johanneskoch94.github.io/GDPuc/articles/verbose.html">“Geting information on the conversion process”</a>)</p></li>
+<li><p>handle missing conversion factors (see <a href="https://johanneskoch94.github.io/GDPuc/articles/handle_NAs.html">“Handling missing conversion factors”</a>)</p></li>
+<li><p>convert regional GDP data (see <a href="https://johanneskoch94.github.io/GDPuc/articles/with_regions.html">“Converting regional GDP data”</a>)</p></li>
+</ul>
 </div>
 </div>
   </div>
