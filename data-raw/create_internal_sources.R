@@ -1,4 +1,5 @@
 # Download data from WDI and save as internal package data
+# !! Don't forget to update the "date" section in print_source_info
 library(magrittr)
 my_vars <- c(
   "GDP (constant LCU)",

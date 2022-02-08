@@ -1,0 +1,179 @@
+---
+title: "Handling missing conversion factors"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Handling missing conversion factors}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## The `replace_NAs` argument
+
+Use the `replace_NAs` argument in `convertGDP` to handle missing conversion factors.  
+  
+By default, `replace_NAs` is `NULL`, and NAs are returned along with a warning. Set the `return_cfs` argument to `TRUE` to inspect the conversion factors, along side the result.
+
+
+```{r}
+library(GDPuc)
+
+# Test with Aruba -> iso3c = ABW
+my_gdp <- tibble::tibble(
+  iso3c = c("ABW"), 
+  year = 2010:2014, 
+  value = 100:104
+)
+
+x <- convertGDP(
+  gdp = my_gdp, 
+  unit_in = "constant 2005 Int$PPP", 
+  unit_out = "constant 2019 Int$PPP",
+  return_cfs = TRUE
+)
+x$result
+
+x$cfs
+```
+
+### `replace_NAs` = 0  
+
+If set to 0, resulting NAs are set to 0.
+
+```{r}
+my_gdp <- tibble::tibble(
+  iso3c = "ABW", 
+  year = 2010:2014, 
+  value = 100:104
+)
+
+x <- convertGDP(
+  gdp = my_gdp, 
+  unit_in = "constant 2005 Int$PPP", 
+  unit_out = "constant 2019 Int$PPP",
+  replace_NAs = 0,
+  return_cfs = TRUE
+)
+x$result
+
+x$cfs
+```
+
+### `replace_NAs` = "linear"
+
+If set to "linear", missing conversion factors are inter- and extrapolated linearly. For the extrapolation, the closest 5 data points are used.
+
+```{r}
+my_gdp <- tibble::tibble(
+  iso3c = "ABW", 
+  year = 2010:2014, 
+  value = 100:104
+)
+
+x <- convertGDP(
+  gdp = my_gdp, 
+  unit_in = "constant 2005 Int$PPP", 
+  unit_out = "constant 2019 Int$PPP",
+  replace_NAs = "linear",
+  return_cfs = TRUE
+)
+x$result
+
+x$cfs
+```
+
+### `replace_NAs` = "regional_average"
+
+If set to "regional_average", the regional GDP-weighted averages will be used. Requires a region-mapping, and a column in the source object with GDP data at PPP, to be used as weight. **May lead to misleading results, use with care!**
+
+```{r}
+my_gdp <- tibble::tibble(
+  iso3c = "ABW", 
+  year = 2010:2014, 
+  value = 100:104
+)
+
+my_mapping_data_frame <- tibble::tibble(
+  iso3c = c("ABW", "BRA", "ARG", "COL"), 
+  region = "LAM"
+)
+
+x <- convertGDP(
+  gdp = my_gdp, 
+  unit_in = "constant 2005 Int$PPP", 
+  unit_out = "constant 2019 Int$PPP",
+  replace_NAs = "regional_average",
+  with_regions = my_mapping_data_frame,
+  return_cfs = TRUE
+)
+x$result
+
+x$cfs
+
+# Compare the 2019 PPP with the 2005 PPP. They are not in the same order of magnitude. 
+# Obviously, being a part of the same region, does not mean the currencies are of the same strength.
+```
+
+### `replace_NAs` = "linear_regional_average"
+
+If set to "linear_regional_average", conversion factors will be linearly inter- and extrapolated, and when impossible (e.g. when no data at all is available for a country) set to the regional GDP-weighted averages.
+
+```{r}
+# Create an imaginary country XXX, and add it to the Latin America region
+my_gdp <- tibble::tibble(
+  iso3c = c("ABW", "XXX"), 
+  year = 2010, 
+  value = 100
+)
+
+my_mapping_data_frame <- tibble::tibble(
+  iso3c = c("ABW", "BRA", "ARG", "COL", "XXX"), 
+  region = "LAM"
+)
+
+x <- convertGDP(
+  gdp = my_gdp, 
+  unit_in = "constant 2005 Int$PPP", 
+  unit_out = "constant 2019 Int$PPP",
+  replace_NAs = "linear_regional_average",
+  with_regions = my_mapping_data_frame,
+  return_cfs = TRUE
+)
+x$result
+
+x$cfs
+```
+
+### Deprecated: `replace_NAs` = 1
+
+If set to `1`, missing conversion factors are set to 1. **To be deprecated, use with care!**
+
+```{r}
+my_gdp <- tibble::tibble(
+  iso3c = "ABW", 
+  year = 2010:2014, 
+  value = 100:104
+)
+
+x <- convertGDP(
+  gdp = my_gdp, 
+  unit_in = "constant 2005 Int$PPP", 
+  unit_out = "constant 2019 Int$PPP",
+  replace_NAs = 1,
+  return_cfs = TRUE
+)
+x$result
+
+x$cfs
+
+# Why is the deflator above not 1? That is because for ABW, only the deflator value in 2019 was set to 1. 
+# In 2005 the deflator was in the order of magnitude of 100. Obviously setting the deflator to 1 in 2019 is 
+# completely misleading.
+```
+

@@ -51,8 +51,8 @@
 #'     \item "constant YYYY US$MER"
 #'   }
 #'   where YYYY should be replaced with a year e.g. "2010" or "2017".
-#' @param source A data frame, or the name of a data frame, to use for conversion factors.
-#'   Can be a custom data-frame that exists in the calling environment, or one of the package internal ones.
+#' @param source A string referring to a package internal data frame containing the conversion factors, or
+#'   a data-frame that exists in the calling environment.
 #'   Use [print_source_info()](https://johanneskoch94.github.io/GDPuc/reference/print_source_info.html)
 #'   to learn about the available sources.
 #' @param with_regions NULL or a data-frame. The data-frame should be "country to region
@@ -61,16 +61,21 @@
 #'   object will then be disaggregated according to the region mapping and weighed by the
 #'   GDP share of countries in that region in the year of the unit, converted on a country
 #'   level, and re-aggregated before being returned.
-#' @param replace_NAs `r lifecycle::badge("maturing")`
-#'   NULL, 0, 1 or "regional_average". Should countries for which conversion factors are
-#'   missing, have their NA-conversion factors replaced with 1 or with a regional average?
-#'   The default is no. If 0, then resulting NAs are simply replaced with 0. If 1, then the
-#'   missing conversion factors will be set to 1, and essentially, no conversion will take
-#'   place. If "regional_average" then, the regional average of the region to which the country
-#'   belongs to will be used. This requires a region-mapping to be passed to the function,
-#'   see the with_regions argument.
-#' @param verbose TRUE or FALSE. A flag to turn verbosity on or off. Overrules
-#'   the GDPuc.verbose option, if it is set.
+#' @param replace_NAs NULL by default, meaning no NA replacement. Can be set to one of the following:
+#'   \itemize{
+#'     \item 0: resulting NAs are simply replaced with 0.
+#'     \item "linear": missing conversion factors in the source object are inter- and extrapolated linearly.
+#'     For the extrapolation, the closest 5 data points are used.
+#'     \item "regional_average": missing conversion factors in the source object are replaced with
+#'     the regional average of the region to which the country belongs. This requires a region-mapping to
+#'     be passed to the function, see the with_regions argument.
+#'     \item "linear_regional_average": missing conversion factors in the source object will be linearly
+#'     inter- and extrapolated, and when impossible (e.g. when no data at all is available for a country) set
+#'     to the regional GDP-weighted averages. This also requires a region-mapping to
+#'     be passed to the function, see the with_regions argument.
+#'   }
+#' @param verbose TRUE or FALSE. A flag to turn verbosity on or off. Be default it is equal to the
+#'   GDPuc.verbose option, which is FALSE if not set to TRUE by the user.
 #' @param return_cfs TRUE or FALSE. Set to TRUE to additionally return a tibble with the conversion factors
 #'   used. In that case a list is returned with the converted GDP under "result", and the conversion factors
 #'   used under "cfs".
@@ -87,26 +92,16 @@ convertGDP <- function(gdp,
                        source = "wb_wdi",
                        with_regions = NULL,
                        replace_NAs = NULL,
-                       verbose = FALSE,
+                       verbose = getOption("GDPuc.verbose", default = FALSE),
                        return_cfs = FALSE) {
   # Save all function arguments as list
   arg <- as.list(environment())
 
-  # Avoid NOTE in package check for CRAN
-  . <- NULL
-
-  # Capture the source argument as quosure
-  source <- rlang::enquo(source)
-
   # Check function arguments
-  check_user_input(gdp, unit_in, unit_out, source, with_regions, replace_NAs, verbose, return_cfs)
+  do.call(check_user_input, arg)
 
-  # Set verbose option, if necessary
-  if (verbose != getOption("GDPuc.verbose", default = FALSE)) {
-    old_value <- getOption("GDPuc.verbose", default = FALSE)
-    options("GDPuc.verbose" = verbose)
-    on.exit(options("GDPuc.verbose" = old_value))
-  }
+  # Set GDPuc.verbose option to the verbose argument, while in this function
+  withr::local_options(list("GDPuc.verbose" = verbose))
 
   # Return straight away if no conversion is needed
   if (identical(unit_in, unit_out)) {
@@ -117,13 +112,13 @@ convertGDP <- function(gdp,
   # Transform user input for internal use, while performing some last consistency checks
   internal <- transform_user_input(gdp, unit_in, unit_out, source, with_regions, replace_NAs)
 
+  # Avoid NOTE in package check for CRAN
+  . <- NULL
   # Get appropriate function
   f <- paste0(internal$unit_in, "_2_", internal$unit_out) %>%
-    stringr::str_replace_all(c(
-      " " = "_",
-      "_YYYY" = "",
-      "\\$" = ""
-    ))
+    gsub(" ", "_", .) %>%
+    gsub("_YYYY", "", .) %>%
+    gsub("\\$", "", .)
 
   # Get list of function arguments
   a <- list("gdp" = internal$gdp, "source" = internal$source) %>%

@@ -1,0 +1,45 @@
+---
+title: "Converting regional GDP data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Converting regional GDP data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## The `with_regions` argument
+
+Use the `with_regions` argument in `convertGDP` to convert aggregated GDP data, e.g. regional-level data. 
+  
+The default value is `NULL`, but if passed a data-frame with a country-to-region mapping, then custom regional codons will be recognized. The data-frame should have two columns, one named "iso3c" with iso3c country codes, and one named "region" with the corresponding region codes. The conversion of regional values is then undertaken by disaggregating the regions to a country level (using the mapping and weighed by the GDP (in $PPP) shares of countries within that region in the base year of `unit_in`).
+
+```{r}
+library(GDPuc)
+
+my_gdp <- tibble::tibble(
+  iso3c = "EUR", 
+  year = 2010:2014, 
+  value = 100:104
+)
+
+my_mapping_data_frame <- tibble::tibble(
+  iso3c = c("DEU", "FRA", "ESP", "ITA"), 
+  region = "EUR"
+)
+
+convertGDP(
+  gdp = my_gdp, 
+  unit_in = "constant 2005 Int$PPP", 
+  unit_out = "constant 2017 Int$PPP",
+  with_regions = my_mapping_data_frame,
+  verbose = TRUE
+)
+```
+

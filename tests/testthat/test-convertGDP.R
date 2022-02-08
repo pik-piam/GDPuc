@@ -83,32 +83,13 @@ test_that("convertGDP data.frame object", {
 
 
 
-test_that("convertGDP with verbose = TRUE", {
-  gdp_in <- wb_wdi %>%
-    dplyr::filter(!is.na(`GDP, PPP (constant 2017 international $)`),
-                  iso3c == "USA") %>%
-    dplyr::select(iso3c, year, "value" = `GDP: linked series (current LCU)`)
-
-  expect_message(
-    expect_message(
-      expect_message(
-        expect_message(
-          convertGDP(gdp_in, "constant 2010 Int$PPP", "constant 2017 Int$PPP", verbose = TRUE)
-        )
-      )
-    )
-  )
-
-})
-
-
-
 test_that("convertGDP unit_in == unit_out", {
   gdp_in <- wb_wdi %>%
     dplyr::filter(!is.na(`GDP, PPP (constant 2017 international $)`)) %>%
     dplyr::select(iso3c, year, "value" = `GDP: linked series (current LCU)`)
 
-  expect_message(convertGDP(gdp_in, "current LCU", "current LCU", verbose = TRUE))
+  expect_message(convertGDP(gdp_in, "current LCU", "current LCU", verbose = TRUE),
+                 "No conversion: unit_in = unit_out.")
 
   gdp_conv <- convertGDP(gdp_in, "current LCU", "current LCU")
 
@@ -124,7 +105,8 @@ test_that("convertGDP missing conversion factors", {
 
   expect_error(convertGDP(gdp_1, "current LCU", "current Int$PPP"))
   expect_error(convertGDP(gdp_2, "current LCU", "current Int$PPP"))
-  expect_warning(convertGDP(gdp_3, "current LCU", "current Int$PPP"))
+  expect_warning(convertGDP(gdp_3, "current LCU", "current Int$PPP"),
+                 "NAs have been generated for countries lacking conversion factors!")
 })
 
 
@@ -162,56 +144,3 @@ test_that("convertGDP with regions", {
   expect_true(all(gdp_conv3$value != gdp_conv$value))
 })
 
-
-test_that("convertGDP replace missing conversion factors", {
-  # wb_wi does not have info for AIA, so AIA is used for testing here
-  gdp <- tidyr::expand_grid("iso3c" = c("AIA", "FRA", "DEU", "USA", "EUR"), "year" = c(2010, 3010),
-                            "SSP" = c("SSP1", "SSP2"), "value" = 100)
-  gdp2 <- tidyr::expand_grid("iso3c" = c("AIA", "USA"), "year" = c(2010, 3010), "value" = 100)
-
-  with_regions <- tibble::tibble("iso3c" = c("FRA", "ESP", "DEU", "BEL", "AIA"), "region" = "EUR") %>%
-    dplyr::bind_rows(tibble::tibble("iso3c" = "USA", "region" = "USA"))
-
-  expect_warning(object = convertGDP(gdp, "constant 2010 US$MER", "constant 2011 Int$PPP"),
-                 regexp = "NAs have been generated for countries lacking conversion factors!")
-  expect_error(convertGDP(gdp, "constant 2010 US$MER", "constant 2011 Int$PPP", replace_NAs = FALSE))
-  expect_error(convertGDP(gdp, "constant 2010 US$MER", "constant 2011 Int$PPP", replace_NAs = "regional_average"))
-
-  gdp_conv <- suppressWarnings(
-    convertGDP(gdp,
-               unit_in = "constant 2005 Int$PPP",
-               unit_out = "constant 2005 US$MER")
-  )
-
-  gdp_conv2 <- convertGDP(gdp,
-                          unit_in = "constant 2005 Int$PPP",
-                          unit_out = "constant 2005 US$MER",
-                          replace_NAs = 0)
-
-  gdp_conv3 <- convertGDP(gdp,
-                          unit_in = "constant 2005 Int$PPP",
-                          unit_out = "constant 2005 US$MER",
-                          replace_NAs = 1)
-
-  gdp_conv4 <- convertGDP(gdp,
-                          unit_in = "constant 2005 Int$PPP",
-                          unit_out = "constant 2005 US$MER",
-                          with_regions = with_regions,
-                          replace_NAs = "regional_average")
-
-  gdp_conv5 <- convertGDP(gdp2,
-                          unit_in = "constant 2005 Int$PPP",
-                          unit_out = "constant 2005 US$MER",
-                          with_regions = with_regions,
-                          replace_NAs = "regional_average")
-
-  expect_true(any(is.na(gdp_conv$value)))
-  expect_true(!any(is.na(gdp_conv2$value)))
-  expect_true(!any(is.na(gdp_conv3$value)))
-  expect_true(!any(is.na(gdp_conv4$value)))
-
-  expect_equal(gdp$iso3c, gdp_conv2$iso3c)
-  expect_equal(gdp$iso3c, gdp_conv3$iso3c)
-  expect_equal(gdp$iso3c, gdp_conv4$iso3c)
-  expect_equal(gdp2$iso3c, gdp_conv5$iso3c)
-})

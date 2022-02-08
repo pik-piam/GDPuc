@@ -20,6 +20,28 @@ test_that("get_conversion_factors", {
 })
 
 
+
+test_that("get_conversion_factors with verbose", {
+  gdp <- tibble::tibble("iso3c" = c("JPN", "FRA", "DEU"), "year" = 2010, "value" = 100)
+
+  myresult <- convertGDP(gdp,
+                         unit_in = "constant 2015 Int$PPP",
+                         unit_out = "constant 2017 Int$PPP",
+                         verbose = TRUE) %>%
+    suppressMessages()
+
+  mylist <- convertGDP(gdp,
+                       unit_in = "constant 2015 Int$PPP",
+                       unit_out = "constant 2017 Int$PPP",
+                       verbose = TRUE,
+                       return_cfs = TRUE) %>%
+    suppressMessages()
+
+  expect_identical(myresult, mylist$result)
+  expect_identical(mylist$cfs$iso3c, c("DEU", "FRA", "JPN"))
+})
+
+
 test_that("get_conversion_factors with regions", {
   gdp <- tibble::tibble("iso3c" = c("JPN", "EUR", "DEU"), "year" = 2010, "value" = 100)
   with_regions <- tibble::tibble("iso3c" = c("FRA", "ESP", "DEU"), "region" = "EUR")

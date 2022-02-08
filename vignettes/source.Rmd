@@ -1,0 +1,85 @@
+---
+title: "Choosing conversion factors"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Choosing conversion factors}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## The `source` argument
+
+Use the `source` argument in `convertGDP` to control the source of the underlying conversion factors (GDP deflators, MERs and PPPs). This can be a user-defined object or one of the sources shipped with the package.
+
+##  User-defined 'source' objects
+
+Any tibble with columns:
+
+-   "iso3c" (character),
+-   "year" (numeric),
+-   "GDP deflator" (numeric),
+-   "MER (LCU per US$)" (numeric),
+-   "PPP conversion factor, GDP (LCU per international $)" (numeric)
+
+can be used as a source of conversion factors.
+
+```{r}
+library(GDPuc)
+
+my_gdp <- tibble::tibble(
+  iso3c = "USA", 
+  year = 2010:2014, 
+  value = 100:104
+)
+
+my_custom_source <- tibble::tibble(
+  iso3c = "USA", 
+  year = 2010:2014, 
+  "GDP deflator" = seq(1, 1.1, 0.025),
+  "MER (LCU per US$)" = 1,
+  "PPP conversion factor, GDP (LCU per international $)" = 1,
+)
+print(my_custom_source)
+
+convertGDP(
+  gdp = my_gdp, 
+  unit_in = "constant 2010 LCU", 
+  unit_out = "constant 2014 Int$PPP",
+  source = my_custom_source,
+  verbose = TRUE
+)
+```
+
+## Shipped 'sources'
+
+There are two `source` options shipped with the package, `wb_wdi` and `wb_wdi_linked`, **with `wb_wdi` set as the default**. Pass the name of a shipped source to the source argument to use it.
+
+```{r}
+convertGDP(
+  gdp = my_gdp, 
+  unit_in = "constant 2010 LCU", 
+  unit_out = "constant 2014 Int$PPP",
+  source = "wb_wdi_linked",
+  verbose = TRUE
+)
+```
+
+Use the function `print_source_info` to print information on a specific, or all available sources.
+
+```{r}
+print_source_info("wb_wdi")
+print_source_info()
+```
+
+Use the `:::` operator to take a closer look at sources shipped with GDPuc.
+
+```{r, eval=FALSE}
+GDPuc:::wb_wdi
+```
