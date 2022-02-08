@@ -19,26 +19,28 @@ RoxygenNote: 7.1.2
 Depends: 
     R (>= 2.10)
 Imports: 
-    dplyr,
-    stringr,
-    tidyselect,
-    glue,
     cli (>= 2.4.0),
     crayon,
+    dplyr,
+    glue,
+    lifecycle,
     magrittr,
     rlang (>= 1.0.0),
+    stringr,
     tibble,
-    lifecycle
+    tidyselect,
+    withr
 Suggests: 
     covr,
     knitr,
     magclass,
     purrr,
     readxl,
+    rmarkdown,
     testthat (>= 3.0.0),
     tidyr,
     WDI,
-    rmarkdown
+    zoo
 Config/testthat/edition: 3
 Encoding: UTF-8
 Date: 2022-02-07

@@ -42,7 +42,7 @@ disaggregate_regions <- function(gdp, with_regions, weight_unit, weight_year, so
     dplyr::select("iso3c", "year", "value" = tidyselect::all_of(share_var)) %>%
     dplyr::left_join(with_regions, by = "iso3c") %>%
     dplyr::filter(.data$year == weight_year, !is.na(.data$gdpuc_region)) %>%
-    convertGDP(unit_in, unit_out, source = source) %>%
+    convertGDP(unit_in, unit_out, source = source, verbose = FALSE) %>%
     dplyr::group_by(.data$gdpuc_region) %>%
     dplyr::mutate(share = .data$value / sum(.data$value, na.rm = TRUE), .keep = "unused") %>%
     dplyr::ungroup() %>%

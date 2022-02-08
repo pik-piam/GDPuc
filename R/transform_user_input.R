@@ -40,11 +40,7 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions, r
   }
 
   # Evaluate source (same steps as performed in check_source)
-  if (is.character(rlang::quo_get_expr(source))) {
-    source_name <- rlang::quo_get_expr(source)
-  } else {
-    source_name <- "user_provided"
-  }
+  source_name <- if (is.character(source)) source else "user_provided"
   source <- check_source(source)
 
   # If a region mapping is available and a region code (that isn't a
@@ -58,24 +54,24 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions, r
   # Need this to check for existence of base_y and base_x
   this_e <- environment()
 
+  # Check that base_y and base_x years exist in the source
+  if (exists("base_y", envir = this_e, inherits = FALSE) && !base_y %in% source$year) {
+    abort("No information in source {crayon::bold(source_name)} for year {base_y} in 'unit_out'.")
+  }
+  if (exists("base_x", envir = this_e, inherits = FALSE) && !base_x %in% source$year) {
+    abort("No information in source {crayon::bold(source_name)} for year {base_x} in 'unit_in'.")
+  }
+  # Check general overlap
+  if (length(intersect(unique(gdp$year), unique(source$year))) == 0) {
+    abort("No information in source {crayon::bold(source_name)} for years in 'gdp'.")
+  }
+
   # Use different source if required
   if (!is.null(replace_NAs) && replace_NAs != 0) {
-    b <- if (exists("base_y", envir = this_e, inherits = FALSE)) base_y else NULL
-    source <- adapt_source(gdp, base_y = b, source, with_regions, replace_NAs)
+    source <- adapt_source(gdp, source, with_regions, replace_NAs)
     source_name <- paste0(source_name, "_adapted")
   }
 
-  # Check availability of required conversion factors in source
-  # The helper is used here to check in the case of constant-to-constant conversion
-  helper <- if(exists("base_y", envir = this_e, inherits = FALSE) &&
-               exists("base_x", envir = this_e, inherits = FALSE)) {
-    length(intersect(c(base_x, base_y), unique(source$year))) == 0
-  } else {
-    length(intersect(unique(gdp$year), unique(source$year))) == 0
-  }
-  if (helper) {
-    abort("No information in source {crayon::bold(source_name)} for years in 'gdp'.")
-  }
   if (length(intersect(unique(gdp$iso3c), unique(source$iso3c))) == 0) {
     abort("No information in source {crayon::bold(source_name)} for countries in 'gdp'.")
   }

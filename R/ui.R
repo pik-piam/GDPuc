@@ -15,9 +15,7 @@ cli_inform <- function(..., verbose = getOption("GDPuc.verbose", default = FALSE
 # Function called by conversion functions to write messages
 cli_elemental <- function(from, to, with, unit, val) {
   # Create named vector for conversion factor list
-  names <- if ("year" %in% colnames(val)) {
-    paste0(val$iso3c, ", ", val$year)
-  } else val$iso3c
+  names <- if ("year" %in% colnames(val)) paste0(val$iso3c, ", ", val$year) else val$iso3c
   values <- dplyr::pull(val, length(val)) %>% stats::setNames(names)
 
   my_cli <- function() {
