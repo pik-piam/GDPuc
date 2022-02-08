@@ -9,12 +9,12 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions, r
 
   # Extract base years if they exist, and adjust string
   if (grepl("constant", unit_in)) {
-    base_x <- stringr::str_match(unit_in, "constant (....)")[, 2] %>% as.double()
+    base_x <- regmatches(unit_in, regexpr("[[:digit:]]{4}", unit_in)) %>% as.double()
     unit_in <- sub(base_x, "YYYY", unit_in) %>%
       paste0(" base x")
   }
   if (grepl("constant", unit_out)) {
-    base_y <- stringr::str_match(unit_out, "constant (....)")[, 2] %>% as.double()
+    base_y <- regmatches(unit_out, regexpr("[[:digit:]]{4}", unit_out)) %>% as.double()
     unit_out <- sub(base_y, "YYYY", unit_out) %>%
       paste0(" base y")
   }

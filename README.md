@@ -114,7 +114,7 @@ convertGDP(
     factors”](https://johanneskoch94.github.io/GDPuc/articles/source.html))
 
 -   print out information on the conversion process and/or return the
-    conversion factors used (see [“Geting information on the conversion
+    conversion factors used (see [“Getting information on the conversion
     process”](https://johanneskoch94.github.io/GDPuc/articles/verbose.html))
 
 -   handle missing conversion factors (see [“Handling missing conversion

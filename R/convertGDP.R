@@ -51,7 +51,7 @@
 #'     \item "constant YYYY US$MER"
 #'   }
 #'   where YYYY should be replaced with a year e.g. "2010" or "2017".
-#' @param source A string referring to a package internal data fram containing the conversion factors, or
+#' @param source A string referring to a package internal data frame containing the conversion factors, or
 #'   a data-frame that exists in the calling environment.
 #'   Use [print_source_info()](https://johanneskoch94.github.io/GDPuc/reference/print_source_info.html)
 #'   to learn about the available sources.
@@ -69,7 +69,7 @@
 #'     \item "regional_average": missing conversion factors in the source object are replaced with
 #'     the regional average of the region to which the country belongs. This requires a region-mapping to
 #'     be passed to the function, see the with_regions argument.
-#'     \item "linear_regional_average": cmissing conversion factors in the source object will be linearly
+#'     \item "linear_regional_average": missing conversion factors in the source object will be linearly
 #'     inter- and extrapolated, and when impossible (e.g. when no data at all is available for a country) set
 #'     to the regional GDP-weighted averages. This also requires a region-mapping to
 #'     be passed to the function, see the with_regions argument.
@@ -112,16 +112,14 @@ convertGDP <- function(gdp,
   # Transform user input for internal use, while performing some last consistency checks
   internal <- transform_user_input(gdp, unit_in, unit_out, source, with_regions, replace_NAs)
 
-  # Get appropriate function
-  f <- paste0(internal$unit_in, "_2_", internal$unit_out) %>%
-    stringr::str_replace_all(c(
-      " " = "_",
-      "_YYYY" = "",
-      "\\$" = ""
-    ))
-
   # Avoid NOTE in package check for CRAN
   . <- NULL
+  # Get appropriate function
+  f <- paste0(internal$unit_in, "_2_", internal$unit_out) %>%
+    gsub(" ", "_", .) %>%
+    gsub("_YYYY", "", .) %>%
+    gsub("\\$", "", .)
+
   # Get list of function arguments
   a <- list("gdp" = internal$gdp, "source" = internal$source) %>%
     {if ("base_x" %in% names(internal)) c(., "base_x" = internal$base_x) else .} %>%

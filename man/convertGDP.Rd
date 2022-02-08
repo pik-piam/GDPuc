@@ -48,7 +48,7 @@ where YYYY should be replaced with a year e.g. "2010" or "2017".}
 }
 where YYYY should be replaced with a year e.g. "2010" or "2017".}
 
-\item{source}{A string referring to a package internal data fram containing the conversion factors, or
+\item{source}{A string referring to a package internal data frame containing the conversion factors, or
 a data-frame that exists in the calling environment.
 Use \href{https://johanneskoch94.github.io/GDPuc/reference/print_source_info.html}{print_source_info()}
 to learn about the available sources.}
@@ -68,7 +68,7 @@ For the extrapolation, the closest 5 data points are used.
 \item "regional_average": missing conversion factors in the source object are replaced with
 the regional average of the region to which the country belongs. This requires a region-mapping to
 be passed to the function, see the with_regions argument.
-\item "linear_regional_average": cmissing conversion factors in the source object will be linearly
+\item "linear_regional_average": missing conversion factors in the source object will be linearly
 inter- and extrapolated, and when impossible (e.g. when no data at all is available for a country) set
 to the regional GDP-weighted averages. This also requires a region-mapping to
 be passed to the function, see the with_regions argument.

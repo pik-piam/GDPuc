@@ -41,7 +41,9 @@ check_gdp <- function(gdp) {
     rlang::check_installed("magclass", reason = "in order for magpie objects to be recognized.")
     # Check if there is years info
     if (is.null(magclass::getYears(gdp))) {
-      abort("Invalid 'gdp' argument. No year information in magpie object.")
+      # I need at least one explizit call to a crayon:: function... otherwise I get a CRAN note
+      h <- crayon::bold("magpie")
+      abort("Invalid 'gdp' argument. No year information in {h} object.")
     }
   } else {
     abort("Invalid 'gdp' argument. 'gdp' is neither a data-frame nor a 'magpie' object.")
