@@ -78,6 +78,7 @@ test_that("replace_NAs argument", {
   expect_error(check_user_input(gdp, unit_in, unit_out,  source = s, replace_NAs = c(0, 1), with_regions = NULL),
                glue::glue("Invalid 'replace_NAs' argument. The only accepted combinations of arguments start with \\
                           'linear', e.g. c\\('linear', 'no_conversion'\\)."))
+  expect_error(check_user_input(gdp, unit_in, unit_out,  source = s, replace_NAs = "linear_regional_average", with_regions = NULL))
 
   expect_error(
     check_user_input(gdp, unit_in, unit_out,  source = s, replace_NAs = "regional_average", with_regions = NULL),
