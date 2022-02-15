@@ -14,8 +14,8 @@ adapt_source <- function(gdp, source, with_regions, replace_NAs) {
                        dplyr::anti_join(source, by = c("iso3c", "year"))) %>%
     tidyr::complete(.data$iso3c, .data$year)
 
-  if (replace_NAs %in% c("linear", "linear_regional_average")) {
-    # Make sure that source contains obersvations for every year between min and max years.
+  if (replace_NAs[1] == "linear") {
+    # Make sure that source contains observations for every year between min and max years.
     # This is important for the function lin_int_ext, which works with indices, to compute the
     # correct values
     source_adapted <- source_adapted %>%
@@ -33,7 +33,7 @@ adapt_source <- function(gdp, source, with_regions, replace_NAs) {
         lin_int_ext))
   }
 
-  if (replace_NAs %in% c("regional_average", "linear_regional_average")) {
+  if ("regional_average" %in% replace_NAs) {
     # Get GDP variable from source object, with its unit
     regex_var <- "GDP, PPP \\(constant .... international \\$\\)"
     weight_var <- grep(regex_var, colnames(source), value = TRUE)[1]
@@ -68,7 +68,7 @@ adapt_source <- function(gdp, source, with_regions, replace_NAs) {
       dplyr::ungroup()
   }
 
-  if (replace_NAs == 1) {
+  if (1 %in% replace_NAs) {
     source_adapted <- source_adapted %>%
       # Mutate the 3 important columns
       dplyr::rowwise() %>%

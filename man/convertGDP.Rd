@@ -63,16 +63,15 @@ level, and re-aggregated before being returned.}
 \item{replace_NAs}{NULL by default, meaning no NA replacement. Can be set to one of the following:
 \itemize{
 \item 0: resulting NAs are simply replaced with 0.
+\item "no_conversion": resulting NAs are simply replaced with the values from the gdp argument.
 \item "linear": missing conversion factors in the source object are inter- and extrapolated linearly.
 For the extrapolation, the closest 5 data points are used.
 \item "regional_average": missing conversion factors in the source object are replaced with
 the regional average of the region to which the country belongs. This requires a region-mapping to
 be passed to the function, see the with_regions argument.
-\item "linear_regional_average": missing conversion factors in the source object will be linearly
-inter- and extrapolated, and when impossible (e.g. when no data at all is available for a country) set
-to the regional GDP-weighted averages. This also requires a region-mapping to
-be passed to the function, see the with_regions argument.
-}}
+}
+Can also be a vector with "linear" as first element, e.g. c("linear", 0) or c("linear", "no_conversion"),
+in which case, the operations are done in sequence.}
 
 \item{verbose}{TRUE or FALSE. A flag to turn verbosity on or off. Be default it is equal to the
 GDPuc.verbose option, which is FALSE if not set to TRUE by the user.}

@@ -1,8 +1,8 @@
 ---
-title: "Geting information on the conversion process"
+title: "Getting information on the conversion process"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Geting information on the conversion process}
+  %\VignetteIndexEntry{Getting information on the conversion process}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
