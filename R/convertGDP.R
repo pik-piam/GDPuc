@@ -64,16 +64,15 @@
 #' @param replace_NAs NULL by default, meaning no NA replacement. Can be set to one of the following:
 #'   \itemize{
 #'     \item 0: resulting NAs are simply replaced with 0.
+#'     \item "no_conversion": resulting NAs are simply replaced with the values from the gdp argument.
 #'     \item "linear": missing conversion factors in the source object are inter- and extrapolated linearly.
 #'     For the extrapolation, the closest 5 data points are used.
 #'     \item "regional_average": missing conversion factors in the source object are replaced with
 #'     the regional average of the region to which the country belongs. This requires a region-mapping to
 #'     be passed to the function, see the with_regions argument.
-#'     \item "linear_regional_average": missing conversion factors in the source object will be linearly
-#'     inter- and extrapolated, and when impossible (e.g. when no data at all is available for a country) set
-#'     to the regional GDP-weighted averages. This also requires a region-mapping to
-#'     be passed to the function, see the with_regions argument.
 #'   }
+#'   Can also be a vector with "linear" as first element, e.g. c("linear", 0) or c("linear", "no_conversion"),
+#'   in which case, the operations are done in sequence.
 #' @param verbose TRUE or FALSE. A flag to turn verbosity on or off. Be default it is equal to the
 #'   GDPuc.verbose option, which is FALSE if not set to TRUE by the user.
 #' @param return_cfs TRUE or FALSE. Set to TRUE to additionally return a tibble with the conversion factors
@@ -133,9 +132,14 @@ convertGDP <- function(gdp,
   # Call function
   x <- do.call(f, a)
 
-  if (!is.null(replace_NAs) && replace_NAs == 0) x[is.na(x)] <- 0
+  # Handle NAs
+  if (!is.null(replace_NAs) && 0 %in% replace_NAs) x[is.na(x)] <- 0
   if (any(is.na(x$value) & !is.na(internal$gdp$value))) {
-    warn("NAs have been generated for countries lacking conversion factors!")
+    if (!is.null(replace_NAs) && "no_conversion" %in% replace_NAs) {
+      x$value[is.na(x$value)] <- internal$gdp$value[is.na(x$value)]
+    } else {
+      warn("NAs have been generated for countries lacking conversion factors!")
+    }
   }
 
   # Return with original type and names

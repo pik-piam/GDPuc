@@ -67,7 +67,7 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions, r
   }
 
   # Use different source if required
-  if (!is.null(replace_NAs) && replace_NAs != 0) {
+  if (!is.null(replace_NAs) && !setequal(replace_NAs, 0)  && !setequal(replace_NAs, "no_conversion")) {
     source <- adapt_source(gdp, source, with_regions, replace_NAs)
     source_name <- paste0(source_name, "_adapted")
   }

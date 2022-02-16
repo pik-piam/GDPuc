@@ -1,3 +1,9 @@
+# GDPuc 0.8.0
+
+* Add options "no_conversion" for the `replace_NAs` argument.
+
+* The `replace_NAs` argument can now take a vector allowing for a combination of options.
+
 # GDPuc 0.7.0
 
 * Add argument `return_cfs` to return the conversion factors used.

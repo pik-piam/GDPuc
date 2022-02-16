@@ -120,14 +120,24 @@ check_with_regions <- function(unit_in, unit_out, source, with_regions) {
 # Check input parameter 'replace_NAs'
 check_replace_NAs <- function(with_regions, replace_NAs) {
   if (!is.null(replace_NAs)) {
-    if (replace_NAs == 1) {
-      lifecycle::deprecate_warn("0.7.0", "convertGDP(replace_NAs = 'was deprecated')")
+    if (setequal(replace_NAs, 1)) {
+      lifecycle::deprecate_warn("0.7.0", "convertGDP(replace_NAs = 'should not be 1')")
     }
-    if (!replace_NAs %in% c(0, 1, "linear", "regional_average", "linear_regional_average")) {
-      abort("Invalid 'replace_NAs' argument. Has to be either NULL, 0, 1, linear, regional_average or \\
-            linear_regional_average.")
+    if ("linear_regional_average" %in% replace_NAs) {
+      lifecycle::deprecate_stop(
+        "0.8.0",
+        "convertGDP(replace_NAs = '\"linear_regional_average\" has been replaced by c(\"linear\", \"regional_average\")')"
+      )
     }
-    if (replace_NAs == "regional_average" && is.null(with_regions)) {
+    if (!all(replace_NAs %in% c(0, 1, "no_conversion", "linear", "regional_average"))) {
+      abort("Invalid 'replace_NAs' argument. Has to be either NULL, 0, 1, no_conversion, linear, regional_average or \\
+            a combination of the above.")
+    }
+    if (length(replace_NAs) > 1 && replace_NAs[1] != "linear") {
+      abort("Invalid 'replace_NAs' argument. The only accepted combinations of arguments start with 'linear', e.g. \\
+            c('linear', 'no_conversion').")
+    }
+    if ("regional_average" %in% replace_NAs && is.null(with_regions)) {
       abort("Using 'regional_average' requires a region mapping. The 'with_regions' argument can't be NULL.")
     }
   }

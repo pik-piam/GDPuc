@@ -65,6 +65,31 @@ x$result
 x$cfs
 ```
 
+
+### `replace_NAs` = "no_conversion"  
+
+If set to "no_conversion", NAs are replaced with the values in the gdp argument.
+
+```{r}
+my_gdp <- tibble::tibble(
+  iso3c = "ABW", 
+  year = 2010:2014, 
+  value = 100:104
+)
+
+x <- convertGDP(
+  gdp = my_gdp, 
+  unit_in = "constant 2005 Int$PPP", 
+  unit_out = "constant 2019 Int$PPP",
+  replace_NAs = "no_conversion",
+  return_cfs = TRUE
+)
+x$result
+
+x$cfs
+```
+
+
 ### `replace_NAs` = "linear"
 
 If set to "linear", missing conversion factors are inter- and extrapolated linearly. For the extrapolation, the closest 5 data points are used.
@@ -120,9 +145,11 @@ x$cfs
 # Obviously, being a part of the same region, does not mean the currencies are of the same strength.
 ```
 
-### `replace_NAs` = "linear_regional_average"
+### `replace_NAs` = c("linear", "...")
 
-If set to "linear_regional_average", conversion factors will be linearly inter- and extrapolated, and when impossible (e.g. when no data at all is available for a country) set to the regional GDP-weighted averages.
+If a vector is passed, with "linear" as first element, then the operations are done in sequence. 
+For example for c("linear", 0), missing conversion factors are first inter- and extrapolated linearly but 
+if any missing conversion factors still lead to NAs, these are replaced with 0.
 
 ```{r}
 # Create an imaginary country XXX, and add it to the Latin America region
@@ -141,7 +168,7 @@ x <- convertGDP(
   gdp = my_gdp, 
   unit_in = "constant 2005 Int$PPP", 
   unit_out = "constant 2019 Int$PPP",
-  replace_NAs = "linear_regional_average",
+  replace_NAs = c("linear", 0),
   with_regions = my_mapping_data_frame,
   return_cfs = TRUE
 )
