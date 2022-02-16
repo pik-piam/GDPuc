@@ -25,8 +25,8 @@ test_that("unit arguments", {
 
 test_that("source argument", {
   gdp <- tibble::tibble("iso3c" = "EUR", "year" = 2010, "value" = 100)
-  unit_in = "current Int$PPP"
-  unit_out = "current US$MER"
+  unit_in <- "current Int$PPP"
+  unit_out <- "current US$MER"
 
   s <- 1
   expect_error(check_user_input(gdp, unit_in, unit_out, source = s),
@@ -45,14 +45,14 @@ test_that("source argument", {
 
 test_that("with_regions argument", {
   gdp <- tibble::tibble("iso3c" = "EUR", "year" = 2010, "value" = 100)
-  unit_in = "current Int$PPP"
-  unit_out = "current US$MER"
+  unit_in <- "current Int$PPP"
+  unit_out <- "current US$MER"
   s <- wb_wdi
 
   expect_error(check_user_input(gdp, unit_in, unit_out, source = s, with_regions = "blabla"))
-  with_regions = tibble::tibble("blabla" = "FRA", "region" = "USA")
+  with_regions <- tibble::tibble("blabla" = "FRA", "region" = "USA")
   expect_error(check_user_input(gdp, unit_in, unit_out,  source = s, with_regions = with_regions))
-  with_regions = tibble::tibble("iso3c" = "FRA", "region" = "USA")
+  with_regions <- tibble::tibble("iso3c" = "FRA", "region" = "USA")
   expect_error(check_user_input(gdp, unit_in, "current LCU",  source = s, with_regions = with_regions))
   my_bad_source <- wb_wdi %>% dplyr::select(
     "iso3c",
@@ -68,8 +68,8 @@ test_that("with_regions argument", {
 test_that("replace_NAs argument", {
 
   gdp <- tibble::tibble("iso3c" = "EUR", "year" = 2010, "value" = 100)
-  unit_in = "current Int$PPP"
-  unit_out = "current US$MER"
+  unit_in <- "current Int$PPP"
+  unit_out <- "current US$MER"
   s <- wb_wdi
 
   expect_error(check_user_input(gdp, unit_in, unit_out,  source = s, replace_NAs = 2, with_regions = NULL),
@@ -78,7 +78,9 @@ test_that("replace_NAs argument", {
   expect_error(check_user_input(gdp, unit_in, unit_out,  source = s, replace_NAs = c(0, 1), with_regions = NULL),
                glue::glue("Invalid 'replace_NAs' argument. The only accepted combinations of arguments start with \\
                           'linear', e.g. c\\('linear', 'no_conversion'\\)."))
-  expect_error(check_user_input(gdp, unit_in, unit_out,  source = s, replace_NAs = "linear_regional_average", with_regions = NULL))
+  expect_error(
+    check_user_input(gdp, unit_in, unit_out,  source = s, replace_NAs = "linear_regional_average", with_regions = NULL)
+  )
 
   expect_error(
     check_user_input(gdp, unit_in, unit_out,  source = s, replace_NAs = "regional_average", with_regions = NULL),
@@ -89,8 +91,8 @@ test_that("replace_NAs argument", {
 test_that("boolean arguments", {
 
   gdp <- tibble::tibble("iso3c" = "EUR", "year" = 2010, "value" = 100)
-  unit_in = "current Int$PPP"
-  unit_out = "current US$MER"
+  unit_in <- "current Int$PPP"
+  unit_out <- "current US$MER"
   s <- wb_wdi
 
   expect_error(check_user_input(gdp, unit_in, unit_out,  source = s,
@@ -106,4 +108,3 @@ test_that("boolean arguments", {
     verbose = TRUE,
     return_cfs = "blabla"))
 })
-
