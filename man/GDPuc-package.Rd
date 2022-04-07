@@ -14,3 +14,4 @@ units (LCU), US$ via market exchange rates and international dollars via
 PPP conversion factors. Conversion factors can easily be customized.
 Conversion at a regional/aggregated level is also possible.
 }
+\keyword{internal}
