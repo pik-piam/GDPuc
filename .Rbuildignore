@@ -16,3 +16,4 @@
 ^CRAN-RELEASE$
 ^\.pre-commit-config\.yaml$
 ^workflow$
+^CRAN-SUBMISSION$
