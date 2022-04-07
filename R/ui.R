@@ -3,7 +3,7 @@ abort <- function(x, .envir = parent.frame()) {
   rlang::abort(glue::glue(x, .envir = .envir))
 }
 warn <- function(x, .envir = parent.frame()) {
-  rlang::warn(glue::glue(x, .envir = .envir))
+  if(getOption("GDPuc.warn", default = TRUE)) rlang::warn(glue::glue(x, .envir = .envir))
 }
 
 # All console output must eventually go through cli_inform() so that

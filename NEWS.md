@@ -1,3 +1,7 @@
+# GDPuc 0.9.0
+
+* Add option GDPuc.warn and corresponding vignette.
+
 # GDPuc 0.8.0
 
 * Add options "no_conversion" for the `replace_NAs` argument.

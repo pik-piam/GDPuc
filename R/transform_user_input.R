@@ -56,14 +56,16 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions, r
 
   # Check that base_y and base_x years exist in the source
   if (exists("base_y", envir = this_e, inherits = FALSE) && !base_y %in% source$year) {
-    abort("No information in source {crayon::bold(source_name)} for year {base_y} in 'unit_out'.")
+    abort("Incompatible 'unit_out' and 'source'. No information in source {crayon::bold(source_name)} for the \\
+          year {base_y}.")
   }
   if (exists("base_x", envir = this_e, inherits = FALSE) && !base_x %in% source$year) {
-    abort("No information in source {crayon::bold(source_name)} for year {base_x} in 'unit_in'.")
+    abort("Incompatible 'unit_in' and 'source'. No information in source {crayon::bold(source_name)} for the \\
+          year {base_x}.")
   }
   # Check general overlap
   if (length(intersect(unique(gdp$year), unique(source$year))) == 0) {
-    abort("No information in source {crayon::bold(source_name)} for years in 'gdp'.")
+    abort("Incompatible 'gdp' and 'source'. No information in source {crayon::bold(source_name)} for years in 'gdp'.")
   }
 
   # Use different source if required
