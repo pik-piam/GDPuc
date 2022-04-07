@@ -27,7 +27,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">GDPuc</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,6 +46,7 @@
     <a class="dropdown-item" href="../articles/magpie.html">Converting magpie objects</a>
     <a class="dropdown-item" href="../articles/source.html">Choosing conversion factors</a>
     <a class="dropdown-item" href="../articles/verbose.html">Getting information on the conversion process</a>
+    <a class="dropdown-item" href="../articles/warn.html">Silence warnings</a>
     <a class="dropdown-item" href="../articles/with_regions.html">Converting regional GDP data</a>
   </div>
 </li>
@@ -88,7 +89,12 @@
 <h2 id="the-replace_nas-argument">The <code>replace_NAs</code> argument<a class="anchor" aria-label="anchor" href="#the-replace_nas-argument"></a>
 </h2>
 <p>Use the <code>replace_NAs</code> argument in <code>convertGDP</code> to handle missing conversion factors.</p>
-<p>By default, <code>replace_NAs</code> is <code>NULL</code>, and NAs are returned along with a warning. Set the <code>return_cfs</code> argument to <code>TRUE</code> to inspect the conversion factors, along side the result.</p>
+<div class="section level3">
+<h3 id="replace_nas-null-or-na">
+<code>replace_NAs</code> = NULL or NA<a class="anchor" aria-label="anchor" href="#replace_nas-null-or-na"></a>
+</h3>
+<p>By default, <code>replace_NAs</code> is <code>NULL</code>, and NAs are returned along with a warning. Set <code>replace_NAs = NA</code> to explicitly return NAs without the warning.</p>
+<p>Below, the <code>return_cfs</code> argument is set to <code>TRUE</code> to inspect the conversion factors, along side the result.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/johanneskoch94/GDPuc#readme" class="external-link">GDPuc</a></span><span class="op">)</span>
 
@@ -121,12 +127,22 @@
 <span class="co">#&gt;   iso3c `\033[34m2005 PPP conversion factor\…` `\033[34m2019 …` `\033[34m2019 …`</span>
 <span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW                                     1.22               <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span></span></code></pre></div>
+<p>To eliminate the warning:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/convertGDP.html">convertGDP</a></span><span class="op">(</span>
+  gdp <span class="op">=</span> <span class="va">my_gdp</span>, 
+  unit_in <span class="op">=</span> <span class="st">"constant 2005 Int$PPP"</span>, 
+  unit_out <span class="op">=</span> <span class="st">"constant 2019 Int$PPP"</span>,
+  replace_NAs <span class="op">=</span> <span class="cn">NA</span>
+<span class="op">)</span></code></pre></div>
+<p>You can also use the <code>GDPuc.warn</code> option to suppress warnings from <code>convertGDP</code> in general (see <a href="https://johanneskoch94.github.io/GDPuc/articles/warn.html">“Silence warnings”</a>).</p>
+</div>
 <div class="section level3">
 <h3 id="replace_nas-0">
 <code>replace_NAs</code> = 0<a class="anchor" aria-label="anchor" href="#replace_nas-0"></a>
 </h3>
 <p>If set to 0, resulting NAs are set to 0.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">my_gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>
   iso3c <span class="op">=</span> <span class="st">"ABW"</span>, 
   year <span class="op">=</span> <span class="fl">2010</span><span class="op">:</span><span class="fl">2014</span>, 
@@ -161,7 +177,7 @@
 <code>replace_NAs</code> = “no_conversion”<a class="anchor" aria-label="anchor" href="#replace_nas-no_conversion"></a>
 </h3>
 <p>If set to “no_conversion”, NAs are replaced with the values in the gdp argument.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">my_gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>
   iso3c <span class="op">=</span> <span class="st">"ABW"</span>, 
   year <span class="op">=</span> <span class="fl">2010</span><span class="op">:</span><span class="fl">2014</span>, 
@@ -196,7 +212,7 @@
 <code>replace_NAs</code> = “linear”<a class="anchor" aria-label="anchor" href="#replace_nas-linear"></a>
 </h3>
 <p>If set to “linear”, missing conversion factors are inter- and extrapolated linearly. For the extrapolation, the closest 5 data points are used.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">my_gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>
   iso3c <span class="op">=</span> <span class="st">"ABW"</span>, 
   year <span class="op">=</span> <span class="fl">2010</span><span class="op">:</span><span class="fl">2014</span>, 
@@ -231,7 +247,7 @@
 <code>replace_NAs</code> = “regional_average”<a class="anchor" aria-label="anchor" href="#replace_nas-regional_average"></a>
 </h3>
 <p>If set to “regional_average”, the regional GDP-weighted averages will be used. Requires a region-mapping, and a column in the source object with GDP data at PPP, to be used as weight. <strong>May lead to misleading results, use with care!</strong></p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">my_gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>
   iso3c <span class="op">=</span> <span class="st">"ABW"</span>, 
   year <span class="op">=</span> <span class="fl">2010</span><span class="op">:</span><span class="fl">2014</span>, 
@@ -275,7 +291,7 @@
 <code>replace_NAs</code> = c(“linear”, “…”)<a class="anchor" aria-label="anchor" href="#replace_nas-clinear"></a>
 </h3>
 <p>If a vector is passed, with “linear” as first element, then the operations are done in sequence. For example for c(“linear”, 0), missing conversion factors are first inter- and extrapolated linearly but if any missing conversion factors still lead to NAs, these are replaced with 0.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Create an imaginary country XXX, and add it to the Latin America region</span>
 <span class="va">my_gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>
   iso3c <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ABW"</span>, <span class="st">"XXX"</span><span class="op">)</span>, 
@@ -314,7 +330,7 @@
 <h3 id="deprecated-replace_nas-1">Deprecated: <code>replace_NAs</code> = 1<a class="anchor" aria-label="anchor" href="#deprecated-replace_nas-1"></a>
 </h3>
 <p>If set to <code>1</code>, missing conversion factors are set to 1. <strong>To be deprecated, use with care!</strong></p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">my_gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>
   iso3c <span class="op">=</span> <span class="st">"ABW"</span>, 
   year <span class="op">=</span> <span class="fl">2010</span><span class="op">:</span><span class="fl">2014</span>, 
