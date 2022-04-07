@@ -17,8 +17,13 @@ knitr::opts_chunk$set(
 ## The `replace_NAs` argument
 
 Use the `replace_NAs` argument in `convertGDP` to handle missing conversion factors.  
-  
-By default, `replace_NAs` is `NULL`, and NAs are returned along with a warning. Set the `return_cfs` argument to `TRUE` to inspect the conversion factors, along side the result.
+
+### `replace_NAs` = NULL or NA  
+ 
+By default, `replace_NAs` is `NULL`, and NAs are returned along with a warning.
+Set `replace_NAs = NA` to explicitly return NAs without the warning.  
+
+Below, the `return_cfs` argument is set to `TRUE` to inspect the conversion factors, along side the result.
 
 
 ```{r}
@@ -41,6 +46,17 @@ x$result
 
 x$cfs
 ```
+To eliminate the warning:
+```{r}
+x <- convertGDP(
+  gdp = my_gdp, 
+  unit_in = "constant 2005 Int$PPP", 
+  unit_out = "constant 2019 Int$PPP",
+  replace_NAs = NA
+)
+```
+
+You can also use the `GDPuc.warn` option to suppress warnings from `convertGDP` in general (see ["Silence warnings"](https://johanneskoch94.github.io/GDPuc/articles/warn.html)).
 
 ### `replace_NAs` = 0  
 

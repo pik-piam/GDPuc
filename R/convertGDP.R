@@ -135,8 +135,10 @@ convertGDP <- function(gdp,
   # Handle NAs
   if (!is.null(replace_NAs) && 0 %in% replace_NAs) x[is.na(x)] <- 0
   if (any(is.na(x$value) & !is.na(internal$gdp$value))) {
-    if (!is.null(replace_NAs) && "no_conversion" %in% replace_NAs) {
-      x$value[is.na(x$value)] <- internal$gdp$value[is.na(x$value)]
+    if (!is.null(replace_NAs)) {
+      if ("no_conversion" %in% replace_NAs) {
+        x$value[is.na(x$value)] <- internal$gdp$value[is.na(x$value)]
+      }
     } else {
       warn("NAs have been generated for countries lacking conversion factors!")
     }

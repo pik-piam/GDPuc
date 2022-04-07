@@ -129,8 +129,8 @@ check_replace_NAs <- function(with_regions, replace_NAs) {
         "convertGDP(replace_NAs = '\"linear_regional_average\" has been replaced by c(\"linear\", \"regional_average\")')"
       )
     }
-    if (!all(replace_NAs %in% c(0, 1, "no_conversion", "linear", "regional_average"))) {
-      abort("Invalid 'replace_NAs' argument. Has to be either NULL, 0, 1, no_conversion, linear, regional_average or \\
+    if (!all(replace_NAs %in% c(NA, 0, 1, "no_conversion", "linear", "regional_average"))) {
+      abort("Invalid 'replace_NAs' argument. Has to be either NULL, NA, 0, 1, no_conversion, linear, regional_average or \\
             a combination of the above.")
     }
     if (length(replace_NAs) > 1 && replace_NAs[1] != "linear") {

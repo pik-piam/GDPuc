@@ -73,7 +73,7 @@ test_that("replace_NAs argument", {
   s <- wb_wdi
 
   expect_error(check_user_input(gdp, unit_in, unit_out,  source = s, replace_NAs = 2, with_regions = NULL),
-               glue::glue("Invalid 'replace_NAs' argument. Has to be either NULL, 0, 1, no_conversion, linear, \\
+               glue::glue("Invalid 'replace_NAs' argument. Has to be either NULL, NA, 0, 1, no_conversion, linear, \\
                           regional_average or a combination of the above."))
   expect_error(check_user_input(gdp, unit_in, unit_out,  source = s, replace_NAs = c(0, 1), with_regions = NULL),
                glue::glue("Invalid 'replace_NAs' argument. The only accepted combinations of arguments start with \\
