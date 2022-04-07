@@ -36,7 +36,7 @@ check_gdp <- function(gdp) {
     if (length(gdp) < 3) {
       abort("Invalid 'gdp' argument. 'gdp' must have at least 3 columns.")
     }
-  } else if (class(gdp) == "magpie") {
+  } else if (inherits(gdp, "magpie")) {
     # Check for magclass package
     rlang::check_installed("magclass", reason = "in order for magpie objects to be recognized.")
     # Check if there is years info

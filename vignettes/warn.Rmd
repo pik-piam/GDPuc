@@ -19,6 +19,11 @@ knitr::opts_chunk$set(
 You can silence all warnings thrown by `convertGDP` by setting the option `GDPuc.warn = FALSE`. 
 This will affect all calls to `convertGDP` in the active R-session. 
 
+```{r eval=FALSE}
+options(GDPuc.warn = FALSE)
+```
+
+
 ## The `replace_NAs` argument
 
 One warning thrown by `convertGDP` comes from the addition of NAs in the return object due to missing conversion 
