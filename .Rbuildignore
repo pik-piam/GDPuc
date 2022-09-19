@@ -19,3 +19,4 @@
 ^.lintr$
 ^tests/.lintr$
 ^vignettes/.lintr$
+^CRAN-SUBMISSION$
