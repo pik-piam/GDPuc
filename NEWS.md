@@ -1,3 +1,7 @@
+# GDPuc 0.9.2
+
+* Transfer base repo to the pik-piam organization and update documentation links accordingly.
+
 # GDPuc 0.9.0
 
 * Add option GDPuc.warn and corresponding vignette.
