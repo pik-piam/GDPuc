@@ -1,7 +1,7 @@
 {
   "title": "GDPuc: Easily Convert GDP Data",
-  "version": "0.9.0",
-  "description": "<p>A function to convert GDP time series from one unit to another.\n    All common GDP units are included, i.e. current and constant local currency\n    units, US$ via market exchange rates and international dollars via\n    purchasing power parities. Conversion factors can easily be customized. \n    Conversion at a regional/aggregated level is also possible.<\/p>",
+  "version": "0.9.1",
+  "description": "<p>A function to convert GDP time series from one unit to\n    another.  All common GDP units are included, i.e. current and constant\n    local currency units, US$ via market exchange rates and international\n    dollars via purchasing power parities. Conversion factors can easily\n    be customized.  Conversion at a regional/aggregated level is also\n    possible.<\/p>",
   "creators": [
     {
       "name": "Koch, Johannes"

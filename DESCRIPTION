@@ -1,24 +1,22 @@
 Package: GDPuc
 Title: Easily Convert GDP Data
-Version: 0.9.0
-Authors@R: 
-    c(person(given = "Johannes",
-             family = "Koch",
-             role = c("aut", "cre"),
-             email = "jokoch@pik-potsdam.de"))
-Description: A function to convert GDP time series from one unit to another.
-    All common GDP units are included, i.e. current and constant local currency
-    units, US$ via market exchange rates and international dollars via
-    purchasing power parities. Conversion factors can easily be customized. 
-    Conversion at a regional/aggregated level is also possible.
+Version: 0.9.1
+Date: 2022-09-16
+Authors@R:
+    person("Johannes", "Koch", , "jokoch@pik-potsdam.de", role = c("aut", "cre"))
+Description: A function to convert GDP time series from one unit to
+    another.  All common GDP units are included, i.e. current and constant
+    local currency units, US$ via market exchange rates and international
+    dollars via purchasing power parities. Conversion factors can easily
+    be customized.  Conversion at a regional/aggregated level is also
+    possible.
 License: GPL (>= 3)
-URL: https://github.com/johanneskoch94/GDPuc#readme,
-    https://johanneskoch94.github.io/GDPuc/
-BugReports: https://github.com/johanneskoch94/GDPuc/issues
-RoxygenNote: 7.1.2
-Depends: 
+URL: https://github.com/pik-piam/GDPuc,
+    https://pik-piam.github.io/GDPuc
+BugReports: https://github.com/pik-piam/GDPuc/issues
+Depends:
     R (>= 2.10)
-Imports: 
+Imports:
     cli (>= 2.4.0),
     crayon,
     dplyr,
@@ -29,7 +27,7 @@ Imports:
     tibble,
     tidyselect,
     withr
-Suggests: 
+Suggests:
     covr,
     knitr,
     magclass,
@@ -39,10 +37,12 @@ Suggests:
     stringr,
     testthat (>= 3.0.0),
     tidyr,
+    usethis,
     WDI,
     zoo
+VignetteBuilder:
+    knitr
 Config/testthat/edition: 3
 Encoding: UTF-8
-Date: 2022-04-07
 Roxygen: list(markdown = TRUE)
-VignetteBuilder: knitr
+RoxygenNote: 7.2.1
