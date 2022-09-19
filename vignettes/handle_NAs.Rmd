@@ -31,14 +31,14 @@ library(GDPuc)
 
 # Test with Aruba -> iso3c = ABW
 my_gdp <- tibble::tibble(
-  iso3c = c("ABW"), 
-  year = 2010:2014, 
+  iso3c = c("ABW"),
+  year = 2010:2014,
   value = 100:104
 )
 
 x <- convertGDP(
-  gdp = my_gdp, 
-  unit_in = "constant 2005 Int$PPP", 
+  gdp = my_gdp,
+  unit_in = "constant 2005 Int$PPP",
   unit_out = "constant 2019 Int$PPP",
   return_cfs = TRUE
 )
@@ -56,7 +56,7 @@ x <- convertGDP(
 )
 ```
 
-You can also use the `GDPuc.warn` option to suppress warnings from `convertGDP` in general (see ["Silence warnings"](https://johanneskoch94.github.io/GDPuc/articles/warn.html)).
+You can also use the `GDPuc.warn` option to suppress warnings from `convertGDP` in general (see ["Silence warnings"](https://pik-piam.github.io/GDPuc/articles/warn.html)).
 
 ### `replace_NAs` = 0  
 
@@ -64,14 +64,14 @@ If set to 0, resulting NAs are set to 0.
 
 ```{r}
 my_gdp <- tibble::tibble(
-  iso3c = "ABW", 
-  year = 2010:2014, 
+  iso3c = "ABW",
+  year = 2010:2014,
   value = 100:104
 )
 
 x <- convertGDP(
-  gdp = my_gdp, 
-  unit_in = "constant 2005 Int$PPP", 
+  gdp = my_gdp,
+  unit_in = "constant 2005 Int$PPP",
   unit_out = "constant 2019 Int$PPP",
   replace_NAs = 0,
   return_cfs = TRUE
@@ -88,14 +88,14 @@ If set to "no_conversion", NAs are replaced with the values in the gdp argument.
 
 ```{r}
 my_gdp <- tibble::tibble(
-  iso3c = "ABW", 
-  year = 2010:2014, 
+  iso3c = "ABW",
+  year = 2010:2014,
   value = 100:104
 )
 
 x <- convertGDP(
-  gdp = my_gdp, 
-  unit_in = "constant 2005 Int$PPP", 
+  gdp = my_gdp,
+  unit_in = "constant 2005 Int$PPP",
   unit_out = "constant 2019 Int$PPP",
   replace_NAs = "no_conversion",
   return_cfs = TRUE
@@ -112,14 +112,14 @@ If set to "linear", missing conversion factors are inter- and extrapolated linea
 
 ```{r}
 my_gdp <- tibble::tibble(
-  iso3c = "ABW", 
-  year = 2010:2014, 
+  iso3c = "ABW",
+  year = 2010:2014,
   value = 100:104
 )
 
 x <- convertGDP(
-  gdp = my_gdp, 
-  unit_in = "constant 2005 Int$PPP", 
+  gdp = my_gdp,
+  unit_in = "constant 2005 Int$PPP",
   unit_out = "constant 2019 Int$PPP",
   replace_NAs = "linear",
   return_cfs = TRUE
@@ -135,19 +135,19 @@ If set to "regional_average", the regional GDP-weighted averages will be used. R
 
 ```{r}
 my_gdp <- tibble::tibble(
-  iso3c = "ABW", 
-  year = 2010:2014, 
+  iso3c = "ABW",
+  year = 2010:2014,
   value = 100:104
 )
 
 my_mapping_data_frame <- tibble::tibble(
-  iso3c = c("ABW", "BRA", "ARG", "COL"), 
+  iso3c = c("ABW", "BRA", "ARG", "COL"),
   region = "LAM"
 )
 
 x <- convertGDP(
-  gdp = my_gdp, 
-  unit_in = "constant 2005 Int$PPP", 
+  gdp = my_gdp,
+  unit_in = "constant 2005 Int$PPP",
   unit_out = "constant 2019 Int$PPP",
   replace_NAs = "regional_average",
   with_regions = my_mapping_data_frame,
@@ -170,19 +170,19 @@ if any missing conversion factors still lead to NAs, these are replaced with 0.
 ```{r}
 # Create an imaginary country XXX, and add it to the Latin America region
 my_gdp <- tibble::tibble(
-  iso3c = c("ABW", "XXX"), 
-  year = 2010, 
+  iso3c = c("ABW", "XXX"),
+  year = 2010,
   value = 100
 )
 
 my_mapping_data_frame <- tibble::tibble(
-  iso3c = c("ABW", "BRA", "ARG", "COL", "XXX"), 
+  iso3c = c("ABW", "BRA", "ARG", "COL", "XXX"),
   region = "LAM"
 )
 
 x <- convertGDP(
-  gdp = my_gdp, 
-  unit_in = "constant 2005 Int$PPP", 
+  gdp = my_gdp,
+  unit_in = "constant 2005 Int$PPP",
   unit_out = "constant 2019 Int$PPP",
   replace_NAs = c("linear", 0),
   with_regions = my_mapping_data_frame,
@@ -199,14 +199,14 @@ If set to `1`, missing conversion factors are set to 1. **To be deprecated, use 
 
 ```{r}
 my_gdp <- tibble::tibble(
-  iso3c = "ABW", 
-  year = 2010:2014, 
+  iso3c = "ABW",
+  year = 2010:2014,
   value = 100:104
 )
 
 x <- convertGDP(
-  gdp = my_gdp, 
-  unit_in = "constant 2005 Int$PPP", 
+  gdp = my_gdp,
+  unit_in = "constant 2005 Int$PPP",
   unit_out = "constant 2019 Int$PPP",
   replace_NAs = 1,
   return_cfs = TRUE

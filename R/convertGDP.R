@@ -53,7 +53,7 @@
 #'   where YYYY should be replaced with a year e.g. "2010" or "2017".
 #' @param source A string referring to a package internal data frame containing the conversion factors, or
 #'   a data-frame that exists in the calling environment.
-#'   Use [print_source_info()](https://johanneskoch94.github.io/GDPuc/reference/print_source_info.html)
+#'   Use [print_source_info()](https://pik-piam.github.io/GDPuc/reference/print_source_info.html)
 #'   to learn about the available sources.
 #' @param with_regions NULL or a data-frame. The data-frame should be "country to region
 #'   mapping": one column named "iso3c" with iso3c country codes, and one column named
