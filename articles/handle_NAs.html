@@ -8,8 +8,8 @@
 <meta name="description" content="GDPuc">
 <title>Handling missing conversion factors • GDPuc</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><link href="../deps/_Source%20Sans%20Pro-0.4.1/font.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.2/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Handling missing conversion factors">
@@ -27,7 +27,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">GDPuc</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,7 +60,7 @@
 
       <ul class="navbar-nav">
 <li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/johanneskoch94/GDPuc/" aria-label="github">
+  <a class="external-link nav-link" href="https://github.com/pik-piam/GDPuc/" aria-label="github">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -75,11 +75,11 @@
 
 
 <script src="handle_NAs_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
-  <main id="main"><div class="page-header">
+  <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Handling missing conversion factors</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/johanneskoch94/GDPuc/blob/HEAD/vignettes/handle_NAs.Rmd" class="external-link"><code>vignettes/handle_NAs.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/pik-piam/GDPuc/blob/HEAD/vignettes/handle_NAs.Rmd" class="external-link"><code>vignettes/handle_NAs.Rmd</code></a></small>
       <div class="d-none name"><code>handle_NAs.Rmd</code></div>
     </div>
 
@@ -96,45 +96,49 @@
 <p>By default, <code>replace_NAs</code> is <code>NULL</code>, and NAs are returned along with a warning. Set <code>replace_NAs = NA</code> to explicitly return NAs without the warning.</p>
 <p>Below, the <code>return_cfs</code> argument is set to <code>TRUE</code> to inspect the conversion factors, along side the result.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/johanneskoch94/GDPuc#readme" class="external-link">GDPuc</a></span><span class="op">)</span>
-
-<span class="co"># Test with Aruba -&gt; iso3c = ABW</span>
-<span class="va">my_gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>
-  iso3c <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ABW"</span><span class="op">)</span>, 
-  year <span class="op">=</span> <span class="fl">2010</span><span class="op">:</span><span class="fl">2014</span>, 
-  value <span class="op">=</span> <span class="fl">100</span><span class="op">:</span><span class="fl">104</span>
-<span class="op">)</span>
-
-<span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/convertGDP.html">convertGDP</a></span><span class="op">(</span>
-  gdp <span class="op">=</span> <span class="va">my_gdp</span>, 
-  unit_in <span class="op">=</span> <span class="st">"constant 2005 Int$PPP"</span>, 
-  unit_out <span class="op">=</span> <span class="st">"constant 2019 Int$PPP"</span>,
-  return_cfs <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span>
-<span class="co">#&gt; Warning: NAs have been generated for countries lacking conversion factors!</span>
-<span class="va">x</span><span class="op">$</span><span class="va">result</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 3</span></span>
-<span class="co">#&gt;   iso3c  year value</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW    <span style="text-decoration: underline;">2</span>010    <span style="color: #BB0000;">NA</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ABW    <span style="text-decoration: underline;">2</span>011    <span style="color: #BB0000;">NA</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ABW    <span style="text-decoration: underline;">2</span>012    <span style="color: #BB0000;">NA</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ABW    <span style="text-decoration: underline;">2</span>013    <span style="color: #BB0000;">NA</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ABW    <span style="text-decoration: underline;">2</span>014    <span style="color: #BB0000;">NA</span></span>
-
-<span class="va">x</span><span class="op">$</span><span class="va">cfs</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 4</span></span>
-<span class="co">#&gt;   iso3c `\033[34m2005 PPP conversion factor\…` `\033[34m2019 …` `\033[34m2019 …`</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW                                     1.22               <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/pik-piam/GDPuc" class="external-link">GDPuc</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Test with Aruba -&gt; iso3c = ABW</span></span>
+<span><span class="va">my_gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span>  iso3c <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ABW"</span><span class="op">)</span>, </span>
+<span>  year <span class="op">=</span> <span class="fl">2010</span><span class="op">:</span><span class="fl">2014</span>, </span>
+<span>  value <span class="op">=</span> <span class="fl">100</span><span class="op">:</span><span class="fl">104</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/convertGDP.html">convertGDP</a></span><span class="op">(</span></span>
+<span>  gdp <span class="op">=</span> <span class="va">my_gdp</span>, </span>
+<span>  unit_in <span class="op">=</span> <span class="st">"constant 2005 Int$PPP"</span>, </span>
+<span>  unit_out <span class="op">=</span> <span class="st">"constant 2019 Int$PPP"</span>,</span>
+<span>  return_cfs <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: NAs have been generated for countries lacking conversion factors!</span></span>
+<span><span class="va">x</span><span class="op">$</span><span class="va">result</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 3</span></span></span>
+<span><span class="co">#&gt;   iso3c  year value</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW    <span style="text-decoration: underline;">2</span>010    <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ABW    <span style="text-decoration: underline;">2</span>011    <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ABW    <span style="text-decoration: underline;">2</span>012    <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ABW    <span style="text-decoration: underline;">2</span>013    <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ABW    <span style="text-decoration: underline;">2</span>014    <span style="color: #BB0000;">NA</span></span></span>
+<span></span>
+<span><span class="va">x</span><span class="op">$</span><span class="va">cfs</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 4</span></span></span>
+<span><span class="co">#&gt;   iso3c \033[34m2005 PPP conversion factor\033[39m in (LCU per…¹ \033[…² \033[…³</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW                                                       1.22      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># … with abbreviated variable names</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ¹​`\033[34m2005 PPP conversion factor\033[39m in (LCU per international $)`,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ²​`\033[34m2019 value of base 2005 GDP deflator\033[39m in (constant 2019 LCU per constant 2005 LCU)`,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ³​`\033[34m2019 PPP conversion factor\033[39m in (LCU per international $)`</span></span></span></code></pre></div>
 <p>To eliminate the warning:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/convertGDP.html">convertGDP</a></span><span class="op">(</span>
-  gdp <span class="op">=</span> <span class="va">my_gdp</span>, 
-  unit_in <span class="op">=</span> <span class="st">"constant 2005 Int$PPP"</span>, 
-  unit_out <span class="op">=</span> <span class="st">"constant 2019 Int$PPP"</span>,
-  replace_NAs <span class="op">=</span> <span class="cn">NA</span>
-<span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/convertGDP.html">convertGDP</a></span><span class="op">(</span></span>
+<span>  gdp <span class="op">=</span> <span class="va">my_gdp</span>, </span>
+<span>  unit_in <span class="op">=</span> <span class="st">"constant 2005 Int$PPP"</span>, </span>
+<span>  unit_out <span class="op">=</span> <span class="st">"constant 2019 Int$PPP"</span>,</span>
+<span>  replace_NAs <span class="op">=</span> <span class="cn">NA</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>You can also use the <code>GDPuc.warn</code> option to suppress warnings from <code>convertGDP</code> in general (see <a href="https://johanneskoch94.github.io/GDPuc/articles/warn.html">“Silence warnings”</a>).</p>
 </div>
 <div class="section level3">
@@ -143,34 +147,38 @@
 </h3>
 <p>If set to 0, resulting NAs are set to 0.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">my_gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>
-  iso3c <span class="op">=</span> <span class="st">"ABW"</span>, 
-  year <span class="op">=</span> <span class="fl">2010</span><span class="op">:</span><span class="fl">2014</span>, 
-  value <span class="op">=</span> <span class="fl">100</span><span class="op">:</span><span class="fl">104</span>
-<span class="op">)</span>
-
-<span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/convertGDP.html">convertGDP</a></span><span class="op">(</span>
-  gdp <span class="op">=</span> <span class="va">my_gdp</span>, 
-  unit_in <span class="op">=</span> <span class="st">"constant 2005 Int$PPP"</span>, 
-  unit_out <span class="op">=</span> <span class="st">"constant 2019 Int$PPP"</span>,
-  replace_NAs <span class="op">=</span> <span class="fl">0</span>,
-  return_cfs <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span>
-<span class="va">x</span><span class="op">$</span><span class="va">result</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 3</span></span>
-<span class="co">#&gt;   iso3c  year value</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW    <span style="text-decoration: underline;">2</span>010     0</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ABW    <span style="text-decoration: underline;">2</span>011     0</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ABW    <span style="text-decoration: underline;">2</span>012     0</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ABW    <span style="text-decoration: underline;">2</span>013     0</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ABW    <span style="text-decoration: underline;">2</span>014     0</span>
-
-<span class="va">x</span><span class="op">$</span><span class="va">cfs</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 4</span></span>
-<span class="co">#&gt;   iso3c `\033[34m2005 PPP conversion factor\…` `\033[34m2019 …` `\033[34m2019 …`</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW                                     1.22               <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">my_gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span>  iso3c <span class="op">=</span> <span class="st">"ABW"</span>, </span>
+<span>  year <span class="op">=</span> <span class="fl">2010</span><span class="op">:</span><span class="fl">2014</span>, </span>
+<span>  value <span class="op">=</span> <span class="fl">100</span><span class="op">:</span><span class="fl">104</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/convertGDP.html">convertGDP</a></span><span class="op">(</span></span>
+<span>  gdp <span class="op">=</span> <span class="va">my_gdp</span>, </span>
+<span>  unit_in <span class="op">=</span> <span class="st">"constant 2005 Int$PPP"</span>, </span>
+<span>  unit_out <span class="op">=</span> <span class="st">"constant 2019 Int$PPP"</span>,</span>
+<span>  replace_NAs <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  return_cfs <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">x</span><span class="op">$</span><span class="va">result</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 3</span></span></span>
+<span><span class="co">#&gt;   iso3c  year value</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW    <span style="text-decoration: underline;">2</span>010     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ABW    <span style="text-decoration: underline;">2</span>011     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ABW    <span style="text-decoration: underline;">2</span>012     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ABW    <span style="text-decoration: underline;">2</span>013     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ABW    <span style="text-decoration: underline;">2</span>014     0</span></span>
+<span></span>
+<span><span class="va">x</span><span class="op">$</span><span class="va">cfs</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 4</span></span></span>
+<span><span class="co">#&gt;   iso3c \033[34m2005 PPP conversion factor\033[39m in (LCU per…¹ \033[…² \033[…³</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW                                                       1.22      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># … with abbreviated variable names</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ¹​`\033[34m2005 PPP conversion factor\033[39m in (LCU per international $)`,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ²​`\033[34m2019 value of base 2005 GDP deflator\033[39m in (constant 2019 LCU per constant 2005 LCU)`,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ³​`\033[34m2019 PPP conversion factor\033[39m in (LCU per international $)`</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="replace_nas-no_conversion">
@@ -178,34 +186,38 @@
 </h3>
 <p>If set to “no_conversion”, NAs are replaced with the values in the gdp argument.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">my_gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>
-  iso3c <span class="op">=</span> <span class="st">"ABW"</span>, 
-  year <span class="op">=</span> <span class="fl">2010</span><span class="op">:</span><span class="fl">2014</span>, 
-  value <span class="op">=</span> <span class="fl">100</span><span class="op">:</span><span class="fl">104</span>
-<span class="op">)</span>
-
-<span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/convertGDP.html">convertGDP</a></span><span class="op">(</span>
-  gdp <span class="op">=</span> <span class="va">my_gdp</span>, 
-  unit_in <span class="op">=</span> <span class="st">"constant 2005 Int$PPP"</span>, 
-  unit_out <span class="op">=</span> <span class="st">"constant 2019 Int$PPP"</span>,
-  replace_NAs <span class="op">=</span> <span class="st">"no_conversion"</span>,
-  return_cfs <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span>
-<span class="va">x</span><span class="op">$</span><span class="va">result</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 3</span></span>
-<span class="co">#&gt;   iso3c  year value</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW    <span style="text-decoration: underline;">2</span>010   100</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ABW    <span style="text-decoration: underline;">2</span>011   101</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ABW    <span style="text-decoration: underline;">2</span>012   102</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ABW    <span style="text-decoration: underline;">2</span>013   103</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ABW    <span style="text-decoration: underline;">2</span>014   104</span>
-
-<span class="va">x</span><span class="op">$</span><span class="va">cfs</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 4</span></span>
-<span class="co">#&gt;   iso3c `\033[34m2005 PPP conversion factor\…` `\033[34m2019 …` `\033[34m2019 …`</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW                                     1.22               <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">my_gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span>  iso3c <span class="op">=</span> <span class="st">"ABW"</span>, </span>
+<span>  year <span class="op">=</span> <span class="fl">2010</span><span class="op">:</span><span class="fl">2014</span>, </span>
+<span>  value <span class="op">=</span> <span class="fl">100</span><span class="op">:</span><span class="fl">104</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/convertGDP.html">convertGDP</a></span><span class="op">(</span></span>
+<span>  gdp <span class="op">=</span> <span class="va">my_gdp</span>, </span>
+<span>  unit_in <span class="op">=</span> <span class="st">"constant 2005 Int$PPP"</span>, </span>
+<span>  unit_out <span class="op">=</span> <span class="st">"constant 2019 Int$PPP"</span>,</span>
+<span>  replace_NAs <span class="op">=</span> <span class="st">"no_conversion"</span>,</span>
+<span>  return_cfs <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">x</span><span class="op">$</span><span class="va">result</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 3</span></span></span>
+<span><span class="co">#&gt;   iso3c  year value</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW    <span style="text-decoration: underline;">2</span>010   100</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ABW    <span style="text-decoration: underline;">2</span>011   101</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ABW    <span style="text-decoration: underline;">2</span>012   102</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ABW    <span style="text-decoration: underline;">2</span>013   103</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ABW    <span style="text-decoration: underline;">2</span>014   104</span></span>
+<span></span>
+<span><span class="va">x</span><span class="op">$</span><span class="va">cfs</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 4</span></span></span>
+<span><span class="co">#&gt;   iso3c \033[34m2005 PPP conversion factor\033[39m in (LCU per…¹ \033[…² \033[…³</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW                                                       1.22      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># … with abbreviated variable names</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ¹​`\033[34m2005 PPP conversion factor\033[39m in (LCU per international $)`,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ²​`\033[34m2019 value of base 2005 GDP deflator\033[39m in (constant 2019 LCU per constant 2005 LCU)`,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ³​`\033[34m2019 PPP conversion factor\033[39m in (LCU per international $)`</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="replace_nas-linear">
@@ -213,34 +225,38 @@
 </h3>
 <p>If set to “linear”, missing conversion factors are inter- and extrapolated linearly. For the extrapolation, the closest 5 data points are used.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">my_gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>
-  iso3c <span class="op">=</span> <span class="st">"ABW"</span>, 
-  year <span class="op">=</span> <span class="fl">2010</span><span class="op">:</span><span class="fl">2014</span>, 
-  value <span class="op">=</span> <span class="fl">100</span><span class="op">:</span><span class="fl">104</span>
-<span class="op">)</span>
-
-<span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/convertGDP.html">convertGDP</a></span><span class="op">(</span>
-  gdp <span class="op">=</span> <span class="va">my_gdp</span>, 
-  unit_in <span class="op">=</span> <span class="st">"constant 2005 Int$PPP"</span>, 
-  unit_out <span class="op">=</span> <span class="st">"constant 2019 Int$PPP"</span>,
-  replace_NAs <span class="op">=</span> <span class="st">"linear"</span>,
-  return_cfs <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span>
-<span class="va">x</span><span class="op">$</span><span class="va">result</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 3</span></span>
-<span class="co">#&gt;   iso3c  year value</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW    <span style="text-decoration: underline;">2</span>010  116.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ABW    <span style="text-decoration: underline;">2</span>011  117.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ABW    <span style="text-decoration: underline;">2</span>012  118.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ABW    <span style="text-decoration: underline;">2</span>013  120.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ABW    <span style="text-decoration: underline;">2</span>014  121.</span>
-
-<span class="va">x</span><span class="op">$</span><span class="va">cfs</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 4</span></span>
-<span class="co">#&gt;   iso3c `\033[34m2005 PPP conversion factor\…` `\033[34m2019 …` `\033[34m2019 …`</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW                                     1.22             1.30             1.37</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">my_gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span>  iso3c <span class="op">=</span> <span class="st">"ABW"</span>, </span>
+<span>  year <span class="op">=</span> <span class="fl">2010</span><span class="op">:</span><span class="fl">2014</span>, </span>
+<span>  value <span class="op">=</span> <span class="fl">100</span><span class="op">:</span><span class="fl">104</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/convertGDP.html">convertGDP</a></span><span class="op">(</span></span>
+<span>  gdp <span class="op">=</span> <span class="va">my_gdp</span>, </span>
+<span>  unit_in <span class="op">=</span> <span class="st">"constant 2005 Int$PPP"</span>, </span>
+<span>  unit_out <span class="op">=</span> <span class="st">"constant 2019 Int$PPP"</span>,</span>
+<span>  replace_NAs <span class="op">=</span> <span class="st">"linear"</span>,</span>
+<span>  return_cfs <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">x</span><span class="op">$</span><span class="va">result</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 3</span></span></span>
+<span><span class="co">#&gt;   iso3c  year value</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW    <span style="text-decoration: underline;">2</span>010  116.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ABW    <span style="text-decoration: underline;">2</span>011  117.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ABW    <span style="text-decoration: underline;">2</span>012  118.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ABW    <span style="text-decoration: underline;">2</span>013  120.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ABW    <span style="text-decoration: underline;">2</span>014  121.</span></span>
+<span></span>
+<span><span class="va">x</span><span class="op">$</span><span class="va">cfs</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 4</span></span></span>
+<span><span class="co">#&gt;   iso3c \033[34m2005 PPP conversion factor\033[39m in (LCU per…¹ \033[…² \033[…³</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW                                                       1.22    1.30    1.37</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># … with abbreviated variable names</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ¹​`\033[34m2005 PPP conversion factor\033[39m in (LCU per international $)`,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ²​`\033[34m2019 value of base 2005 GDP deflator\033[39m in (constant 2019 LCU per constant 2005 LCU)`,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ³​`\033[34m2019 PPP conversion factor\033[39m in (LCU per international $)`</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="replace_nas-regional_average">
@@ -248,43 +264,47 @@
 </h3>
 <p>If set to “regional_average”, the regional GDP-weighted averages will be used. Requires a region-mapping, and a column in the source object with GDP data at PPP, to be used as weight. <strong>May lead to misleading results, use with care!</strong></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">my_gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>
-  iso3c <span class="op">=</span> <span class="st">"ABW"</span>, 
-  year <span class="op">=</span> <span class="fl">2010</span><span class="op">:</span><span class="fl">2014</span>, 
-  value <span class="op">=</span> <span class="fl">100</span><span class="op">:</span><span class="fl">104</span>
-<span class="op">)</span>
-
-<span class="va">my_mapping_data_frame</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>
-  iso3c <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ABW"</span>, <span class="st">"BRA"</span>, <span class="st">"ARG"</span>, <span class="st">"COL"</span><span class="op">)</span>, 
-  region <span class="op">=</span> <span class="st">"LAM"</span>
-<span class="op">)</span>
-
-<span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/convertGDP.html">convertGDP</a></span><span class="op">(</span>
-  gdp <span class="op">=</span> <span class="va">my_gdp</span>, 
-  unit_in <span class="op">=</span> <span class="st">"constant 2005 Int$PPP"</span>, 
-  unit_out <span class="op">=</span> <span class="st">"constant 2019 Int$PPP"</span>,
-  replace_NAs <span class="op">=</span> <span class="st">"regional_average"</span>,
-  with_regions <span class="op">=</span> <span class="va">my_mapping_data_frame</span>,
-  return_cfs <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span>
-<span class="va">x</span><span class="op">$</span><span class="va">result</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 3</span></span>
-<span class="co">#&gt;   iso3c  year value</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW    <span style="text-decoration: underline;">2</span>010  3.75</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ABW    <span style="text-decoration: underline;">2</span>011  3.79</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ABW    <span style="text-decoration: underline;">2</span>012  3.83</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ABW    <span style="text-decoration: underline;">2</span>013  3.86</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ABW    <span style="text-decoration: underline;">2</span>014  3.90</span>
-
-<span class="va">x</span><span class="op">$</span><span class="va">cfs</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 4</span></span>
-<span class="co">#&gt;   iso3c `\033[34m2005 PPP conversion factor\…` `\033[34m2019 …` `\033[34m2019 …`</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW                                     1.22             6.44             210.</span>
-
-<span class="co"># Compare the 2019 PPP with the 2005 PPP. They are not in the same order of magnitude. </span>
-<span class="co"># Obviously, being a part of the same region, does not mean the currencies are of the same strength.</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">my_gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span>  iso3c <span class="op">=</span> <span class="st">"ABW"</span>, </span>
+<span>  year <span class="op">=</span> <span class="fl">2010</span><span class="op">:</span><span class="fl">2014</span>, </span>
+<span>  value <span class="op">=</span> <span class="fl">100</span><span class="op">:</span><span class="fl">104</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">my_mapping_data_frame</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span>  iso3c <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ABW"</span>, <span class="st">"BRA"</span>, <span class="st">"ARG"</span>, <span class="st">"COL"</span><span class="op">)</span>, </span>
+<span>  region <span class="op">=</span> <span class="st">"LAM"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/convertGDP.html">convertGDP</a></span><span class="op">(</span></span>
+<span>  gdp <span class="op">=</span> <span class="va">my_gdp</span>, </span>
+<span>  unit_in <span class="op">=</span> <span class="st">"constant 2005 Int$PPP"</span>, </span>
+<span>  unit_out <span class="op">=</span> <span class="st">"constant 2019 Int$PPP"</span>,</span>
+<span>  replace_NAs <span class="op">=</span> <span class="st">"regional_average"</span>,</span>
+<span>  with_regions <span class="op">=</span> <span class="va">my_mapping_data_frame</span>,</span>
+<span>  return_cfs <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">x</span><span class="op">$</span><span class="va">result</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 3</span></span></span>
+<span><span class="co">#&gt;   iso3c  year value</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW    <span style="text-decoration: underline;">2</span>010  3.75</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ABW    <span style="text-decoration: underline;">2</span>011  3.79</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ABW    <span style="text-decoration: underline;">2</span>012  3.83</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ABW    <span style="text-decoration: underline;">2</span>013  3.86</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ABW    <span style="text-decoration: underline;">2</span>014  3.90</span></span>
+<span></span>
+<span><span class="va">x</span><span class="op">$</span><span class="va">cfs</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 4</span></span></span>
+<span><span class="co">#&gt;   iso3c \033[34m2005 PPP conversion factor\033[39m in (LCU per…¹ \033[…² \033[…³</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW                                                       1.22    6.44    210.</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># … with abbreviated variable names</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ¹​`\033[34m2005 PPP conversion factor\033[39m in (LCU per international $)`,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ²​`\033[34m2019 value of base 2005 GDP deflator\033[39m in (constant 2019 LCU per constant 2005 LCU)`,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ³​`\033[34m2019 PPP conversion factor\033[39m in (LCU per international $)`</span></span></span>
+<span></span>
+<span><span class="co"># Compare the 2019 PPP with the 2005 PPP. They are not in the same order of magnitude. </span></span>
+<span><span class="co"># Obviously, being a part of the same region, does not mean the currencies are of the same strength.</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="replace_nas-clinear">
@@ -292,80 +312,87 @@
 </h3>
 <p>If a vector is passed, with “linear” as first element, then the operations are done in sequence. For example for c(“linear”, 0), missing conversion factors are first inter- and extrapolated linearly but if any missing conversion factors still lead to NAs, these are replaced with 0.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Create an imaginary country XXX, and add it to the Latin America region</span>
-<span class="va">my_gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>
-  iso3c <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ABW"</span>, <span class="st">"XXX"</span><span class="op">)</span>, 
-  year <span class="op">=</span> <span class="fl">2010</span>, 
-  value <span class="op">=</span> <span class="fl">100</span>
-<span class="op">)</span>
-
-<span class="va">my_mapping_data_frame</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>
-  iso3c <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ABW"</span>, <span class="st">"BRA"</span>, <span class="st">"ARG"</span>, <span class="st">"COL"</span>, <span class="st">"XXX"</span><span class="op">)</span>, 
-  region <span class="op">=</span> <span class="st">"LAM"</span>
-<span class="op">)</span>
-
-<span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/convertGDP.html">convertGDP</a></span><span class="op">(</span>
-  gdp <span class="op">=</span> <span class="va">my_gdp</span>, 
-  unit_in <span class="op">=</span> <span class="st">"constant 2005 Int$PPP"</span>, 
-  unit_out <span class="op">=</span> <span class="st">"constant 2019 Int$PPP"</span>,
-  replace_NAs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"linear"</span>, <span class="fl">0</span><span class="op">)</span>,
-  with_regions <span class="op">=</span> <span class="va">my_mapping_data_frame</span>,
-  return_cfs <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span>
-<span class="va">x</span><span class="op">$</span><span class="va">result</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 3</span></span>
-<span class="co">#&gt;   iso3c  year value</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW    <span style="text-decoration: underline;">2</span>010  116.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> XXX    <span style="text-decoration: underline;">2</span>010    0</span>
-
-<span class="va">x</span><span class="op">$</span><span class="va">cfs</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 4</span></span>
-<span class="co">#&gt;   iso3c `\033[34m2005 PPP conversion factor\…` `\033[34m2019 …` `\033[34m2019 …`</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW                                     1.22             1.30             1.37</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> XXX                                    <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span>               <span style="color: #BB0000;">NA</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Create an imaginary country XXX, and add it to the Latin America region</span></span>
+<span><span class="va">my_gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span>  iso3c <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ABW"</span>, <span class="st">"XXX"</span><span class="op">)</span>, </span>
+<span>  year <span class="op">=</span> <span class="fl">2010</span>, </span>
+<span>  value <span class="op">=</span> <span class="fl">100</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">my_mapping_data_frame</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span>  iso3c <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ABW"</span>, <span class="st">"BRA"</span>, <span class="st">"ARG"</span>, <span class="st">"COL"</span>, <span class="st">"XXX"</span><span class="op">)</span>, </span>
+<span>  region <span class="op">=</span> <span class="st">"LAM"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/convertGDP.html">convertGDP</a></span><span class="op">(</span></span>
+<span>  gdp <span class="op">=</span> <span class="va">my_gdp</span>, </span>
+<span>  unit_in <span class="op">=</span> <span class="st">"constant 2005 Int$PPP"</span>, </span>
+<span>  unit_out <span class="op">=</span> <span class="st">"constant 2019 Int$PPP"</span>,</span>
+<span>  replace_NAs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"linear"</span>, <span class="fl">0</span><span class="op">)</span>,</span>
+<span>  with_regions <span class="op">=</span> <span class="va">my_mapping_data_frame</span>,</span>
+<span>  return_cfs <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">x</span><span class="op">$</span><span class="va">result</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 3</span></span></span>
+<span><span class="co">#&gt;   iso3c  year value</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW    <span style="text-decoration: underline;">2</span>010  116.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> XXX    <span style="text-decoration: underline;">2</span>010    0</span></span>
+<span></span>
+<span><span class="va">x</span><span class="op">$</span><span class="va">cfs</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 4</span></span></span>
+<span><span class="co">#&gt;   iso3c \033[34m2005 PPP conversion factor\033[39ms in (LCU pe…¹ \033[…² \033[…³</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW                                                       1.22    1.30    1.37</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> XXX                                                      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># … with abbreviated variable names</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ¹​`\033[34m2005 PPP conversion factor\033[39ms in (LCU per international $)`,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ²​`\033[34m2019 value of base 2005 GDP deflator\033[39ms in (constant 2019 LCU per constant 2005 LCU)`,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ³​`\033[34m2019 PPP conversion factor\033[39ms in (LCU per international $)`</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="deprecated-replace_nas-1">Deprecated: <code>replace_NAs</code> = 1<a class="anchor" aria-label="anchor" href="#deprecated-replace_nas-1"></a>
 </h3>
 <p>If set to <code>1</code>, missing conversion factors are set to 1. <strong>To be deprecated, use with care!</strong></p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">my_gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>
-  iso3c <span class="op">=</span> <span class="st">"ABW"</span>, 
-  year <span class="op">=</span> <span class="fl">2010</span><span class="op">:</span><span class="fl">2014</span>, 
-  value <span class="op">=</span> <span class="fl">100</span><span class="op">:</span><span class="fl">104</span>
-<span class="op">)</span>
-
-<span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/convertGDP.html">convertGDP</a></span><span class="op">(</span>
-  gdp <span class="op">=</span> <span class="va">my_gdp</span>, 
-  unit_in <span class="op">=</span> <span class="st">"constant 2005 Int$PPP"</span>, 
-  unit_out <span class="op">=</span> <span class="st">"constant 2019 Int$PPP"</span>,
-  replace_NAs <span class="op">=</span> <span class="fl">1</span>,
-  return_cfs <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span>
-<span class="co">#&gt; Warning: The `replace_NAs` argument of `convertGDP()` should not be 1 as of GDPuc 0.7.0.</span>
-<span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span>
-<span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.</span></span>
-<span class="va">x</span><span class="op">$</span><span class="va">result</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 3</span></span>
-<span class="co">#&gt;   iso3c  year value</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW    <span style="text-decoration: underline;">2</span>010  103.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ABW    <span style="text-decoration: underline;">2</span>011  104.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ABW    <span style="text-decoration: underline;">2</span>012  105.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ABW    <span style="text-decoration: underline;">2</span>013  106.</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ABW    <span style="text-decoration: underline;">2</span>014  107.</span>
-
-<span class="va">x</span><span class="op">$</span><span class="va">cfs</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 4</span></span>
-<span class="co">#&gt;   iso3c `\033[34m2005 PPP conversion factor\…` `\033[34m2019 …` `\033[34m2019 …`</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW                                     1.22            0.840                1</span>
-
-<span class="co"># Why is the deflator above not 1? That is because for ABW, only the deflator value in 2019 was set to 1. </span>
-<span class="co"># In 2005 the deflator was in the order of magnitude of 100. Obviously setting the deflator to 1 in 2019 is </span>
-<span class="co"># completely misleading.</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">my_gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span>  iso3c <span class="op">=</span> <span class="st">"ABW"</span>, </span>
+<span>  year <span class="op">=</span> <span class="fl">2010</span><span class="op">:</span><span class="fl">2014</span>, </span>
+<span>  value <span class="op">=</span> <span class="fl">100</span><span class="op">:</span><span class="fl">104</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/convertGDP.html">convertGDP</a></span><span class="op">(</span></span>
+<span>  gdp <span class="op">=</span> <span class="va">my_gdp</span>, </span>
+<span>  unit_in <span class="op">=</span> <span class="st">"constant 2005 Int$PPP"</span>, </span>
+<span>  unit_out <span class="op">=</span> <span class="st">"constant 2019 Int$PPP"</span>,</span>
+<span>  replace_NAs <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  return_cfs <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: The `replace_NAs` argument of `convertGDP()` should not be 1 as of</span></span>
+<span><span class="co">#&gt; GDPuc 0.7.0.</span></span>
+<span><span class="va">x</span><span class="op">$</span><span class="va">result</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 3</span></span></span>
+<span><span class="co">#&gt;   iso3c  year value</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW    <span style="text-decoration: underline;">2</span>010  103.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ABW    <span style="text-decoration: underline;">2</span>011  104.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ABW    <span style="text-decoration: underline;">2</span>012  105.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ABW    <span style="text-decoration: underline;">2</span>013  106.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ABW    <span style="text-decoration: underline;">2</span>014  107.</span></span>
+<span></span>
+<span><span class="va">x</span><span class="op">$</span><span class="va">cfs</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 4</span></span></span>
+<span><span class="co">#&gt;   iso3c \033[34m2005 PPP conversion factor\033[39m in (LCU per…¹ \033[…² \033[…³</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW                                                       1.22   0.840       1</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># … with abbreviated variable names</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ¹​`\033[34m2005 PPP conversion factor\033[39m in (LCU per international $)`,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ²​`\033[34m2019 value of base 2005 GDP deflator\033[39m in (constant 2019 LCU per constant 2005 LCU)`,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ³​`\033[34m2019 PPP conversion factor\033[39m in (LCU per international $)`</span></span></span>
+<span></span>
+<span><span class="co"># Why is the deflator above not 1? That is because for ABW, only the deflator value in 2019 was set to 1. </span></span>
+<span><span class="co"># In 2005 the deflator was in the order of magnitude of 100. Obviously setting the deflator to 1 in 2019 is </span></span>
+<span><span class="co"># completely misleading.</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -381,7 +408,7 @@
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
     </footer>
