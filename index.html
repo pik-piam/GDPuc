@@ -37,7 +37,7 @@
     
     <a class="navbar-brand me-2" href="index.html">GDPuc</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -96,7 +96,7 @@
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"GDPuc"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Or the development version from GitHub</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"johanneskoch94/GDPuc"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"pik-piam/GDPuc"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
@@ -107,8 +107,8 @@
 <p>The main function of the package is <code>convertGDP</code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/convertGDP.html">convertGDP</a></span><span class="op">(</span></span>
-<span>  gdp <span class="op">=</span> <span class="va">my_gdp</span>, </span>
-<span>  unit_in <span class="op">=</span> <span class="st">"constant 2005 LCU"</span>, </span>
+<span>  gdp <span class="op">=</span> <span class="va">my_gdp</span>,</span>
+<span>  unit_in <span class="op">=</span> <span class="st">"constant 2005 LCU"</span>,</span>
 <span>  unit_out <span class="op">=</span> <span class="st">"constant 2017 Int$PPP"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Here, the <code>gdp</code> argument takes a tibble or a data-frame that contains, at least:</p>
@@ -135,8 +135,8 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/pik-piam/GDPuc" class="external-link">GDPuc</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">my_gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
-<span>  iso3c <span class="op">=</span> <span class="st">"USA"</span>, </span>
-<span>  year <span class="op">=</span> <span class="fl">2010</span><span class="op">:</span><span class="fl">2014</span>, </span>
+<span>  iso3c <span class="op">=</span> <span class="st">"USA"</span>,</span>
+<span>  year <span class="op">=</span> <span class="fl">2010</span><span class="op">:</span><span class="fl">2014</span>,</span>
 <span>  value <span class="op">=</span> <span class="fl">100</span><span class="op">:</span><span class="fl">104</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">my_gdp</span><span class="op">)</span></span>
@@ -150,8 +150,8 @@
 <span><span class="co">#&gt; 5 USA    2014   104</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/convertGDP.html">convertGDP</a></span><span class="op">(</span></span>
-<span>  gdp <span class="op">=</span> <span class="va">my_gdp</span>, </span>
-<span>  unit_in <span class="op">=</span> <span class="st">"constant 2005 LCU"</span>, </span>
+<span>  gdp <span class="op">=</span> <span class="va">my_gdp</span>,</span>
+<span>  unit_in <span class="op">=</span> <span class="st">"constant 2005 LCU"</span>,</span>
 <span>  unit_out <span class="op">=</span> <span class="st">"constant 2017 Int$PPP"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 5 × 3</span></span>
@@ -168,10 +168,10 @@
 </h2>
 <p><code>convertGDP</code> has other arguments that allow you to:</p>
 <ul>
-<li><p>choose conversion factors (see <a href="https://johanneskoch94.github.io/GDPuc/articles/source.html" class="external-link">“Choosing conversion factors”</a>)</p></li>
-<li><p>print out information on the conversion process and/or return the conversion factors used (see <a href="https://johanneskoch94.github.io/GDPuc/articles/verbose.html" class="external-link">“Getting information on the conversion process”</a>)</p></li>
-<li><p>handle missing conversion factors (see <a href="https://johanneskoch94.github.io/GDPuc/articles/handle_NAs.html" class="external-link">“Handling missing conversion factors”</a>)</p></li>
-<li><p>convert regional GDP data (see <a href="https://johanneskoch94.github.io/GDPuc/articles/with_regions.html" class="external-link">“Converting regional GDP data”</a>)</p></li>
+<li><p>choose conversion factors (see <a href="https://pik-piam.github.io/GDPuc/articles/source.html">“Choosing conversion factors”</a>)</p></li>
+<li><p>print out information on the conversion process and/or return the conversion factors used (see <a href="https://pik-piam.github.io/GDPuc/articles/verbose.html">“Getting information on the conversion process”</a>)</p></li>
+<li><p>handle missing conversion factors (see <a href="https://pik-piam.github.io/GDPuc/articles/handle_NAs.html">“Handling missing conversion factors”</a>)</p></li>
+<li><p>convert regional GDP data (see <a href="https://pik-piam.github.io/GDPuc/articles/with_regions.html">“Converting regional GDP data”</a>)</p></li>
 </ul>
 </div>
 </div>
@@ -211,8 +211,8 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://CRAN.R-project.org/package=GDPuc" class="external-link"><img src="https://www.r-pkg.org/badges/version/GDPuc" alt="CRAN status"></a></li>
-<li><a href="https://github.com/johanneskoch94/GDPuc/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/johanneskoch94/GDPuc/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://app.codecov.io/gh/johanneskoch94/GDPuc" class="external-link"><img src="https://codecov.io/gh/johanneskoch94/GDPuc/branch/main/graph/badge.svg?token=3GHXFQXARX" alt="codecov"></a></li>
+<li><a href="https://github.com/pik-piam/GDPuc/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/pik-piam/GDPuc/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://app.codecov.io/gh/pik-piam/GDPuc" class="external-link"><img src="https://codecov.io/gh/pik-piam/GDPuc/branch/main/graph/badge.svg?token=3GHXFQXARX" alt="codecov"></a></li>
 </ul>
 </div>
 
