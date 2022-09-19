@@ -50,7 +50,7 @@ where YYYY should be replaced with a year e.g. "2010" or "2017".}
 
 \item{source}{A string referring to a package internal data frame containing the conversion factors, or
 a data-frame that exists in the calling environment.
-Use \href{https://johanneskoch94.github.io/GDPuc/reference/print_source_info.html}{print_source_info()}
+Use \href{https://pik-piam.github.io/GDPuc/reference/print_source_info.html}{print_source_info()}
 to learn about the available sources.}
 
 \item{with_regions}{NULL or a data-frame. The data-frame should be "country to region

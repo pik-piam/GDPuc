@@ -56,7 +56,7 @@ x <- convertGDP(
 )
 ```
 
-You can also use the `GDPuc.warn` option to suppress warnings from `convertGDP` in general (see ["Silence warnings"](https://johanneskoch94.github.io/GDPuc/articles/warn.html)).
+You can also use the `GDPuc.warn` option to suppress warnings from `convertGDP` in general (see ["Silence warnings"](https://pik-piam.github.io/GDPuc/articles/warn.html)).
 
 ### `replace_NAs` = 0  
 

@@ -7,8 +7,8 @@
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/GDPuc)](https://CRAN.R-project.org/package=GDPuc)
-[![R-CMD-check](https://github.com/johanneskoch94/GDPuc/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/johanneskoch94/GDPuc/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://codecov.io/gh/johanneskoch94/GDPuc/branch/main/graph/badge.svg?token=3GHXFQXARX)](https://app.codecov.io/gh/johanneskoch94/GDPuc)
+[![R-CMD-check](https://github.com/pik-piam/GDPuc/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/pik-piam/GDPuc/actions/workflows/R-CMD-check.yaml)
+[![codecov](https://codecov.io/gh/pik-piam/GDPuc/branch/main/graph/badge.svg?token=3GHXFQXARX)](https://app.codecov.io/gh/pik-piam/GDPuc)
 ![Lifecycle:
 stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)
 
@@ -30,7 +30,7 @@ planned for October 2022.
 install.packages("GDPuc")
 
 # Or the development version from GitHub
-remotes::install_github("johanneskoch94/GDPuc")
+remotes::install_github("pik-piam/GDPuc")
 ```
 
 ## Usage
@@ -111,14 +111,14 @@ convertGDP(
 `convertGDP` has other arguments that allow you to:
 
 -   choose conversion factors (see [“Choosing conversion
-    factors”](https://johanneskoch94.github.io/GDPuc/articles/source.html))
+    factors”](https://pik-piam.github.io/GDPuc/articles/source.html))
 
 -   print out information on the conversion process and/or return the
     conversion factors used (see [“Getting information on the conversion
-    process”](https://johanneskoch94.github.io/GDPuc/articles/verbose.html))
+    process”](https://pik-piam.github.io/GDPuc/articles/verbose.html))
 
 -   handle missing conversion factors (see [“Handling missing conversion
-    factors”](https://johanneskoch94.github.io/GDPuc/articles/handle_NAs.html))
+    factors”](https://pik-piam.github.io/GDPuc/articles/handle_NAs.html))
 
 -   convert regional GDP data (see [“Converting regional GDP
-    data”](https://johanneskoch94.github.io/GDPuc/articles/with_regions.html))
+    data”](https://pik-piam.github.io/GDPuc/articles/with_regions.html))
