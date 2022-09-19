@@ -8,8 +8,8 @@ articles:
   verbose: verbose.html
   warn: warn.html
   with_regions: with_regions.html
-last_built: 2022-09-19T09:51Z
+last_built: 2022-09-19T10:36Z
 urls:
-  reference: https://johanneskoch94.github.io/GDPuc/reference
-  article: https://johanneskoch94.github.io/GDPuc/articles
+  reference: https://pik-piam.github.io/GDPuc/reference
+  article: https://pik-piam.github.io/GDPuc/articles
 
