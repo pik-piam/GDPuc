@@ -45,8 +45,8 @@ The main function of the package is `convertGDP`.
 
 ``` r
 convertGDP(
-  gdp = my_gdp, 
-  unit_in = "constant 2005 LCU", 
+  gdp = my_gdp,
+  unit_in = "constant 2005 LCU",
   unit_out = "constant 2017 Int$PPP"
 )
 ```
@@ -62,11 +62,11 @@ The `unit_in` and `unit_out` arguments specify the incoming and outgoing
 GDP units. All common GDP units are supported, i.e.:
 
 -   current LCU
--   current US$MER
--   current Int$PPP
+-   current US\$MER
+-   current Int\$PPP
 -   constant YYYY LCU
--   constant YYYY US$MER
--   constant YYYY Int$PPP
+-   constant YYYY US\$MER
+-   constant YYYY Int\$PPP
 
 Here “YYYY” is a placeholder for a year, e.g. “2010” or “2015”, and
 “LCU” stands for Local Currency Unit.
@@ -77,8 +77,8 @@ Here “YYYY” is a placeholder for a year, e.g. “2010” or “2015”, and
 library(GDPuc)
 
 my_gdp <- tibble::tibble(
-  iso3c = "USA", 
-  year = 2010:2014, 
+  iso3c = "USA",
+  year = 2010:2014,
   value = 100:104
 )
 print(my_gdp)
@@ -92,8 +92,8 @@ print(my_gdp)
 #> 5 USA    2014   104
 
 convertGDP(
-  gdp = my_gdp, 
-  unit_in = "constant 2005 LCU", 
+  gdp = my_gdp,
+  unit_in = "constant 2005 LCU",
   unit_out = "constant 2017 Int$PPP"
 )
 #> # A tibble: 5 × 3

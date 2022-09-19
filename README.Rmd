@@ -48,8 +48,8 @@ The main function of the package is `convertGDP`.
 
 ```{r usage1, eval=FALSE}
 convertGDP(
-  gdp = my_gdp, 
-  unit_in = "constant 2005 LCU", 
+  gdp = my_gdp,
+  unit_in = "constant 2005 LCU",
   unit_out = "constant 2017 Int$PPP"
 )
 ```
@@ -77,15 +77,15 @@ Here "YYYY" is a placeholder for a year, e.g. "2010" or "2015", and "LCU" stands
 library(GDPuc)
 
 my_gdp <- tibble::tibble(
-  iso3c = "USA", 
-  year = 2010:2014, 
+  iso3c = "USA",
+  year = 2010:2014,
   value = 100:104
 )
 print(my_gdp)
 
 convertGDP(
-  gdp = my_gdp, 
-  unit_in = "constant 2005 LCU", 
+  gdp = my_gdp,
+  unit_in = "constant 2005 LCU",
   unit_out = "constant 2017 Int$PPP"
 )
 ```
