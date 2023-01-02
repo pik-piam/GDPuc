@@ -1,3 +1,7 @@
+# GDPuc 0.10.0
+
+* Get rid of tidyselect warnings and improve tests
+
 # GDPuc 0.9.2
 
 * Transfer base repo to the pik-piam organization and update documentation links accordingly.
