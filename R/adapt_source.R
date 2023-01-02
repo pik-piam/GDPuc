@@ -9,7 +9,7 @@ adapt_source <- function(gdp, source, with_regions, replace_NAs) {
     # Add any iso3c-year combinations from gdp, not available in source
     dplyr::bind_rows(gdp %>%
                        {if ("gdpuc_region" %in% colnames(.)) dplyr::filter(., is.na(.data$gdpuc_region)) else .} %>%
-                       dplyr::select(.data$iso3c, .data$year) %>%
+                       dplyr::select("iso3c", "year") %>%
                        dplyr::distinct() %>%
                        dplyr::anti_join(source, by = c("iso3c", "year"))) %>%
     tidyr::complete(.data$iso3c, .data$year)
@@ -27,9 +27,9 @@ adapt_source <- function(gdp, source, with_regions, replace_NAs) {
       dplyr::group_by(.data$iso3c) %>%
       dplyr::arrange(.data$year) %>%
       dplyr::mutate(dplyr::across(.cols = c(
-        .data$`GDP deflator`,
-        .data$`MER (LCU per US$)`,
-        .data$`PPP conversion factor, GDP (LCU per international $)`),
+        "GDP deflator",
+        "MER (LCU per US$)",
+        "PPP conversion factor, GDP (LCU per international $)"),
         lin_int_ext))
   }
 
@@ -38,19 +38,19 @@ adapt_source <- function(gdp, source, with_regions, replace_NAs) {
     regex_var <- "GDP, PPP \\(constant .... international \\$\\)"
     weight_var <- grep(regex_var, colnames(source), value = TRUE)[1]
 
-    with_regions <- dplyr::rename(with_regions, "gdpuc_region" = .data$region)
+    with_regions <- dplyr::rename(with_regions, "gdpuc_region" = "region")
 
     reg_averages <- source_adapted %>%
       dplyr::full_join(with_regions, by = "iso3c") %>%
       dplyr::group_by(.data$gdpuc_region, .data$year) %>%
       dplyr::mutate(dplyr::across(.cols = c(
-        .data$`GDP deflator`,
-        .data$`MER (LCU per US$)`,
-        .data$`PPP conversion factor, GDP (LCU per international $)`),
+        "GDP deflator",
+        "MER (LCU per US$)",
+        "PPP conversion factor, GDP (LCU per international $)"),
         ~ sum(.x * eval(rlang::sym(weight_var)) /sum(eval(rlang::sym(weight_var)), na.rm = TRUE), na.rm = TRUE),
         .names = "ra_{.col}")) %>%
       dplyr::ungroup() %>%
-      dplyr::select(.data$iso3c, .data$year, dplyr::starts_with("ra_"))
+      dplyr::select("iso3c", "year", dplyr::starts_with("ra_"))
 
     source_adapted <- source_adapted %>%
       # Join the regional averages
@@ -58,9 +58,9 @@ adapt_source <- function(gdp, source, with_regions, replace_NAs) {
       # Mutate the 3 important columns
       dplyr::rowwise() %>%
       dplyr::mutate(dplyr::across(.cols = c(
-        .data$`GDP deflator`,
-        .data$`MER (LCU per US$)`,
-        .data$`PPP conversion factor, GDP (LCU per international $)`),
+        "GDP deflator",
+        "MER (LCU per US$)",
+        "PPP conversion factor, GDP (LCU per international $)"),
         ~ if (is.na(.x)) {
           eval(rlang::sym(paste0("ra_", dplyr::cur_column())))
         } else .x),
@@ -73,9 +73,9 @@ adapt_source <- function(gdp, source, with_regions, replace_NAs) {
       # Mutate the 3 important columns
       dplyr::rowwise() %>%
       dplyr::mutate(dplyr::across(.cols = c(
-        .data$`GDP deflator`,
-        .data$`MER (LCU per US$)`,
-        .data$`PPP conversion factor, GDP (LCU per international $)`),
+        "GDP deflator",
+        "MER (LCU per US$)",
+        "PPP conversion factor, GDP (LCU per international $)"),
         ~ if (is.na(.x)) 1 else .x)) %>%
       dplyr::ungroup()
   }

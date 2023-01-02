@@ -98,12 +98,12 @@ transform_internal <- function(x, gdp, with_regions) {
     x_reg <- dplyr::filter(x, !is.na(.data$gdpuc_region))
     x <- x %>%
       dplyr::filter(is.na(.data$gdpuc_region)) %>%
-      dplyr::select(-.data$gdpuc_region)
+      dplyr::select(-"gdpuc_region")
 
     x_reg <- x_reg %>%
-      dplyr::group_by(dplyr::across(c(-.data$iso3c, -.data$value))) %>%
+      dplyr::group_by(dplyr::across(c(-"iso3c", -"value"))) %>%
       dplyr::summarise(value = sum(.data$value, na.rm = TRUE), .groups = "drop") %>%
-      dplyr::rename("iso3c" = .data$gdpuc_region)
+      dplyr::rename("iso3c" = "gdpuc_region")
 
     i_iso3c <- if (! "iso3c" %in% colnames(gdp)) smart_select_iso3c(gdp) else "iso3c"
 
