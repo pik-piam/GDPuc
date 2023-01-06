@@ -11,7 +11,7 @@ replace_regions_with_countries <- function(gdp, unit_in, base_x, with_regions, s
   # Disaggregate regions
   weight_unit <- sub("\\$", "", regmatches(unit_in, regexpr("\\$(...)", unit_in)))
   weight_year <- base_x
-  with_regions <- dplyr::rename(with_regions, "gdpuc_region" = .data$region)
+  with_regions <- dplyr::rename(with_regions, "gdpuc_region" = "region")
   gdp_reg <- disaggregate_regions(gdp_reg, with_regions, weight_unit, weight_year, source)
 
   # Bind original countries and countries from disaggregation (duplicates now possible)
@@ -46,12 +46,12 @@ disaggregate_regions <- function(gdp, with_regions, weight_unit, weight_year, so
     dplyr::group_by(.data$gdpuc_region) %>%
     dplyr::mutate(share = .data$value / sum(.data$value, na.rm = TRUE), .keep = "unused") %>%
     dplyr::ungroup() %>%
-    dplyr::select(-.data$year) %>%
+    dplyr::select(-"year") %>%
     suppressWarnings()
 
   # Dissagregate regions
   gdp %>%
-    dplyr::rename("gdpuc_region" = .data$iso3c) %>%
+    dplyr::rename("gdpuc_region" = "iso3c") %>%
     dplyr::left_join(with_regions, by = "gdpuc_region") %>%
     dplyr::left_join(shares, by = c("gdpuc_region", "iso3c")) %>%
     dplyr::mutate(value = .data$value * .data$share, .keep = "unused")

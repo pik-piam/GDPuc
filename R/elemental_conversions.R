@@ -145,7 +145,9 @@ constant_LCU_base_x_2_current_LCU <- function(gdp, base_x, source) {
                 to = glue::glue("current LCU"),
                 with = glue::glue("Base {base_x} {deflator}"),
                 unit = glue::glue("(current LCU per constant {base_x} LCU)"),
-                val = dplyr::filter(def_base_x, .data$iso3c %in% unique(gdp$iso3c)))
+                val = dplyr::filter(def_base_x,
+                                    .data$iso3c %in% unique(gdp$iso3c),
+                                    .data$year %in% unique(gdp$year)))
 
   gdp %>%
     dplyr::left_join(def_base_x, by = c("iso3c", "year")) %>%

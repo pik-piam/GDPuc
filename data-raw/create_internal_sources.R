@@ -5,7 +5,7 @@ my_vars <- c(
   "GDP (constant LCU)",
   "GDP (current LCU)",
   "GDP: linked series (current LCU)",
-  "GDP (constant 2010 US$)",
+  "GDP (constant 2015 US$)",
   "GDP (current US$)",
   "GDP, PPP (constant 2017 international $)",
   "PPP conversion factor, GDP (LCU per international $)",
@@ -50,7 +50,7 @@ wb_wdi <- my_data %>%
 wb_wdi_linked <- wb_wdi %>%
   dplyr::select(iso3c,
                 year,
-                "GDP deflator" = `GDP deflator: linked series`,
+                `GDP deflator` = `GDP deflator: linked series`,
                 `PPP conversion factor, GDP (LCU per international $)`,
                 `MER (LCU per US$)`)
 
