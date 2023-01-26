@@ -15,7 +15,8 @@ my_vars <- c(
   "Population, total",
   "GDP deflator (base year varies by country)",
   "GDP deflator: linked series (base year varies by country)",
-  "DEC alternative conversion factor (LCU per US$)"
+  "DEC alternative conversion factor (LCU per US$)",
+  "Consumer price index (2010 = 100)"
 )
 
 my_info <- WDI::WDIsearch(
@@ -32,21 +33,24 @@ my_info <- WDI::WDIsearch(
   tibble::as_tibble()
 
 # Download data, remove aggregates and do some pivoting and renaming
-my_data <- WDI::WDI(indicator = my_info$indicator, extra = TRUE) %>%
-  tibble::as_tibble() %>%
-  dplyr::filter(!is.na(region) & region != "Aggregates") %>%
-  dplyr::arrange(iso3c, year) %>%
-  dplyr::select(iso3c, year, tidyselect::contains(my_info$indicator)) %>%
-  tidyr::pivot_longer(cols = tidyselect::contains(my_info$indicator), names_to = "id") %>%
-  dplyr::mutate(name = stringr::str_replace_all(id, my_info$name %>%
-                                                  rlang::set_names(paste0("^", my_info$indicator, "$")))) %>%
-  dplyr::select(iso3c, year, id, name, value)
+my_data <- purrr::map2(my_info$indicator,
+                       my_info$name,
+                       ~ WDI::WDI(indicator = .x, extra = TRUE) %>%
+                         tibble::as_tibble() %>%
+                         dplyr::filter(!is.na(region) & region != "Aggregates") %>%
+                         dplyr::arrange(iso3c, year) %>%
+                         dplyr::select(iso3c, year, tidyselect::contains(.x)) %>%
+                         tidyr::pivot_longer(cols = tidyselect::contains(.x), names_to = "id") %>%
+                         dplyr::mutate(name = .y) %>%
+                         dplyr::select(iso3c, year, id, name, value)) %>%
+  purrr::list_rbind()
 
 wb_wdi <- my_data %>%
   dplyr::select(-id) %>%
   tidyr::pivot_wider(names_from = name) %>%
   dplyr::mutate(`GDP deflator: linked series` = `GDP deflator: linked series (base year varies by country)` / 100,
                 `GDP deflator` = `GDP deflator (base year varies by country)` / 100,
+                `CPI` = `Consumer price index (2010 = 100)` / 100,
                 `MER (LCU per US$)` = `DEC alternative conversion factor (LCU per US$)`)
 
 wb_wdi_linked <- wb_wdi %>%
@@ -56,9 +60,16 @@ wb_wdi_linked <- wb_wdi %>%
                 `PPP conversion factor, GDP (LCU per international $)`,
                 `MER (LCU per US$)`)
 
+wb_wdi_cpi <- wb_wdi %>%
+  dplyr::select(iso3c,
+                year,
+                `GDP deflator` = `CPI`,
+                `PPP conversion factor, GDP (LCU per international $)`,
+                `MER (LCU per US$)`)
+
 # For now, IMF is removed due to copyright issues
 #usethis::use_data(imf_weo, wb_wdi, wb_wdi_linked, internal = TRUE, overwrite = TRUE)
-usethis::use_data(wb_wdi, wb_wdi_linked, internal = TRUE, overwrite = TRUE)
+usethis::use_data(wb_wdi, wb_wdi_linked, wb_wdi_cpi, internal = TRUE, overwrite = TRUE)
 
 
 

@@ -1,3 +1,20 @@
+adapt_source_USA <- function(gdp, source, replace_NAs) {
+  source_USA <- source %>%
+    dplyr::filter(.data$iso3c == "USA") %>%
+    dplyr::select("year", "USA_deflator" = "GDP deflator")
+
+  source_adapted <- source %>%
+    dplyr::left_join(source_USA, by = dplyr::join_by("year")) %>%
+    dplyr::mutate("GDP deflator" = .data$USA_deflator)
+
+  if (!is.null(replace_NAs) && replace_NAs[1] == "with_USA") {
+    source_USA <- source %>% dplyr::filter(.data$iso3c == "USA")
+    source_adapted <- purrr::map(unique(gdp$iso3c), ~dplyr::mutate(source_USA, "iso3c" = .x)) %>%
+      purrr::list_rbind()
+  }
+  source_adapted
+}
+
 #
 adapt_source <- function(gdp, source, with_regions, replace_NAs) {
   rlang::check_installed(c("zoo"), reason = "in order for 'replace_NAs' to work.")

@@ -11,4 +11,17 @@
 Convert GDP time series data from one unit to another. All common GDP units are included, i.e. current and constant
 local currency units, US$ via market exchange rates and international dollars via purchasing power parities.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/pik-piam/GDPuc}
+  \item \url{https://pik-piam.github.io/GDPuc/}
+  \item Report bugs at \url{https://github.com/pik-piam/GDPuc/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Johannes Koch \email{jokoch@pik-potsdam.de}
+
+}
 \keyword{internal}

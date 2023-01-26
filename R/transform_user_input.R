@@ -1,10 +1,10 @@
 # Transform user input for package internal use
-transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions, replace_NAs) {
+transform_user_input <- function(gdp, unit_in, unit_out, source, use_USA_deflator_for_all, with_regions, replace_NAs) {
   . <- NULL
 
   # Convert to tibble, if necessary
   if (class(gdp)[1] == "magpie") {
-    gdp <- mag_2_tibb(gdp)
+    gdp <- tibble::as_tibble(gdp) %>% dplyr::rename(tidyselect::any_of(c("iso3c" = "region")))
   }
 
   # Extract base years if they exist, and adjust string
@@ -68,9 +68,13 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions, r
     abort("Incompatible 'gdp' and 'source'. No information in source {crayon::bold(source_name)} for years in 'gdp'.")
   }
 
-  # Use different source if required
-  if (!is.null(replace_NAs) && !any(sapply(c(NA, 0, "no_conversion"), setequal, replace_NAs))) {
-    source <- adapt_source(gdp, source, with_regions, replace_NAs)
+  # Use different source if required by the replace_NAs argument
+  if (use_USA_deflator_for_all ||
+      (!is.null(replace_NAs) && !any(sapply(c(NA, 0, "no_conversion"), setequal, replace_NAs))) ) {
+    if (use_USA_deflator_for_all || replace_NAs[1] == "with_USA") source <- adapt_source_USA(gdp, source, replace_NAs)
+    if (!is.null(replace_NAs) && !any(sapply(c(NA, 0, "no_conversion", "with_USA"), setequal, replace_NAs))){
+      source <- adapt_source(gdp, source, with_regions, replace_NAs)
+    }
     source_name <- paste0(source_name, "_adapted")
   }
 

@@ -22,7 +22,7 @@ cli_elemental <- function(from, to, with, unit, val) {
     cli::cli({
       cli::cli_text("{.strong {from}} {crayon::green(cli::symbol$arrow_right)} {.strong {to}}")
       cli::cli_text("{crayon::blue(with)}{cli::qty(as.character(values))}{?s} in {unit} used:")
-      cli::cli_dl(c(values))
+      cli::cli_dl(c(signif(values, 6)))
     })
   }
   cli_inform(my_cli)

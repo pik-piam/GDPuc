@@ -51,11 +51,29 @@ test_that("with_regions argument", {
   unit_out <- "current US$MER"
   s <- wb_wdi
 
-  expect_error(check_user_input(gdp, unit_in, unit_out, source = s, with_regions = "blabla"))
+  expect_error(check_user_input(gdp,
+                                unit_in,
+                                unit_out,
+                                source = s,
+                                use_USA_deflator_for_all = FALSE,
+                                with_regions = "blabla"))
+
   with_regions <- tibble::tibble("blabla" = "FRA", "region" = "USA")
-  expect_error(check_user_input(gdp, unit_in, unit_out,  source = s, with_regions = with_regions))
+  expect_error(check_user_input(gdp,
+                                unit_in,
+                                unit_out,
+                                source = s,
+                                use_USA_deflator_for_all = FALSE,
+                                with_regions = with_regions))
+
   with_regions <- tibble::tibble("iso3c" = "FRA", "region" = "USA")
-  expect_error(check_user_input(gdp, unit_in, "current LCU",  source = s, with_regions = with_regions))
+  expect_error(check_user_input(gdp,
+                                unit_in,
+                                "current LCU",
+                                source = s,
+                                use_USA_deflator_for_all = FALSE,
+                                with_regions = with_regions))
+
   my_bad_source <- wb_wdi %>% dplyr::select(
     "iso3c",
     "year",
@@ -64,7 +82,12 @@ test_that("with_regions argument", {
     "PPP conversion factor, GDP (LCU per international $)"
   )
   s <- my_bad_source
-  expect_error(check_user_input(gdp, unit_in, unit_out,  source = s, with_regions = with_regions))
+  expect_error(check_user_input(gdp,
+                                unit_in,
+                                unit_out,
+                                source = s,
+                                use_USA_deflator_for_all = FALSE,
+                                with_regions = with_regions))
 })
 
 test_that("replace_NAs argument", {
@@ -74,18 +97,42 @@ test_that("replace_NAs argument", {
   unit_out <- "current US$MER"
   s <- wb_wdi
 
-  expect_error(check_user_input(gdp, unit_in, unit_out,  source = s, replace_NAs = 2, with_regions = NULL),
+  expect_error(check_user_input(gdp,
+                                unit_in,
+                                unit_out,
+                                source = s,
+                                use_USA_deflator_for_all = FALSE,
+                                replace_NAs = 2,
+                                with_regions = NULL),
                glue::glue("Invalid 'replace_NAs' argument. Has to be either NULL, NA, 0, 1, no_conversion, linear, \\
-                          regional_average or a combination of the above."))
-  expect_error(check_user_input(gdp, unit_in, unit_out,  source = s, replace_NAs = c(0, 1), with_regions = NULL),
+                          regional_average, with_USA or a combination of the above."))
+  expect_error(check_user_input(gdp,
+                                unit_in,
+                                unit_out,
+                                source = s,
+                                use_USA_deflator_for_all = FALSE,
+                                replace_NAs = c(0, 1),
+                                with_regions = NULL),
                glue::glue("Invalid 'replace_NAs' argument. The only accepted combinations of arguments start with \\
                           'linear', e.g. c\\('linear', 'no_conversion'\\)."))
   expect_error(
-    check_user_input(gdp, unit_in, unit_out,  source = s, replace_NAs = "linear_regional_average", with_regions = NULL)
+    check_user_input(gdp,
+                     unit_in,
+                     unit_out,
+                     source = s,
+                     use_USA_deflator_for_all = FALSE,
+                     replace_NAs = "linear_regional_average",
+                     with_regions = NULL)
   )
 
   expect_error(
-    check_user_input(gdp, unit_in, unit_out,  source = s, replace_NAs = "regional_average", with_regions = NULL),
+    check_user_input(gdp,
+                     unit_in,
+                     unit_out,
+                     source = s,
+                     use_USA_deflator_for_all = FALSE,
+                     replace_NAs = "regional_average",
+                     with_regions = NULL),
     glue::glue("Using 'regional_average' requires a region mapping. The 'with_regions' argument can't be NULL.")
   )
 })
@@ -97,14 +144,21 @@ test_that("boolean arguments", {
   unit_out <- "current US$MER"
   s <- wb_wdi
 
-  expect_error(check_user_input(gdp, unit_in, unit_out,  source = s,
-                                with_regions = NULL, replace_NAs = NULL, verbose = "blabla"))
+  expect_error(check_user_input(gdp,
+                                unit_in,
+                                unit_out,
+                                source = s,
+                                use_USA_deflator_for_all = FALSE,
+                                with_regions = NULL,
+                                replace_NAs = NULL,
+                                verbose = "blabla"))
 
   expect_error(check_user_input(
     gdp,
     unit_in,
     unit_out,
     source = s,
+    use_USA_deflator_for_all = FALSE,
     with_regions = NULL,
     replace_NAs = NULL,
     verbose = TRUE,

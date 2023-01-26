@@ -1,6 +1,7 @@
 test_that("convertGDP", {
   gdp_in <- wb_wdi %>%
-    dplyr::filter(!is.na(`GDP, PPP (constant 2017 international $)`)) %>%
+    dplyr::filter(!iso3c %in% bad_countries,
+                  !is.na(`GDP, PPP (constant 2017 international $)`)) %>%
     dplyr::select("iso3c", "year", "value" = `GDP (current LCU)`)
 
   gdp_conv <- convertGDP(gdp_in, "current LCU", "constant 2017 Int$PPP") %>%
@@ -15,12 +16,14 @@ test_that("convertGDP", {
 
 test_that("convertGDP different column names", {
   gdp_in1 <- wb_wdi %>%
-    dplyr::filter(!is.na(`GDP, PPP (constant 2017 international $)`)) %>%
+    dplyr::filter(!iso3c %in% bad_countries,
+                  !is.na(`GDP, PPP (constant 2017 international $)`)) %>%
     dplyr::select("r"=iso3c, year, "value" = `GDP (current LCU)`)
   gdp_in1b <- dplyr::mutate(gdp_in1, r = "")
 
   gdp_in2 <- wb_wdi %>%
-    dplyr::filter(!is.na(`GDP, PPP (constant 2017 international $)`)) %>%
+    dplyr::filter(!iso3c %in% bad_countries,
+                  !is.na(`GDP, PPP (constant 2017 international $)`)) %>%
     dplyr::select(iso3c, "y" = year, "value" = `GDP (current LCU)`)
   gdp_in2b <- dplyr::mutate(gdp_in2, y = "")
 
@@ -65,7 +68,7 @@ test_that("convertGDP magpie object", {
                                  years = c(2001, 2002),
                                  names = c("ssp1", "ssp2"),
                                  fill = 100)
-  magclass::getSets(gdp_in)[1] <- c("r")
+  magclass::getSets(gdp_in)[1] <- c("iso3c")
 
   gdp_conv <- convertGDP(gdp_in, "current LCU", "constant 2017 Int$PPP")
 
@@ -86,7 +89,8 @@ test_that("convertGDP data.frame object", {
 
 test_that("convertGDP unit_in == unit_out", {
   gdp_in <- wb_wdi %>%
-    dplyr::filter(!is.na(`GDP, PPP (constant 2017 international $)`)) %>%
+    dplyr::filter(!iso3c %in% bad_countries,
+                  !is.na(`GDP, PPP (constant 2017 international $)`)) %>%
     dplyr::select(iso3c, year, "value" = `GDP: linked series (current LCU)`)
 
   expect_message(convertGDP(gdp_in, "current LCU", "current LCU", verbose = TRUE),
