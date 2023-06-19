@@ -179,7 +179,7 @@ test_that("constant_LCU_2_constant_IntPPP", {
 
   gdp_in <- wb_wdi %>%
     dplyr::filter(iso3c %in% my_countries,
-                  !is.na(dplyr::across(tidyselect::matches(regex_var_IntPPP)))) %>%
+                  dplyr::if_all(tidyselect::matches(regex_var_IntPPP), ~!is.na(.x))) %>%
     dplyr::select("iso3c", "year", "value" = `GDP (constant LCU)`)
 
   gdp_conv <- constant_LCU_2_constant_IntPPP(gdp_in, year_IntPPP, wb_wdi) %>%
@@ -207,7 +207,7 @@ test_that("constant_LCU_2_constant_USMER", {
 
   gdp_in <- wb_wdi %>%
     dplyr::filter(iso3c %in% my_countries,
-                  !is.na(dplyr::across(tidyselect::matches(regex_var_USMER)))) %>%
+                  dplyr::if_all(tidyselect::matches(regex_var_USMER), ~!is.na(.x))) %>%
     dplyr::select("iso3c", "year", "value" = `GDP (constant LCU)`)
 
   gdp_conv <- constant_LCU_2_constant_USMER(gdp_in, year_USMER, wb_wdi) %>%
