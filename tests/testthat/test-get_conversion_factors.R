@@ -1,7 +1,7 @@
 test_that("get_conversion_factors", {
   gdp_in <- wb_wdi %>%
     dplyr::filter(!is.na(`GDP, PPP (constant 2017 international $)`),
-                  iso3c == "USA") %>%
+                  iso3c %in% c("ABW", "USA")) %>%
     dplyr::select(iso3c, year, "value" = `GDP: linked series (current LCU)`)
 
   myresult <- convertGDP(gdp_in, "constant 2010 Int$PPP", "constant 2015 LCU", return_cfs = FALSE)
@@ -17,6 +17,9 @@ test_that("get_conversion_factors", {
   expect_lte(length(mylist$cfs), 4)
   expect_gte(length(mylist$cfs), 2)
   expect_true(colnames(mylist$cfs)[1] == "iso3c")
+  expect_true(mylist$cfs %>%
+                dplyr::filter(iso3c == "USA") %>%
+                dplyr::pull("2010 PPP conversion factors in (LCU per international $)") == 1)
 })
 
 

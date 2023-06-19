@@ -52,7 +52,7 @@ disaggregate_regions <- function(gdp, with_regions, weight_unit, weight_year, so
   # Dissagregate regions
   gdp %>%
     dplyr::rename("gdpuc_region" = "iso3c") %>%
-    dplyr::left_join(with_regions, by = "gdpuc_region") %>%
+    dplyr::left_join(with_regions, by = "gdpuc_region", relationship = "many-to-many") %>%
     dplyr::left_join(shares, by = c("gdpuc_region", "iso3c")) %>%
     dplyr::mutate(value = .data$value * .data$share, .keep = "unused")
 }

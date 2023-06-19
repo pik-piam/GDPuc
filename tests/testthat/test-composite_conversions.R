@@ -5,7 +5,7 @@
 
 test_that("current_LCU_2_constant_IntPPP_base_y", {
   gdp_in <- wb_wdi %>%
-    dplyr::filter(!is.na(dplyr::across(tidyselect::matches(regex_var_IntPPP)))) %>%
+    dplyr::filter(dplyr::if_all(tidyselect::matches(regex_var_IntPPP), ~!is.na(.x))) %>%
     dplyr::select("iso3c", "year", "value" = `GDP (current LCU)`)
 
   gdp_conv <- current_LCU_2_constant_IntPPP_base_y(gdp_in, year_IntPPP, wb_wdi) %>%
@@ -25,7 +25,7 @@ test_that("current_LCU_2_constant_IntPPP_base_y", {
 
 test_that("current_LCU_2_constant_USMER_base_y", {
   gdp_in <- wb_wdi %>%
-    dplyr::filter(!is.na(dplyr::across(tidyselect::matches(regex_var_USMER)))) %>%
+    dplyr::filter(dplyr::if_all(tidyselect::matches(regex_var_USMER), ~!is.na(.x))) %>%
     dplyr::select("iso3c", "year", "value" = `GDP (current LCU)`)
 
   gdp_conv <- current_LCU_2_constant_USMER_base_y(gdp_in, year_USMER, wb_wdi)%>%
@@ -119,7 +119,7 @@ test_that("current_IntPPP_2_constant_LCU_base_y", {
 
 test_that("current_IntPPP_2_constant_IntPPP", {
   gdp_in <- wb_wdi %>%
-    dplyr::filter(!is.na(dplyr::across(tidyselect::matches(regex_var_IntPPP)))) %>%
+    dplyr::filter(dplyr::if_all(tidyselect::matches(regex_var_IntPPP), ~!is.na(.x))) %>%
     # Convert the PPP current series from one based on the linked LCU series
     # to one based on the standard LCU series
     dplyr::mutate(value = `GDP, PPP (current international $)` *
@@ -145,7 +145,7 @@ test_that("current_IntPPP_2_constant_IntPPP", {
 
 test_that("current_IntPPP_2_constant_USMER", {
   gdp_in <- wb_wdi %>%
-    dplyr::filter(!is.na(dplyr::across(tidyselect::matches(regex_var_USMER))))  %>%
+    dplyr::filter(dplyr::if_all(tidyselect::matches(regex_var_USMER), ~!is.na(.x)))  %>%
     # Convert the PPP current series from one based on the linked LCU series
     # to one based on the standard LCU series
     dplyr::mutate(value = `GDP, PPP (current international $)` *
@@ -201,7 +201,7 @@ test_that("current_USMER_2_current_IntPPP", {
 
 test_that("current_USMER_2_constant_USMER", {
   gdp_in <- wb_wdi %>%
-    dplyr::filter(!is.na(dplyr::across(tidyselect::matches(regex_var_USMER)))) %>%
+    dplyr::filter(dplyr::if_all(tidyselect::matches(regex_var_USMER), ~!is.na(.x))) %>%
     dplyr::select("iso3c", "year", "value" = `GDP (current US$)`)
 
   gdp_conv <- current_USMER_2_constant_USMER_base_y(gdp_in, year_USMER, wb_wdi) %>%
@@ -220,7 +220,7 @@ test_that("current_USMER_2_constant_USMER", {
 
 test_that("current_USMER_2_constant_IntPPP", {
   gdp_in <- wb_wdi %>%
-    dplyr::filter(!is.na(dplyr::across(tidyselect::matches(regex_var_IntPPP)))) %>%
+    dplyr::filter(dplyr::if_all(tidyselect::matches(regex_var_IntPPP), ~!is.na(.x))) %>%
     dplyr::select("iso3c", "year", "value" = `GDP (current US$)`)
 
   gdp_conv <- current_USMER_2_constant_IntPPP_base_y(gdp_in, year_IntPPP, wb_wdi) %>%
@@ -343,7 +343,7 @@ test_that("constant_LCU_base_x_2_constant_IntPPP_base_y", {
 
     gdp_in <- wb_wdi %>%
       dplyr::filter(iso3c %in% my_countries,
-                    !is.na(dplyr::across(tidyselect::matches(regex_var_IntPPP)))) %>%
+                    dplyr::if_all(tidyselect::matches(regex_var_IntPPP), ~!is.na(.x))) %>%
       dplyr::select("iso3c", "year", "value" = `GDP (constant LCU)`)
 
     gdp_conv <- constant_LCU_base_x_2_constant_IntPPP_base_y(gdp_in, my_base_year, year_IntPPP, wb_wdi) %>%
@@ -380,7 +380,7 @@ test_that("constant_LCU_base_x_2_constant_USMER_base_y", {
 
     gdp_in <- wb_wdi %>%
       dplyr::filter(iso3c %in% my_countries,
-                    !is.na(dplyr::across(tidyselect::matches(regex_var_USMER)))) %>%
+                    dplyr::if_all(tidyselect::matches(regex_var_USMER), ~!is.na(.x))) %>%
       dplyr::select("iso3c", "year", "value" = `GDP (constant LCU)`)
 
     gdp_conv <- constant_LCU_base_x_2_constant_USMER_base_y(gdp_in, my_base_year, year_USMER, wb_wdi) %>%
@@ -503,7 +503,7 @@ test_that("constant_IntPPP_base_x_2_constant_LCU_base_y", {
 
 test_that("constant_IntPPP_base_x_2_constant_USMER_base_y", {
   gdp_in <- wb_wdi %>%
-    dplyr::filter(!is.na(dplyr::across(tidyselect::matches(regex_var_USMER)))) %>%
+    dplyr::filter(dplyr::if_all(tidyselect::matches(regex_var_USMER), ~!is.na(.x))) %>%
     dplyr::select("iso3c", "year", "value" = tidyselect::matches(regex_var_IntPPP))
 
   gdp_conv <- constant_IntPPP_base_x_2_constant_USMER_base_y(gdp_in, year_IntPPP, year_USMER, wb_wdi)%>%
@@ -593,7 +593,7 @@ test_that("constant_USMER_base_x_2_current_USMER", {
 
 test_that("constant_USMER_base_x_2_constant_IntPPP_base_y", {
   gdp_in <- wb_wdi %>%
-    dplyr::filter(!is.na(dplyr::across(tidyselect::matches(regex_var_IntPPP)))) %>%
+    dplyr::filter(dplyr::if_all(tidyselect::matches(regex_var_IntPPP), ~!is.na(.x))) %>%
     dplyr::select("iso3c", "year", "value" = tidyselect::matches(regex_var_USMER))
 
   gdp_conv <- constant_USMER_base_x_2_constant_IntPPP_base_y(gdp_in, year_USMER, year_IntPPP, wb_wdi)%>%

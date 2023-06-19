@@ -1,3 +1,8 @@
+# GDPuc 0.11.0
+
+* Fix issue #15. The cfs data-frame returned when "return_cfs = TRUE" now displays the correct conversion factors.
+* Get rid of dplyr warnings and improve tests
+
 # GDPuc 0.10.0
 
 * Get rid of tidyselect warnings and improve tests
