@@ -22,18 +22,12 @@ get_conversion_factors <- function(...) {
 
   # Separate lines into conversion factor names and values
   my_names <- gsub(" used:", "", grep("used:", my_lines, value = TRUE))
-
   my_reg_values <- grep("used:", my_lines, value = TRUE, invert = TRUE)
-  my_reg <- unique(gsub(":(.*)$", "", my_reg_values))
-  my_values <- as.numeric(gsub("^...: ", "", my_reg_values)) %>%
-    # Necessary in case of NAs
-    suppressWarnings()
-  my_values <- purrr::map(seq_along(i_cf), ~ my_values[(1 + n_c * (.x - 1)):(n_c * .x)])
 
-  # Assign names to values
-  names(my_values) <- my_names
-
-  # Transform into tibble
-  tibble::tibble("iso3c" = my_reg) %>%
-    dplyr::bind_cols(tibble::as_tibble(my_values))
+  tibble::as_tibble(my_reg_values) %>%
+    tidyr::separate("value", c("iso3c", "value"), sep = ": ") %>%
+    dplyr::mutate(value = as.numeric(.data$value), x = rep(my_names, n_c)) %>%
+    # Suppress NA warnings
+    suppressWarnings() %>%
+    tidyr::pivot_wider(names_from = x)
 }
