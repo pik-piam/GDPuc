@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it using the metadata from this file.
+type: software
+title: 'GDPuc: Easily Convert GDP Data'
+version: 0.11.0
+date-released: '2023-06-19'
+abstract: A function to convert GDP time series from one unit to another. All common
+  GDP units are included, i.e. current and constant local currency units, US$ via
+  market exchange rates and international dollars via purchasing power parities. Conversion
+  factors can easily be customized. Conversion at a regional/aggregated level is also
+  possible.
+authors:
+- family-names: Koch
+  given-names: Johannes
+  email: jokoch@pik-potsdam.de
+license: GPL (>= 3)
+repository-code: https://github.com/pik-piam/GDPuc
+url: https://pik-piam.github.io/GDPuc/
+
