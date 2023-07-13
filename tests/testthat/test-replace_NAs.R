@@ -1,3 +1,5 @@
+skip_if_not_installed("zoo")
+
 test_that("convertGDP replace missing conversion factors", {
   # wb_wi does not have info for AIA, so AIA is used for testing here
   gdp <- tidyr::expand_grid("iso3c" = c("AIA", "FRA", "DEU", "USA", "EUR"), "year" = c(2010, 3010),

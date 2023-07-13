@@ -60,6 +60,7 @@ test_that("convertGDP different column names", {
 
 
 test_that("convertGDP magpie object", {
+  skip_if_not_installed("magclass")
   gdp_in <- magclass::new.magpie("USA",
                                  years = c(2001, 2002),
                                  names = c("ssp1", "ssp2"),

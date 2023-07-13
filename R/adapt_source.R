@@ -1,6 +1,6 @@
 #
 adapt_source <- function(gdp, source, with_regions, replace_NAs) {
-  rlang::check_installed(c("tidyr", "zoo"), reason = "in order for 'replace_NAs' to work.")
+  rlang::check_installed(c("zoo"), reason = "in order for 'replace_NAs' to work.")
 
   . <- NULL
 

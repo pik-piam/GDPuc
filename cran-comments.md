@@ -1,6 +1,6 @@
-* Re-submission after package as archived.
+* Re-submission after package was archived.
 
-Resubmit to CRAN after the package was removed due to a Warning concerning the use of packages in the Suggests field. Warning does not show up in any of the local or online checks. I hope that it has been addressed. 
+Resubmit to CRAN after the package was removed due to an Error in the tests. The tests now check for package availability (for those listed under Suggests) before performing related tests.
 
 ## R CMD check results
 

@@ -25,6 +25,7 @@ Imports:
     magrittr,
     rlang (>= 1.0.0),
     tibble,
+    tidyr,
     tidyselect,
     withr
 Suggests:
@@ -35,7 +36,6 @@ Suggests:
     rmarkdown,
     stringr,
     testthat (>= 3.0.0),
-    tidyr,
     usethis,
     WDI,
     zoo
