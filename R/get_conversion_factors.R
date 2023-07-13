@@ -1,6 +1,6 @@
 # A function to extract the conversion factors returned when verbose == TRUE, and return as a tibble
 get_conversion_factors <- function(...) {
-  rlang::check_installed(c("testthat", "purrr"), reason = "in order for 'return_cfs = TRUE' to work.")
+  rlang::check_installed(c("testthat", "purrr", "tidyr"), reason = "in order for 'return_cfs = TRUE' to work.")
 
   # Make sure all messages are printed to one line. Otherwise some unwanted \n may automatically pop up
   withr::local_options(list("cli.width" = 120))
