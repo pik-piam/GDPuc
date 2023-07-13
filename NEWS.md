@@ -1,3 +1,7 @@
+# GDPuc 0.11.1
+
+* Clean up Suggest field, in order to comply with CRAN specifications
+
 # GDPuc 0.11.0
 
 * Fix issue #15. The cfs data-frame returned when "return_cfs = TRUE" now displays the correct conversion factors.
