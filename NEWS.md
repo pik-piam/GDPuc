@@ -1,6 +1,7 @@
 # GDPuc 0.11.1
 
 * Clean up Suggest field, in order to comply with CRAN specifications
+* Improve documentation
 
 # GDPuc 0.11.0
 

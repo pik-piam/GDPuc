@@ -13,10 +13,13 @@ print_source_info(source)
 \item "wb_wdi_linked"
 }}
 }
+\value{
+No return value, called for side effects.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
-Print detailed information on sources to the screen. Information includes the
-name, origin, date, html-link and an associated note. Calling the function
-without any argument will print information on all available sources.
+Print detailed information on conversion factor sources to the screen. Information includes the name, origin, date,
+html-link and an associated note. Calling the function without any argument will print information on all
+available sources.
 }

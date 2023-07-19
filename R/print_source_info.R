@@ -3,15 +3,16 @@
 #' @description
 #'  `r lifecycle::badge("stable")`
 #'
-#' Print detailed information on sources to the screen. Information includes the
-#' name, origin, date, html-link and an associated note. Calling the function
-#' without any argument will print information on all available sources.
+#' Print detailed information on conversion factor sources to the screen. Information includes the name, origin, date,
+#'  html-link and an associated note. Calling the function without any argument will print information on all
+#'  available sources.
 #'
 #' @param source The name of one of the internal sources:
 #'   \enumerate{
 #'     \item "wb_wdi"
 #'     \item "wb_wdi_linked"
 #'   }
+#' @return No return value, called for side effects.
 #' @export
 print_source_info <- function(source) {
   if (missing(source)) cli::cli_alert_info("Sources available:")
