@@ -8,11 +8,11 @@
 <meta name="description" content="GDPuc">
 <title>Handling missing conversion factors • GDPuc</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.2/font.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.7/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Handling missing conversion factors">
+<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Handling missing conversion factors">
 <meta property="og:description" content="GDPuc">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -27,7 +27,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">GDPuc</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,7 +74,8 @@
 
 
 
-<script src="handle_NAs_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+
+<div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Handling missing conversion factors</h1>
             
@@ -88,13 +89,18 @@
 <div class="section level2">
 <h2 id="the-replace_nas-argument">The <code>replace_NAs</code> argument<a class="anchor" aria-label="anchor" href="#the-replace_nas-argument"></a>
 </h2>
-<p>Use the <code>replace_NAs</code> argument in <code>convertGDP</code> to handle missing conversion factors.</p>
+<p>Use the <code>replace_NAs</code> argument in <code>convertGDP</code>
+to handle missing conversion factors.</p>
 <div class="section level3">
 <h3 id="replace_nas-null-or-na">
 <code>replace_NAs</code> = NULL or NA<a class="anchor" aria-label="anchor" href="#replace_nas-null-or-na"></a>
 </h3>
-<p>By default, <code>replace_NAs</code> is <code>NULL</code>, and NAs are returned along with a warning. Set <code>replace_NAs = NA</code> to explicitly return NAs without the warning.</p>
-<p>Below, the <code>return_cfs</code> argument is set to <code>TRUE</code> to inspect the conversion factors, along side the result.</p>
+<p>By default, <code>replace_NAs</code> is <code>NULL</code>, and NAs
+are returned along with a warning. Set <code>replace_NAs = NA</code> to
+explicitly return NAs without the warning.</p>
+<p>Below, the <code>return_cfs</code> argument is set to
+<code>TRUE</code> to inspect the conversion factors, along side the
+result.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/pik-piam/GDPuc" class="external-link">GDPuc</a></span><span class="op">)</span></span>
 <span></span>
@@ -124,10 +130,10 @@
 <span></span>
 <span><span class="va">x</span><span class="op">$</span><span class="va">cfs</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 4</span></span></span>
-<span><span class="co">#&gt;   iso3c \033[34m2005 PPP conversion factor\033[39m in (LCU per…¹ \033[…² \033[…³</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW                                                       1.22      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with abbreviated variable names</span></span></span>
+<span><span class="co">#&gt;   iso3c \033[34m2005 PPP convers…¹ \033[34m2019 value o…² \033[34m2019 PPP con…³</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW                         1.22                     <span style="color: #BB0000;">NA</span>                     <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ abbreviated names:</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ¹​`\033[34m2005 PPP conversion factor\033[39m in (LCU per international $)`,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ²​`\033[34m2019 value of base 2005 GDP deflator\033[39m in (constant 2019 LCU per constant 2005 LCU)`,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ³​`\033[34m2019 PPP conversion factor\033[39m in (LCU per international $)`</span></span></span></code></pre></div>
@@ -139,7 +145,9 @@
 <span>  unit_out <span class="op">=</span> <span class="st">"constant 2019 Int$PPP"</span>,</span>
 <span>  replace_NAs <span class="op">=</span> <span class="cn">NA</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>You can also use the <code>GDPuc.warn</code> option to suppress warnings from <code>convertGDP</code> in general (see <a href="https://pik-piam.github.io/GDPuc/articles/warn.html">“Silence warnings”</a>).</p>
+<p>You can also use the <code>GDPuc.warn</code> option to suppress
+warnings from <code>convertGDP</code> in general (see <a href="https://pik-piam.github.io/GDPuc/articles/warn.html">“Silence
+warnings”</a>).</p>
 </div>
 <div class="section level3">
 <h3 id="replace_nas-0">
@@ -172,10 +180,10 @@
 <span></span>
 <span><span class="va">x</span><span class="op">$</span><span class="va">cfs</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 4</span></span></span>
-<span><span class="co">#&gt;   iso3c \033[34m2005 PPP conversion factor\033[39m in (LCU per…¹ \033[…² \033[…³</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW                                                       1.22      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with abbreviated variable names</span></span></span>
+<span><span class="co">#&gt;   iso3c \033[34m2005 PPP convers…¹ \033[34m2019 value o…² \033[34m2019 PPP con…³</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW                         1.22                     <span style="color: #BB0000;">NA</span>                     <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ abbreviated names:</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ¹​`\033[34m2005 PPP conversion factor\033[39m in (LCU per international $)`,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ²​`\033[34m2019 value of base 2005 GDP deflator\033[39m in (constant 2019 LCU per constant 2005 LCU)`,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ³​`\033[34m2019 PPP conversion factor\033[39m in (LCU per international $)`</span></span></span></code></pre></div>
@@ -184,7 +192,8 @@
 <h3 id="replace_nas-no_conversion">
 <code>replace_NAs</code> = “no_conversion”<a class="anchor" aria-label="anchor" href="#replace_nas-no_conversion"></a>
 </h3>
-<p>If set to “no_conversion”, NAs are replaced with the values in the gdp argument.</p>
+<p>If set to “no_conversion”, NAs are replaced with the values in the
+gdp argument.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
 <span>  iso3c <span class="op">=</span> <span class="st">"ABW"</span>,</span>
@@ -211,10 +220,10 @@
 <span></span>
 <span><span class="va">x</span><span class="op">$</span><span class="va">cfs</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 4</span></span></span>
-<span><span class="co">#&gt;   iso3c \033[34m2005 PPP conversion factor\033[39m in (LCU per…¹ \033[…² \033[…³</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW                                                       1.22      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with abbreviated variable names</span></span></span>
+<span><span class="co">#&gt;   iso3c \033[34m2005 PPP convers…¹ \033[34m2019 value o…² \033[34m2019 PPP con…³</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW                         1.22                     <span style="color: #BB0000;">NA</span>                     <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ abbreviated names:</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ¹​`\033[34m2005 PPP conversion factor\033[39m in (LCU per international $)`,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ²​`\033[34m2019 value of base 2005 GDP deflator\033[39m in (constant 2019 LCU per constant 2005 LCU)`,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ³​`\033[34m2019 PPP conversion factor\033[39m in (LCU per international $)`</span></span></span></code></pre></div>
@@ -223,7 +232,9 @@
 <h3 id="replace_nas-linear">
 <code>replace_NAs</code> = “linear”<a class="anchor" aria-label="anchor" href="#replace_nas-linear"></a>
 </h3>
-<p>If set to “linear”, missing conversion factors are inter- and extrapolated linearly. For the extrapolation, the closest 5 data points are used.</p>
+<p>If set to “linear”, missing conversion factors are inter- and
+extrapolated linearly. For the extrapolation, the closest 5 data points
+are used.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
 <span>  iso3c <span class="op">=</span> <span class="st">"ABW"</span>,</span>
@@ -250,10 +261,10 @@
 <span></span>
 <span><span class="va">x</span><span class="op">$</span><span class="va">cfs</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 4</span></span></span>
-<span><span class="co">#&gt;   iso3c \033[34m2005 PPP conversion factor\033[39m in (LCU per…¹ \033[…² \033[…³</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW                                                       1.22    1.30    1.37</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with abbreviated variable names</span></span></span>
+<span><span class="co">#&gt;   iso3c \033[34m2005 PPP convers…¹ \033[34m2019 value o…² \033[34m2019 PPP con…³</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW                         1.22                   1.30                   1.37</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ abbreviated names:</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ¹​`\033[34m2005 PPP conversion factor\033[39m in (LCU per international $)`,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ²​`\033[34m2019 value of base 2005 GDP deflator\033[39m in (constant 2019 LCU per constant 2005 LCU)`,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ³​`\033[34m2019 PPP conversion factor\033[39m in (LCU per international $)`</span></span></span></code></pre></div>
@@ -262,7 +273,10 @@
 <h3 id="replace_nas-regional_average">
 <code>replace_NAs</code> = “regional_average”<a class="anchor" aria-label="anchor" href="#replace_nas-regional_average"></a>
 </h3>
-<p>If set to “regional_average”, the regional GDP-weighted averages will be used. Requires a region-mapping, and a column in the source object with GDP data at PPP, to be used as weight. <strong>May lead to misleading results, use with care!</strong></p>
+<p>If set to “regional_average”, the regional GDP-weighted averages will
+be used. Requires a region-mapping, and a column in the source object
+with GDP data at PPP, to be used as weight. <strong>May lead to
+misleading results, use with care!</strong></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
 <span>  iso3c <span class="op">=</span> <span class="st">"ABW"</span>,</span>
@@ -295,10 +309,10 @@
 <span></span>
 <span><span class="va">x</span><span class="op">$</span><span class="va">cfs</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 4</span></span></span>
-<span><span class="co">#&gt;   iso3c \033[34m2005 PPP conversion factor\033[39m in (LCU per…¹ \033[…² \033[…³</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW                                                       1.22    6.44    210.</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with abbreviated variable names</span></span></span>
+<span><span class="co">#&gt;   iso3c \033[34m2005 PPP convers…¹ \033[34m2019 value o…² \033[34m2019 PPP con…³</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW                         1.22                   6.44                   210.</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ abbreviated names:</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ¹​`\033[34m2005 PPP conversion factor\033[39m in (LCU per international $)`,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ²​`\033[34m2019 value of base 2005 GDP deflator\033[39m in (constant 2019 LCU per constant 2005 LCU)`,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ³​`\033[34m2019 PPP conversion factor\033[39m in (LCU per international $)`</span></span></span>
@@ -310,7 +324,11 @@
 <h3 id="replace_nas-clinear">
 <code>replace_NAs</code> = c(“linear”, “…”)<a class="anchor" aria-label="anchor" href="#replace_nas-clinear"></a>
 </h3>
-<p>If a vector is passed, with “linear” as first element, then the operations are done in sequence. For example for c(“linear”, 0), missing conversion factors are first inter- and extrapolated linearly but if any missing conversion factors still lead to NAs, these are replaced with 0.</p>
+<p>If a vector is passed, with “linear” as first element, then the
+operations are done in sequence. For example for c(“linear”, 0), missing
+conversion factors are first inter- and extrapolated linearly but if any
+missing conversion factors still lead to NAs, these are replaced with
+0.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create an imaginary country XXX, and add it to the Latin America region</span></span>
 <span><span class="va">my_gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
@@ -341,11 +359,11 @@
 <span></span>
 <span><span class="va">x</span><span class="op">$</span><span class="va">cfs</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 4</span></span></span>
-<span><span class="co">#&gt;   iso3c \033[34m2005 PPP conversion factor\033[39ms in (LCU pe…¹ \033[…² \033[…³</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW                                                       1.22    1.30    1.37</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> XXX                                                      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with abbreviated variable names</span></span></span>
+<span><span class="co">#&gt;   iso3c \033[34m2005 PPP convers…¹ \033[34m2019 value o…² \033[34m2019 PPP con…³</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW                         1.22                   1.30                   1.37</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> XXX                        <span style="color: #BB0000;">NA</span>                     <span style="color: #BB0000;">NA</span>                     <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ abbreviated names:</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ¹​`\033[34m2005 PPP conversion factor\033[39ms in (LCU per international $)`,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ²​`\033[34m2019 value of base 2005 GDP deflator\033[39ms in (constant 2019 LCU per constant 2005 LCU)`,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ³​`\033[34m2019 PPP conversion factor\033[39ms in (LCU per international $)`</span></span></span></code></pre></div>
@@ -353,7 +371,8 @@
 <div class="section level3">
 <h3 id="deprecated-replace_nas-1">Deprecated: <code>replace_NAs</code> = 1<a class="anchor" aria-label="anchor" href="#deprecated-replace_nas-1"></a>
 </h3>
-<p>If set to <code>1</code>, missing conversion factors are set to 1. <strong>To be deprecated, use with care!</strong></p>
+<p>If set to <code>1</code>, missing conversion factors are set to 1.
+<strong>To be deprecated, use with care!</strong></p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
 <span>  iso3c <span class="op">=</span> <span class="st">"ABW"</span>,</span>
@@ -368,8 +387,12 @@
 <span>  replace_NAs <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  return_cfs <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: The `replace_NAs` argument of `convertGDP()` should not be 1 as of</span></span>
-<span><span class="co">#&gt; GDPuc 0.7.0.</span></span>
+<span><span class="co">#&gt; Warning: The `replace_NAs` argument of `convertGDP()` should not be 1 as of GDPuc 0.7.0.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">GDPuc</span> package.</span></span>
+<span><span class="co">#&gt;   Please report the issue at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/pik-piam/GDPuc/issues&gt;</span>.</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
 <span><span class="va">x</span><span class="op">$</span><span class="va">result</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 3</span></span></span>
 <span><span class="co">#&gt;   iso3c  year value</span></span>
@@ -382,10 +405,10 @@
 <span></span>
 <span><span class="va">x</span><span class="op">$</span><span class="va">cfs</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 4</span></span></span>
-<span><span class="co">#&gt;   iso3c \033[34m2005 PPP conversion factor\033[39m in (LCU per…¹ \033[…² \033[…³</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW                                                       1.22   0.840       1</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with abbreviated variable names</span></span></span>
+<span><span class="co">#&gt;   iso3c \033[34m2005 PPP convers…¹ \033[34m2019 value o…² \033[34m2019 PPP con…³</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ABW                         1.22                  0.840                      1</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ abbreviated names:</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ¹​`\033[34m2005 PPP conversion factor\033[39m in (LCU per international $)`,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ²​`\033[34m2019 value of base 2005 GDP deflator\033[39m in (constant 2019 LCU per constant 2005 LCU)`,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ³​`\033[34m2019 PPP conversion factor\033[39m in (LCU per international $)`</span></span></span>
@@ -408,7 +431,7 @@
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
     </footer>
