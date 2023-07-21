@@ -11,7 +11,7 @@ status](https://www.r-pkg.org/badges/version/GDPuc)](https://CRAN.R-project.org/
 [![codecov](https://codecov.io/gh/pik-piam/GDPuc/branch/main/graph/badge.svg?token=3GHXFQXARX)](https://app.codecov.io/gh/pik-piam/GDPuc)
 ![Lifecycle:
 stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)
-
+[![R-CMD-check](https://github.com/pik-piam/GDPuc/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/pik-piam/GDPuc/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 GDPuc (a.k.a. the GDP unit-converter) provides a simple function to
@@ -54,19 +54,19 @@ convertGDP(
 Here, the `gdp` argument takes a tibble or a data-frame that contains,
 at least:
 
--   a column with iso3c country codes, (ideally named “iso3c”),
--   a column with the year, (ideally named “year”),
--   a column named “value”, with the gdp data.
+- a column with iso3c country codes, (ideally named “iso3c”),
+- a column with the year, (ideally named “year”),
+- a column named “value”, with the gdp data.
 
 The `unit_in` and `unit_out` arguments specify the incoming and outgoing
 GDP units. All common GDP units are supported, i.e.:
 
--   current LCU
--   current US\$MER
--   current Int\$PPP
--   constant YYYY LCU
--   constant YYYY US\$MER
--   constant YYYY Int\$PPP
+- current LCU
+- current US\$MER
+- current Int\$PPP
+- constant YYYY LCU
+- constant YYYY US\$MER
+- constant YYYY Int\$PPP
 
 Here “YYYY” is a placeholder for a year, e.g. “2010” or “2015”, and
 “LCU” stands for Local Currency Unit.
@@ -110,15 +110,15 @@ convertGDP(
 
 `convertGDP` has other arguments that allow you to:
 
--   choose conversion factors (see [“Choosing conversion
-    factors”](https://pik-piam.github.io/GDPuc/articles/source.html))
+- choose conversion factors (see [“Choosing conversion
+  factors”](https://pik-piam.github.io/GDPuc/articles/source.html))
 
--   print out information on the conversion process and/or return the
-    conversion factors used (see [“Getting information on the conversion
-    process”](https://pik-piam.github.io/GDPuc/articles/verbose.html))
+- print out information on the conversion process and/or return the
+  conversion factors used (see [“Getting information on the conversion
+  process”](https://pik-piam.github.io/GDPuc/articles/verbose.html))
 
--   handle missing conversion factors (see [“Handling missing conversion
-    factors”](https://pik-piam.github.io/GDPuc/articles/handle_NAs.html))
+- handle missing conversion factors (see [“Handling missing conversion
+  factors”](https://pik-piam.github.io/GDPuc/articles/handle_NAs.html))
 
--   convert regional GDP data (see [“Converting regional GDP
-    data”](https://pik-piam.github.io/GDPuc/articles/with_regions.html))
+- convert regional GDP data (see [“Converting regional GDP
+  data”](https://pik-piam.github.io/GDPuc/articles/with_regions.html))

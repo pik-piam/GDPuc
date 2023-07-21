@@ -1,6 +1,8 @@
 # Download data from WDI and save as internal package data
 # !! Don't forget to update the "date" section in print_source_info
 library(magrittr)
+rlang::check_installed(c("WDI", "stringr", "usethis"), reason = "in order to access the WDI database.")
+
 my_vars <- c(
   "GDP (constant LCU)",
   "GDP (current LCU)",

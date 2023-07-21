@@ -1,3 +1,5 @@
+skip_if_not_installed("purrr")
+
 test_that("get_conversion_factors", {
   gdp_in <- wb_wdi %>%
     dplyr::filter(!is.na(`GDP, PPP (constant 2017 international $)`),
