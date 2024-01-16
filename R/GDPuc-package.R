@@ -8,8 +8,7 @@
 #'
 #' @name GDPuc-package
 #' @aliases GDPuc-package GDPuc
-#' @docType package
 #' @importFrom magrittr %>%
 #' @importFrom rlang !! := .data
 #' @keywords internal
-NULL
+"_PACKAGE"
