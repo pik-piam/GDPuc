@@ -297,16 +297,12 @@ test_that("constant_USMER_2_constant_EURO", {
     dplyr::filter(`GDP deflator (base year varies by country)` == 100) %>%
     dplyr::select("iso3c", "year")
 
-  euro_countries <- c("AUT", "BEL", "HRV", "CYP", "EST", "FIN", "FRA", "DEU", "GRC", "IRL",
-                      "ITA", "LVA", "LTU", "LUX", "NLD", "PRT", "SVK", "SVN", "ESP")
-
   my_countries <- country_base_years %>%
     dplyr::filter(year == year_USMER, iso3c %in% euro_countries) %>%
     dplyr::pull(iso3c)
 
   gdp_in <- wb_wdi %>%
-    dplyr::filter(iso3c %in% my_countries,
-                  !is.na(`GDP (constant LCU)`)) %>%
+    dplyr::filter(iso3c %in% my_countries, !is.na(`GDP (constant LCU)`)) %>%
     dplyr::select("iso3c", "year", "value" = tidyselect::matches(regex_var_USMER))
 
   gdp_conv <- constant_USMER_2_constant_EURO(gdp_in, year_USMER, wb_wdi) %>%
@@ -332,9 +328,6 @@ test_that("constant_EURO_2_constant_USMER", {
   country_base_years <- wb_wdi %>%
     dplyr::filter(`GDP deflator (base year varies by country)` == 100) %>%
     dplyr::select("iso3c", "year")
-
-  euro_countries <- c("AUT", "BEL", "HRV", "CYP", "EST", "FIN", "FRA", "DEU", "GRC", "IRL",
-                      "ITA", "LVA", "LTU", "LUX", "NLD", "PRT", "SVK", "SVN", "ESP")
 
   my_countries <- country_base_years %>%
     dplyr::filter(year == year_USMER, iso3c %in% euro_countries) %>%

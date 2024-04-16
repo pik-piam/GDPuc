@@ -39,7 +39,10 @@ test_that("source argument", {
                           sources. Use print_source_info\\(\\) for information on available sources. \\
                           If you are trying to pass a custom source, pass the data frame directly, not its name."))
 
-  # Following doesn't work in covr for some reason
+  s <- dplyr::bind_rows(wb_wdi, wb_wdi)
+  expect_error(check_user_input(gdp, unit_in, unit_out, source = s),
+               glue::glue("Invalid 'source' argument. Duplicate iso3c - year pairs found."))
+
   my_bad_source <- tibble::tibble("iso3c" = 1)
   expect_error(check_user_input(gdp, unit_in, unit_out, source = my_bad_source),
                "Invalid 'source' argument. Required columns are:(.*)")
@@ -163,4 +166,35 @@ test_that("boolean arguments", {
     replace_NAs = NULL,
     verbose = TRUE,
     return_cfs = "blabla"))
+
+  expect_error(check_user_input(
+    gdp,
+    unit_in,
+    unit_out,
+    source = s,
+    use_USA_deflator_for_all = "blabla",
+    with_regions = NULL,
+    replace_NAs = NULL,
+    verbose = TRUE,
+    return_cfs = TRUE))
+})
+
+
+test_that("boolean arguments", {
+
+  gdp <- tibble::tibble("iso3c" = "EUR", "year" = 2010, "value" = 100)
+  unit_in <- "current Int$PPP"
+  unit_out <- "constant 2010 US$MER"
+  s <- wb_wdi
+
+  expect_error(check_user_input(
+    gdp,
+    unit_in,
+    unit_out,
+    source = s,
+    use_USA_deflator_for_all = TRUE,
+    with_regions = NULL,
+    replace_NAs = NULL,
+    verbose = TRUE,
+    return_cfs = TRUE))
 })

@@ -202,10 +202,7 @@ convertCPI <- function(...) convertGDP(..., source = "wb_wdi_cpi")
 #'                 unit_in = "current LCU",
 #'                 unit_out = "constant 2015 Int$PPP")
 #' @export
-convertSingle <- function(x,
-                          iso3c,
-                          year = 2000,
-                          ...) {
+convertSingle <- function(x, iso3c, year = 2000, ...) {
   tib <- tibble::tibble("iso3c" = iso3c, "year" = year, "value" = x)
   tib_c <- convertGDP(gdp = tib, ...)
 

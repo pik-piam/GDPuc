@@ -98,7 +98,7 @@ check_source <- function(source) {
   if (!all(required_cols_in_source %in% colnames(source))) {
     abort("Invalid 'source' argument. Required columns are: {paste(required_cols_in_source, collapse = '; ')}")
   }
-  if (nrow(dplyr::distinct(source)) != nrow(dplyr::distinct(source, .data$iso3c , .data$year))) {
+  if (nrow(source) != nrow(dplyr::distinct(source, .data$iso3c , .data$year))) {
     abort("Invalid 'source' argument. Duplicate iso3c - year pairs found.")
   }
   source

@@ -10,3 +10,7 @@ var_IntPPP <- paste("GDP, PPP (constant", year_IntPPP, "international $)")
 
 # PAN = Panama has inconsistent WDI data...
 bad_countries <- c("PAN")
+
+# Countries with the euro as currency
+euro_countries <- c("AUT", "BEL", "HRV", "EST", "FIN", "FRA", "DEU", "GRC", "IRL",
+                    "ITA", "LVA", "LTU", "LUX", "NLD", "PRT", "SVK", "SVN", "ESP")

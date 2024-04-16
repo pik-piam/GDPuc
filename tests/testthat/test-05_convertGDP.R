@@ -149,3 +149,56 @@ test_that("convertGDP with regions", {
   expect_true(all(gdp_conv3$value != gdp_conv$value))
 })
 
+test_that("convertGDP using US conversion factors", {
+  gdp_1 <- tibble::tibble("iso3c" = "USA", "year" = 2010, "value" = 100)
+  gdp_2 <- tibble::tibble("iso3c" = "DEU", "year" = 2010, "value" = 100)
+  gdp_3 <- tibble::tibble("iso3c" = "JJJ", "year" = 2010, "value" = 100)
+
+  gdp1_conv <- convertGDP(gdp_1,
+                          unit_in = "constant 2015 LCU",
+                          unit_out = "constant 2017 LCU")
+  gdp2_conv <- convertGDP(gdp_2,
+                          unit_in = "constant 2015 LCU",
+                          unit_out = "constant 2017 LCU",
+                          use_USA_deflator_for_all = TRUE)
+  gdp3_conv <- convertGDP(gdp_3,
+                          unit_in = "constant 2015 LCU",
+                          unit_out = "constant 2017 LCU",
+                          replace_NAs = "with_USA")
+
+  expect_equal(gdp1_conv, gdp2_conv %>% dplyr::mutate(iso3c = "USA"))
+  expect_equal(gdp1_conv, gdp3_conv %>% dplyr::mutate(iso3c = "USA"))
+})
+
+test_that("convertCPI", {
+  gdp_1 <- tibble::tibble("iso3c" = "USA", "year" = 2010, "value" = 100)
+
+  gdp1_conv <- convertCPI(gdp_1,
+                          unit_in = "constant 2015 LCU",
+                          unit_out = "constant 2017 LCU")
+  gdp2_conv <- convertGDP(gdp_1,
+                          unit_in = "constant 2015 LCU",
+                          unit_out = "constant 2017 LCU",
+                          source = "wb_wdi_cpi")
+
+  expect_equal(gdp1_conv, gdp2_conv)
+})
+
+
+test_that("convertSingle", {
+  gdp_1 <- tibble::tibble("iso3c" = "USA", "year" = 2010, "value" = 100)
+
+  gdp1_conv <- convertGDP(gdp_1,
+                          unit_in = "constant 2015 LCU",
+                          unit_out = "constant 2017 LCU")
+  gdp2_conv <- convertSingle(100, "USA", 2010,
+                             unit_in = "constant 2015 LCU",
+                             unit_out = "constant 2017 LCU")
+  gdp3_conv <- convertSingle(100, "USA", 2010,
+                             unit_in = "constant 2015 LCU",
+                             unit_out = "constant 2017 LCU",
+                             return_cfs = TRUE)
+
+  expect_equal(gdp1_conv$value, gdp2_conv)
+  expect_equal(gdp1_conv, gdp3_conv$result)
+})
