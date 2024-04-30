@@ -8,8 +8,9 @@ year_IntPPP <- 2017
 regex_var_IntPPP <- paste("GDP, PPP \\(constant", year_IntPPP, "international \\$\\)")
 var_IntPPP <- paste("GDP, PPP (constant", year_IntPPP, "international $)")
 
-# PAN = Panama has inconsistent WDI data...
-bad_countries <- c("PAN")
+# The WDI is not always consistent. In January 2024 only PAN was causing problems. In April 2024 a couple of
+# additional countries are not consistent in every year. These countries are removed from the tests.
+bad_countries <- c("PAN", "SWE", "NOR", "JPN", "CZE", "FIN", "CAN")
 
 # Countries with the euro as currency
 euro_countries <- c("AUT", "BEL", "HRV", "EST", "FIN", "FRA", "DEU", "GRC", "IRL",

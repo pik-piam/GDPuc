@@ -68,6 +68,7 @@ test_that("current_LCU_2_constant_LCU_base_y linked series", {
       dplyr::select("iso3c", "year", "value" = `GDP (constant LCU)`)
 
     for (country in unique(gdp_conv$iso3c)) {
+      if (country %in% bad_countries) next
       expect_equal(gdp_conv %>% dplyr::filter(iso3c == country),
                    gdp_out %>% dplyr::filter(iso3c == country),
                    label = country)

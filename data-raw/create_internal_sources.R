@@ -32,12 +32,21 @@ my_info <- WDI::WDIsearch(
 ) %>%
   tibble::as_tibble()
 
+# Get codes of only countries (excluding regional aggregates)
+wb_country_codes  <- WDI::WDIcache()$country %>%
+  dplyr::pull(iso3c) %>%
+  countrycode::countrycode("wb", "country.name") %>%
+  `[`(!is.na(.)) %>%
+  countrycode::countrycode("country.name", "wb")
+
+
 # Download data, remove aggregates and do some pivoting and renaming
 my_data <- purrr::map2(my_info$indicator,
                        my_info$name,
                        ~ WDI::WDI(indicator = .x, extra = TRUE) %>%
                          tibble::as_tibble() %>%
-                         dplyr::filter(!is.na(region) & region != "Aggregates") %>%
+                         dplyr::filter(iso3c %in% wb_country_codes) %>%
+                         #dplyr::filter(!is.na(region) & region != "Aggregates") %>%
                          dplyr::arrange(iso3c, year) %>%
                          dplyr::select(iso3c, year, tidyselect::contains(.x)) %>%
                          tidyr::pivot_longer(cols = tidyselect::contains(.x), names_to = "id") %>%

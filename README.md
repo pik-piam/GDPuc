@@ -19,8 +19,8 @@ convert GDP time-series data from one unit to another.
 **To note:** The default conversion parameters are from the World Bank’s
 World Development Indicators (WDI) database (see
 [link](https://databank.worldbank.org/source/world-development-indicators)).
-The current parameters are from **January 2nd 2024**, with the next
-update planned for January 2025.
+The current parameters are from **April 30th 2024**, with the next
+update planned for April 2026.
 
 ## Installation
 
