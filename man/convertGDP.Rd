@@ -20,16 +20,16 @@ convertGDP(
 
 convertCPI(...)
 
-convertSingle(x, iso3c, year = 2000, ...)
+convertSingle(x, iso3c, year = NULL, ...)
 }
 \arguments{
 \item{gdp}{A tibble, data frame or magpie object, the latter of which
 requires the \href{https://github.com/pik-piam/magclass}{magclass}
-package to be installed. The data-frame needs to have at least 3 columns:
+package to be installed. The data-frame needs to have at least 2 columns, in some cases 3:
 \itemize{
 \item a character column with iso3c
 (\href{https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3}{wikipedia}) country codes,
-\item a numeric column with years,
+\item a numeric column with years (only required when converting from or to current currencies),
 \item a numeric column named "value" with GDP values.
 }}
 
@@ -102,8 +102,7 @@ used under "cfs".}
 
 \item{iso3c}{Country code}
 
-\item{year}{Year of value. Is given the default value of 2000, since it only plays a role when converting from
-or to current currencies. This facilitates the conversion between constant currencies.}
+\item{year}{NULL, or year of value. Only plays a role when converting from or to current currencies.}
 }
 \value{
 The gdp argument, with the values in the "value" column, converted to unit_out. If the argument

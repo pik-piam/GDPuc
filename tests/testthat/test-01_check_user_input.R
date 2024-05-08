@@ -2,9 +2,6 @@ test_that("gdp argument", {
   gdp <- tibble::tibble("iso3c" = "EUR", "year" = 2010, "value2" = 100)
   expect_error(check_user_input(gdp), "Invalid 'gdp' argument. 'gdp' does not have the required 'value' column.")
 
-  gdp <- tibble::tibble("iso3c" = "EUR", "value" = 100)
-  expect_error(check_user_input(gdp), "Invalid 'gdp' argument. 'gdp' must have at least 3 columns.")
-
   gdp <- tibble::tibble("iso3c" = "EUR", "year" = 2007, "value" = "100")
   expect_error(check_user_input(gdp), "Invalid 'gdp' argument. The 'value' column is not numeric.")
 

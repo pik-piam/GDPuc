@@ -24,11 +24,11 @@
 #'
 #' @param gdp A tibble, data frame or magpie object, the latter of which
 #'   requires the [magclass](https://github.com/pik-piam/magclass)
-#'   package to be installed. The data-frame needs to have at least 3 columns:
+#'   package to be installed. The data-frame needs to have at least 2 columns, in some cases 3:
 #'   \itemize{
 #'     \item a character column with iso3c
 #'     ([wikipedia](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3)) country codes,
-#'     \item a numeric column with years,
+#'     \item a numeric column with years (only required when converting from or to current currencies),
 #'     \item a numeric column named "value" with GDP values.
 #'  }
 #' @param unit_in A string with the incoming GDP unit, one of:
@@ -163,7 +163,7 @@ convertGDP <- function(gdp,
   }
 
   # Return with original type and names
-  x <- transform_internal(x, gdp, with_regions)
+  x <- transform_internal(x, gdp, with_regions, internal$require_year_column)
 
   if (return_cfs) {
     return(list("result" = x, "cfs" = do.call(get_conversion_factors, arg[1:6])))
@@ -192,8 +192,7 @@ convertCPI <- function(...) convertGDP(..., source = "wb_wdi_cpi")
 #'   single row tibble.
 #' @param x Number to convert
 #' @param iso3c Country code
-#' @param year Year of value. Is given the default value of 2000, since it only plays a role when converting from
-#'   or to current currencies. This facilitates the conversion between constant currencies.
+#' @param year NULL, or year of value. Only plays a role when converting from or to current currencies.
 #' @examples
 #'   # Convert a single value quickly
 #'   convertSingle(x = 100,
@@ -202,8 +201,13 @@ convertCPI <- function(...) convertGDP(..., source = "wb_wdi_cpi")
 #'                 unit_in = "current LCU",
 #'                 unit_out = "constant 2015 Int$PPP")
 #' @export
-convertSingle <- function(x, iso3c, year = 2000, ...) {
-  tib <- tibble::tibble("iso3c" = iso3c, "year" = year, "value" = x)
+convertSingle <- function(x, iso3c, year = NULL, ...) {
+  tib <- tibble::tibble("iso3c" = iso3c, "value" = x)
+
+  if (!is.null(year)) {
+    tib <- tibble::add_column(tib, "year" = year, .before = "value")
+  }
+
   tib_c <- convertGDP(gdp = tib, ...)
 
   if (tibble::is_tibble(tib_c)) {
