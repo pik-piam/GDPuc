@@ -72,7 +72,7 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, use_USA_deflato
       (!is.null(replace_NAs) && !any(sapply(c(NA, 0, "no_conversion"), setequal, replace_NAs))) ) {
     if (use_USA_deflator_for_all || replace_NAs[1] == "with_USA") source <- adapt_source_USA(gdp, source, replace_NAs)
     if (!is.null(replace_NAs) && !any(sapply(c(NA, 0, "no_conversion", "with_USA"), setequal, replace_NAs))){
-      source <- adapt_source(gdp, source, with_regions, replace_NAs)
+      source <- adapt_source(gdp, source, with_regions, replace_NAs, require_year_column)
     }
     source_name <- paste0(source_name, "_adapted")
   }

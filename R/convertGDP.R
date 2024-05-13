@@ -166,7 +166,7 @@ convertGDP <- function(gdp,
   x <- transform_internal(x, gdp, with_regions, internal$require_year_column)
 
   if (return_cfs) {
-    return(list("result" = x, "cfs" = do.call(get_conversion_factors, arg[1:6])))
+    return(list("result" = x, "cfs" = do.call(get_conversion_factors, arg[1:7])))
   } else {
     return(x)
   }
