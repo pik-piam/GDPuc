@@ -1,18 +1,38 @@
+adapt_source_USA <- function(gdp, source, replace_NAs) {
+  source_USA <- source %>%
+    dplyr::filter(.data$iso3c == "USA") %>%
+    dplyr::select("year", "USA_deflator" = "GDP deflator")
+
+  source_adapted <- source %>%
+    dplyr::left_join(source_USA, by = dplyr::join_by("year")) %>%
+    dplyr::mutate("GDP deflator" = .data$USA_deflator)
+
+  if (!is.null(replace_NAs) && replace_NAs[1] == "with_USA") {
+    source_USA <- source %>% dplyr::filter(.data$iso3c == "USA")
+    source_adapted <- purrr::map(unique(gdp$iso3c), ~dplyr::mutate(source_USA, "iso3c" = .x)) %>%
+      purrr::list_rbind()
+  }
+  source_adapted
+}
+
 #
-adapt_source <- function(gdp, source, with_regions, replace_NAs) {
+adapt_source <- function(gdp, source, with_regions, replace_NAs, require_year_column) {
   rlang::check_installed(c("zoo"), reason = "in order for 'replace_NAs' to work.")
 
   . <- NULL
 
   # Create adapted source object
+  ## Columns by which to identify missing source entries
+  hcol <- if (require_year_column) c("iso3c", "year") else "iso3c"
   source_adapted <- source %>%
-    # Add any iso3c-year combinations from gdp, not available in source
+    # Add any hcol combinations from gdp, not available in source
     dplyr::bind_rows(gdp %>%
                        {if ("gdpuc_region" %in% colnames(.)) dplyr::filter(., is.na(.data$gdpuc_region)) else .} %>%
-                       dplyr::select("iso3c", "year") %>%
+                       dplyr::select(tidyselect::all_of(hcol)) %>%
                        dplyr::distinct() %>%
-                       dplyr::anti_join(source, by = c("iso3c", "year"))) %>%
-    tidyr::complete(.data$iso3c, .data$year)
+                       dplyr::anti_join(source, by = hcol)) %>%
+    tidyr::complete(.data$iso3c, .data$year) %>%
+    dplyr::filter(!is.na(.data$year))
 
   if (replace_NAs[1] == "linear") {
     # Make sure that source contains observations for every year between min and max years.
@@ -72,11 +92,10 @@ adapt_source <- function(gdp, source, with_regions, replace_NAs) {
     source_adapted <- source_adapted %>%
       # Mutate the 3 important columns
       dplyr::rowwise() %>%
-      dplyr::mutate(dplyr::across(.cols = c(
-        "GDP deflator",
-        "MER (LCU per US$)",
-        "PPP conversion factor, GDP (LCU per international $)"),
-        ~ if (is.na(.x)) 1 else .x)) %>%
+      dplyr::mutate(dplyr::across(c("GDP deflator",
+                                    "MER (LCU per US$)",
+                                    "PPP conversion factor, GDP (LCU per international $)"),
+                                  ~ if (is.na(.x)) 1 else .x)) %>%
       dplyr::ungroup()
   }
 

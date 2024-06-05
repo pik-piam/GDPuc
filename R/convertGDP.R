@@ -24,11 +24,11 @@
 #'
 #' @param gdp A tibble, data frame or magpie object, the latter of which
 #'   requires the [magclass](https://github.com/pik-piam/magclass)
-#'   package to be installed. The data-frame needs to have at least 3 columns:
+#'   package to be installed. The data-frame needs to have at least 2 columns, in some cases 3:
 #'   \itemize{
 #'     \item a character column with iso3c
 #'     ([wikipedia](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3)) country codes,
-#'     \item a numeric column with years,
+#'     \item a numeric column with years (only required when converting from or to current currencies),
 #'     \item a numeric column named "value" with GDP values.
 #'  }
 #' @param unit_in A string with the incoming GDP unit, one of:
@@ -39,6 +39,7 @@
 #'     \item "constant YYYY LCU"
 #'     \item "constant YYYY Int$PPP"
 #'     \item "constant YYYY US$MER"
+#'     \item "constant YYYY €"
 #'   }
 #'   where YYYY should be replaced with a year e.g. "2010" or "2017".
 #' @param unit_out A string with the outgoing GDP unit, one of:
@@ -49,12 +50,16 @@
 #'     \item "constant YYYY LCU"
 #'     \item "constant YYYY Int$PPP"
 #'     \item "constant YYYY US$MER"
+#'     \item "constant YYYY €"
 #'   }
 #'   where YYYY should be replaced with a year e.g. "2010" or "2017".
 #' @param source A string referring to a package internal data frame containing the conversion factors, or
 #'   a data-frame that exists in the calling environment.
 #'   Use [print_source_info()](https://pik-piam.github.io/GDPuc/reference/print_source_info.html)
 #'   to learn about the available sources.
+#' @param use_USA_deflator_for_all TRUE or FALSE (default). If TRUE, then only the USA deflator is used to adjust for
+#'   inflation, regardless of the country codes provided. This is a very specific deviation from the correct conversion
+#'   process, which nevertheless is often used in the integrated assessment community. Use carefully!
 #' @param with_regions NULL or a data-frame. The data-frame should be "country to region
 #'   mapping": one column named "iso3c" with iso3c country codes, and one column named
 #'   "region" with region codes to which the countries belong. Any regions in the gdp
@@ -71,6 +76,8 @@
 #'     \item "regional_average": missing conversion factors in the source object are replaced with
 #'     the regional average of the region to which the country belongs. This requires a region-mapping to
 #'     be passed to the function, see the with_regions argument.
+#'     \item "with USA": missing conversion factors in the source object are replaced with
+#'     the conversion factors of the USA.
 #'   }
 #'   Can also be a vector with "linear" as first element, e.g. c("linear", 0) or c("linear", "no_conversion"),
 #'   in which case, the operations are done in sequence.
@@ -82,14 +89,22 @@
 #' @return The gdp argument, with the values in the "value" column, converted to unit_out. If the argument
 #'   return_cfs is TRUE, then a list is returned with the converted GDP under "result", and the conversion
 #'   factors used under "cfs".
-#' @seealso The [countrycode](https://github.com/vincentarelbundock/countrycode)
-#'   package to convert country codes.
-#' @importFrom magrittr %>%
+#' @seealso The [countrycode](https://github.com/vincentarelbundock/countrycode) package to convert country codes.
+#' @examples
+#'   my_tbble <- tibble::tibble(iso3c = "FRA",
+#'                              year = 2013,
+#'                              value = 100)
+#'
+#'   convertGDP(gdp = my_tbble,
+#'              unit_in = "current LCU",
+#'              unit_out = "constant 2015 Int$PPP")
+#'
 #' @export
 convertGDP <- function(gdp,
                        unit_in,
                        unit_out,
                        source = "wb_wdi",
+                       use_USA_deflator_for_all = FALSE,
                        with_regions = NULL,
                        replace_NAs = NULL,
                        verbose = getOption("GDPuc.verbose", default = FALSE),
@@ -110,7 +125,7 @@ convertGDP <- function(gdp,
   }
 
   # Transform user input for internal use, while performing some last consistency checks
-  internal <- transform_user_input(gdp, unit_in, unit_out, source, with_regions, replace_NAs)
+  internal <- transform_user_input(gdp, unit_in, unit_out, source, use_USA_deflator_for_all, with_regions, replace_NAs)
 
   # Avoid NOTE in package check for CRAN
   . <- NULL
@@ -118,7 +133,9 @@ convertGDP <- function(gdp,
   f <- paste0(internal$unit_in, "_2_", internal$unit_out) %>%
     gsub(" ", "_", .) %>%
     gsub("_YYYY", "", .) %>%
-    gsub("\\$", "", .)
+    gsub("\\$", "", .) %>%
+    # \u20ac is the ascii code for the € sign
+    gsub("\u20ac", "EURO", .)
 
   # Get list of function arguments
   a <- list("gdp" = internal$gdp, "source" = internal$source) %>%
@@ -146,11 +163,56 @@ convertGDP <- function(gdp,
   }
 
   # Return with original type and names
-  x <- transform_internal(x, gdp, with_regions)
+  x <- transform_internal(x, gdp, with_regions, internal$require_year_column)
 
   if (return_cfs) {
-    return(list("result" = x, "cfs" = do.call(get_conversion_factors, arg[1:6])))
+    return(list("result" = x, "cfs" = do.call(get_conversion_factors, arg[1:7])))
   } else {
     return(x)
+  }
+}
+
+#' @describeIn convertGDP Short cut for `convertGDP(..., source = "wb_wdi_cpi")`
+#' @param ... Arguments passed on to `convertGDP()`
+#' @examples
+#'   # Convert using the CPI as deflator.
+#'   convertGDP(gdp = my_tbble,
+#'              unit_in = "current LCU",
+#'              unit_out = "constant 2015 Int$PPP",
+#'              source = "wb_wdi_cpi")
+#'   # Or using the shortcut `convertCPI()`
+#'   convertCPI(gdp = my_tbble,
+#'              unit_in = "current LCU",
+#'              unit_out = "constant 2015 Int$PPP")
+#'
+#' @export
+convertCPI <- function(...) convertGDP(..., source = "wb_wdi_cpi")
+
+#' @describeIn convertGDP Convert a single value, while specifying iso3c code and year. Simpler than creating a
+#'   single row tibble.
+#' @param x Number to convert
+#' @param iso3c Country code
+#' @param year NULL, or year of value. Only plays a role when converting from or to current currencies.
+#' @examples
+#'   # Convert a single value quickly
+#'   convertSingle(x = 100,
+#'                 iso3c = "FRA",
+#'                 year = 2013,
+#'                 unit_in = "current LCU",
+#'                 unit_out = "constant 2015 Int$PPP")
+#' @export
+convertSingle <- function(x, iso3c, year = NULL, ...) {
+  tib <- tibble::tibble("iso3c" = iso3c, "value" = x)
+
+  if (!is.null(year)) {
+    tib <- tibble::add_column(tib, "year" = year, .before = "value")
+  }
+
+  tib_c <- convertGDP(gdp = tib, ...)
+
+  if (tibble::is_tibble(tib_c)) {
+    return(tib_c$value)
+  } else {
+    return(tib_c)
   }
 }

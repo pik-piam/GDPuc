@@ -2,6 +2,8 @@
 % Please edit documentation in R/convertGDP.R
 \name{convertGDP}
 \alias{convertGDP}
+\alias{convertCPI}
+\alias{convertSingle}
 \title{Convert GDP data}
 \usage{
 convertGDP(
@@ -9,20 +11,25 @@ convertGDP(
   unit_in,
   unit_out,
   source = "wb_wdi",
+  use_USA_deflator_for_all = FALSE,
   with_regions = NULL,
   replace_NAs = NULL,
   verbose = getOption("GDPuc.verbose", default = FALSE),
   return_cfs = FALSE
 )
+
+convertCPI(...)
+
+convertSingle(x, iso3c, year = NULL, ...)
 }
 \arguments{
 \item{gdp}{A tibble, data frame or magpie object, the latter of which
 requires the \href{https://github.com/pik-piam/magclass}{magclass}
-package to be installed. The data-frame needs to have at least 3 columns:
+package to be installed. The data-frame needs to have at least 2 columns, in some cases 3:
 \itemize{
 \item a character column with iso3c
 (\href{https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3}{wikipedia}) country codes,
-\item a numeric column with years,
+\item a numeric column with years (only required when converting from or to current currencies),
 \item a numeric column named "value" with GDP values.
 }}
 
@@ -34,6 +41,7 @@ package to be installed. The data-frame needs to have at least 3 columns:
 \item "constant YYYY LCU"
 \item "constant YYYY Int$PPP"
 \item "constant YYYY US$MER"
+\item "constant YYYY €"
 }
 where YYYY should be replaced with a year e.g. "2010" or "2017".}
 
@@ -45,6 +53,7 @@ where YYYY should be replaced with a year e.g. "2010" or "2017".}
 \item "constant YYYY LCU"
 \item "constant YYYY Int$PPP"
 \item "constant YYYY US$MER"
+\item "constant YYYY €"
 }
 where YYYY should be replaced with a year e.g. "2010" or "2017".}
 
@@ -52,6 +61,10 @@ where YYYY should be replaced with a year e.g. "2010" or "2017".}
 a data-frame that exists in the calling environment.
 Use \href{https://pik-piam.github.io/GDPuc/reference/print_source_info.html}{print_source_info()}
 to learn about the available sources.}
+
+\item{use_USA_deflator_for_all}{TRUE or FALSE (default). If TRUE, then only the USA deflator is used to adjust for
+inflation, regardless of the country codes provided. This is a very specific deviation from the correct conversion
+process, which nevertheless is often used in the integrated assessment community. Use carefully!}
 
 \item{with_regions}{NULL or a data-frame. The data-frame should be "country to region
 mapping": one column named "iso3c" with iso3c country codes, and one column named
@@ -70,6 +83,8 @@ For the extrapolation, the closest 5 data points are used.
 \item "regional_average": missing conversion factors in the source object are replaced with
 the regional average of the region to which the country belongs. This requires a region-mapping to
 be passed to the function, see the with_regions argument.
+\item "with USA": missing conversion factors in the source object are replaced with
+the conversion factors of the USA.
 }
 Can also be a vector with "linear" as first element, e.g. c("linear", 0) or c("linear", "no_conversion"),
 in which case, the operations are done in sequence.}
@@ -80,6 +95,14 @@ GDPuc.verbose option, which is FALSE if not set to TRUE by the user.}
 \item{return_cfs}{TRUE or FALSE. Set to TRUE to additionally return a tibble with the conversion factors
 used. In that case a list is returned with the converted GDP under "result", and the conversion factors
 used under "cfs".}
+
+\item{...}{Arguments passed on to \code{convertGDP()}}
+
+\item{x}{Number to convert}
+
+\item{iso3c}{Country code}
+
+\item{year}{NULL, or year of value. Only plays a role when converting from or to current currencies.}
 }
 \value{
 The gdp argument, with the values in the "value" column, converted to unit_out. If the argument
@@ -108,7 +131,40 @@ The base year of the deflator can be any year, and can be country-specific.
 wit PPP exchange rate values.
 }
 }
+\section{Functions}{
+\itemize{
+\item \code{convertCPI()}: Short cut for \code{convertGDP(..., source = "wb_wdi_cpi")}
+
+\item \code{convertSingle()}: Convert a single value, while specifying iso3c code and year. Simpler than creating a
+single row tibble.
+
+}}
+\examples{
+  my_tbble <- tibble::tibble(iso3c = "FRA",
+                             year = 2013,
+                             value = 100)
+
+  convertGDP(gdp = my_tbble,
+             unit_in = "current LCU",
+             unit_out = "constant 2015 Int$PPP")
+
+  # Convert using the CPI as deflator.
+  convertGDP(gdp = my_tbble,
+             unit_in = "current LCU",
+             unit_out = "constant 2015 Int$PPP",
+             source = "wb_wdi_cpi")
+  # Or using the shortcut `convertCPI()`
+  convertCPI(gdp = my_tbble,
+             unit_in = "current LCU",
+             unit_out = "constant 2015 Int$PPP")
+
+  # Convert a single value quickly
+  convertSingle(x = 100,
+                iso3c = "FRA",
+                year = 2013,
+                unit_in = "current LCU",
+                unit_out = "constant 2015 Int$PPP")
+}
 \seealso{
-The \href{https://github.com/vincentarelbundock/countrycode}{countrycode}
-package to convert country codes.
+The \href{https://github.com/vincentarelbundock/countrycode}{countrycode} package to convert country codes.
 }

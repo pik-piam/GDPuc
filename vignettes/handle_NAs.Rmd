@@ -29,9 +29,9 @@ Below, the `return_cfs` argument is set to `TRUE` to inspect the conversion fact
 ```{r}
 library(GDPuc)
 
-# Test with Aruba -> iso3c = ABW
+# Test with Venezuela -> iso3c = VEN
 my_gdp <- tibble::tibble(
-  iso3c = c("ABW"),
+  iso3c = c("VEN"),
   year = 2010:2014,
   value = 100:104
 )
@@ -64,7 +64,7 @@ If set to 0, resulting NAs are set to 0.
 
 ```{r}
 my_gdp <- tibble::tibble(
-  iso3c = "ABW",
+  iso3c = "VEN",
   year = 2010:2014,
   value = 100:104
 )
@@ -88,7 +88,7 @@ If set to "no_conversion", NAs are replaced with the values in the gdp argument.
 
 ```{r}
 my_gdp <- tibble::tibble(
-  iso3c = "ABW",
+  iso3c = "VEN",
   year = 2010:2014,
   value = 100:104
 )
@@ -112,7 +112,7 @@ If set to "linear", missing conversion factors are inter- and extrapolated linea
 
 ```{r}
 my_gdp <- tibble::tibble(
-  iso3c = "ABW",
+  iso3c = "VEN",
   year = 2010:2014,
   value = 100:104
 )
@@ -135,13 +135,13 @@ If set to "regional_average", the regional GDP-weighted averages will be used. R
 
 ```{r}
 my_gdp <- tibble::tibble(
-  iso3c = "ABW",
+  iso3c = "VEN",
   year = 2010:2014,
   value = 100:104
 )
 
 my_mapping_data_frame <- tibble::tibble(
-  iso3c = c("ABW", "BRA", "ARG", "COL"),
+  iso3c = c("VEN", "BRA", "ARG", "COL"),
   region = "LAM"
 )
 
@@ -170,13 +170,13 @@ if any missing conversion factors still lead to NAs, these are replaced with 0.
 ```{r}
 # Create an imaginary country XXX, and add it to the Latin America region
 my_gdp <- tibble::tibble(
-  iso3c = c("ABW", "XXX"),
+  iso3c = c("VEN", "XXX"),
   year = 2010,
   value = 100
 )
 
 my_mapping_data_frame <- tibble::tibble(
-  iso3c = c("ABW", "BRA", "ARG", "COL", "XXX"),
+  iso3c = c("VEN", "BRA", "ARG", "COL", "XXX"),
   region = "LAM"
 )
 
@@ -199,7 +199,7 @@ If set to `1`, missing conversion factors are set to 1. **To be deprecated, use 
 
 ```{r}
 my_gdp <- tibble::tibble(
-  iso3c = "ABW",
+  iso3c = "VEN",
   year = 2010:2014,
   value = 100:104
 )
@@ -215,7 +215,7 @@ x$result
 
 x$cfs
 
-# Why is the deflator above not 1? That is because for ABW, only the deflator value in 2019 was set to 1. 
+# Why is the deflator above not 1? That is because for VEN, only the deflator value in 2019 was set to 1. 
 # In 2005 the deflator was in the order of magnitude of 100. Obviously setting the deflator to 1 in 2019 is 
 # completely misleading.
 ```

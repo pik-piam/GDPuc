@@ -7,10 +7,11 @@
 print_source_info(source)
 }
 \arguments{
-\item{source}{The name of one of the internal sources:
+\item{source}{Empty, or the name of one of the internal sources:
 \enumerate{
 \item "wb_wdi"
 \item "wb_wdi_linked"
+\item "wb_wdi_cpi"
 }}
 }
 \value{
@@ -22,4 +23,8 @@ No return value, called for side effects.
 Print detailed information on conversion factor sources to the screen. Information includes the name, origin, date,
 html-link and an associated note. Calling the function without any argument will print information on all
 available sources.
+}
+\examples{
+print_source_info()
+
 }

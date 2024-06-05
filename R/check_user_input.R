@@ -2,21 +2,23 @@
 #
 # check_user_input performs some checks on the function arguments.
 # @return TRUE or an Error
-check_user_input <- function(gdp, unit_in, unit_out, source, with_regions, replace_NAs, verbose, return_cfs) {
+check_user_input <- function(gdp,
+                             unit_in,
+                             unit_out,
+                             source,
+                             use_USA_deflator_for_all,
+                             with_regions,
+                             replace_NAs,
+                             verbose,
+                             return_cfs) {
 
-  # Check the gdp argument
   check_gdp(gdp)
-  # Check the unit_in and unit_out arguments
   check_unit_in_out(unit_in, unit_out)
-  # Check the source argument
   source <- check_source(source)
-  # Check the with_regions argument. Depends on unit_in, unit_out, and the source tibble
+  check_use_USA_deflator_for_all(use_USA_deflator_for_all, unit_in, unit_out)
   check_with_regions(unit_in, unit_out, source, with_regions)
-  # Check the replaceNAs argument. Depends on the with_regions argument.
   check_replace_NAs(with_regions, replace_NAs)
-  # Check the verbose argument
   check_verbose(verbose)
-  # Check the return_cfs argument
   check_return_cfs(return_cfs)
 
   TRUE
@@ -32,9 +34,6 @@ check_gdp <- function(gdp) {
     }
     if (!is.numeric(gdp$value)) {
       abort("Invalid 'gdp' argument. The 'value' column is not numeric.")
-    }
-    if (length(gdp) < 3) {
-      abort("Invalid 'gdp' argument. 'gdp' must have at least 3 columns.")
     }
   } else if (inherits(gdp, "magpie")) {
     # Check for magclass package
@@ -59,6 +58,7 @@ check_unit_in_out <- function(unit_in, unit_out) {
     "current Int\\$PPP",
     "constant .... LCU",
     "constant .... US\\$MER",
+    "constant .... \u20ac",
     "constant .... Int\\$PPP"
   )
   if (!is.character(unit_in) || !any(sapply(valid_units, grepl, unit_in))) {
@@ -95,7 +95,20 @@ check_source <- function(source) {
   if (!all(required_cols_in_source %in% colnames(source))) {
     abort("Invalid 'source' argument. Required columns are: {paste(required_cols_in_source, collapse = '; ')}")
   }
+  if (nrow(source) != nrow(dplyr::distinct(source, .data$iso3c , .data$year))) {
+    abort("Invalid 'source' argument. Duplicate iso3c - year pairs found.")
+  }
   source
+}
+
+# Check input parameter 'verbose'
+check_use_USA_deflator_for_all <- function(use_USA_deflator_for_all, unit_in, unit_out) {
+  if (!is.logical(use_USA_deflator_for_all)) {
+    abort("Invalid 'use_USA_deflator_for_all' argument. Has to be either TRUE or FALSE.")
+  }
+  if (use_USA_deflator_for_all && any(grepl("current", c(unit_in, unit_out)))) {
+    abort("Setting 'use_USA_deflator_for_all' to TRUE should only be applied between conversion of constant units.")
+  }
 }
 
 # Check input parameter 'with_regions'
@@ -129,9 +142,9 @@ check_replace_NAs <- function(with_regions, replace_NAs) {
         "convertGDP(replace_NAs = '\"linear_regional_average\" has been replaced by c(\"linear\", \"regional_average\")')"
       )
     }
-    if (!all(replace_NAs %in% c(NA, 0, 1, "no_conversion", "linear", "regional_average"))) {
-      abort("Invalid 'replace_NAs' argument. Has to be either NULL, NA, 0, 1, no_conversion, linear, regional_average or \\
-            a combination of the above.")
+    if (!all(replace_NAs %in% c(NA, 0, 1, "no_conversion", "linear", "regional_average", "with_USA"))) {
+      abort("Invalid 'replace_NAs' argument. Has to be either NULL, NA, 0, 1, no_conversion, linear, \\
+            regional_average, with_USA or a combination of the above.")
     }
     if (length(replace_NAs) > 1 && replace_NAs[1] != "linear") {
       abort("Invalid 'replace_NAs' argument. The only accepted combinations of arguments start with 'linear', e.g. \\

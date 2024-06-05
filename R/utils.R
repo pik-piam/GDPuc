@@ -1,3 +1,6 @@
+# Eager pipe. Used to make sure the messages of the elemental conversion are printed in the right order.
+`%>e%` <- magrittr::pipe_eager_lexical
+
 smart_select_iso3c <- function(gdp) {
   gdp %>%
     dplyr::select(tidyselect::vars_select_helpers$where(
@@ -16,13 +19,4 @@ smart_select_year <- function(gdp) {
         all(nchar(as.character(.x)) == 4)
     )) %>%
     colnames()
-}
-
-mag_2_tibb <- function(gdp) {
-  gdp %>%
-    magclass::as.data.frame() %>%
-    tibble::as_tibble() %>%
-    dplyr::select(-"Cell") %>%
-    dplyr::rename("iso3c" = "Region", "year" = "Year", "value" = "Value") %>%
-    dplyr::mutate(year = as.integer(as.character(.data$year)))
 }

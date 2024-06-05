@@ -1,23 +1,22 @@
 # Transform user input for package internal use
-transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions, replace_NAs) {
+transform_user_input <- function(gdp, unit_in, unit_out, source, use_USA_deflator_for_all, with_regions, replace_NAs) {
   . <- NULL
 
   # Convert to tibble, if necessary
   if (class(gdp)[1] == "magpie") {
-    gdp <- mag_2_tibb(gdp)
+    gdp <- tibble::as_tibble(gdp) %>% dplyr::rename(tidyselect::any_of(c("iso3c" = "region")))
   }
 
   # Extract base years if they exist, and adjust string
   if (grepl("constant", unit_in)) {
     base_x <- regmatches(unit_in, regexpr("[[:digit:]]{4}", unit_in)) %>% as.double()
-    unit_in <- sub(base_x, "YYYY", unit_in) %>%
-      paste0(" base x")
+    unit_in <- sub(base_x, "YYYY", unit_in) %>% paste0(" base x")
   }
   if (grepl("constant", unit_out)) {
     base_y <- regmatches(unit_out, regexpr("[[:digit:]]{4}", unit_out)) %>% as.double()
-    unit_out <- sub(base_y, "YYYY", unit_out) %>%
-      paste0(" base y")
+    unit_out <- sub(base_y, "YYYY", unit_out) %>% paste0(" base y")
   }
+  require_year_column <- any(grepl("current", c(unit_in, unit_out)))
 
   # Rename columns if necessary
   if (! "iso3c" %in% colnames(gdp)) {
@@ -29,11 +28,11 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions, r
     warn("No 'iso3c' column in 'gdp' argument. Using '{i_iso3c}' column instead.")
     gdp <- dplyr::rename(gdp, "iso3c" = !!rlang::sym(i_iso3c))
   }
-  if (! "year" %in% colnames(gdp)) {
+  if (require_year_column && ! "year" %in% colnames(gdp)) {
     i_year <- smart_select_year(gdp)
     if (length(i_year) != 1) {
-      abort("Invalid 'gdp' argument. 'gdp' does not have the required \\
-               'year' column, and no other column could be identified in its stead.")
+      abort("Invalid 'gdp' argument. 'gdp' does not have a 'year' column, required when converting current values, \\
+             and no other column could be identified in its stead.")
     }
     warn("No 'year' column in 'gdp' argument. Using '{i_year}' column instead.")
     gdp <- dplyr::rename(gdp, "year" = !!rlang::sym(i_year))
@@ -64,13 +63,17 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions, r
           year {base_x}.")
   }
   # Check general overlap
-  if (length(intersect(unique(gdp$year), unique(source$year))) == 0) {
+  if (require_year_column && length(intersect(unique(gdp$year), unique(source$year))) == 0) {
     abort("Incompatible 'gdp' and 'source'. No information in source {crayon::bold(source_name)} for years in 'gdp'.")
   }
 
-  # Use different source if required
-  if (!is.null(replace_NAs) && !any(sapply(c(NA, 0, "no_conversion"), setequal, replace_NAs))) {
-    source <- adapt_source(gdp, source, with_regions, replace_NAs)
+  # Use different source if required by the replace_NAs argument
+  if (use_USA_deflator_for_all ||
+      (!is.null(replace_NAs) && !any(sapply(c(NA, 0, "no_conversion"), setequal, replace_NAs))) ) {
+    if (use_USA_deflator_for_all || replace_NAs[1] == "with_USA") source <- adapt_source_USA(gdp, source, replace_NAs)
+    if (!is.null(replace_NAs) && !any(sapply(c(NA, 0, "no_conversion", "with_USA"), setequal, replace_NAs))){
+      source <- adapt_source(gdp, source, with_regions, replace_NAs, require_year_column)
+    }
     source_name <- paste0(source_name, "_adapted")
   }
 
@@ -81,6 +84,7 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions, r
   list("gdp" = gdp,
        "unit_in" = unit_in,
        "unit_out" = unit_out,
+       "require_year_column" = require_year_column,
        "source" = source,
        "source_name" = source_name) %>%
     {if (exists("base_x", envir = this_e, inherits = FALSE)) c(., "base_x" = base_x) else .} %>%
@@ -92,7 +96,7 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, with_regions, r
 
 
 # Transform user input for package internal use
-transform_internal <- function(x, gdp, with_regions) {
+transform_internal <- function(x, gdp, with_regions, require_year_column) {
 
   if (!is.null(with_regions) && "gdpuc_region" %in% colnames(x)) {
     x_reg <- dplyr::filter(x, !is.na(.data$gdpuc_region))
@@ -124,7 +128,7 @@ transform_internal <- function(x, gdp, with_regions) {
     i_iso3c <- smart_select_iso3c(gdp)
     x <- dplyr::rename(x, !!rlang::sym(i_iso3c) := "iso3c")
   }
-  if (! "year" %in% colnames(gdp)) {
+  if (require_year_column && ! "year" %in% colnames(gdp)) {
     i_year <- smart_select_year(gdp)
     x <- dplyr::rename(x, !!rlang::sym(i_year) := "year")
   }
