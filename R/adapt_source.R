@@ -30,7 +30,7 @@ adapt_source <- function(gdp, source, with_regions, replace_NAs, require_year_co
                        {if ("gdpuc_region" %in% colnames(.)) dplyr::filter(., is.na(.data$gdpuc_region)) else .} %>%
                        dplyr::select(tidyselect::all_of(hcol)) %>%
                        dplyr::distinct() %>%
-                       dplyr::anti_join(source, by = tidyselect::all_of(hcol))) %>%
+                       dplyr::anti_join(source, by = hcol)) %>%
     tidyr::complete(.data$iso3c, .data$year) %>%
     dplyr::filter(!is.na(.data$year))
 
@@ -92,11 +92,10 @@ adapt_source <- function(gdp, source, with_regions, replace_NAs, require_year_co
     source_adapted <- source_adapted %>%
       # Mutate the 3 important columns
       dplyr::rowwise() %>%
-      dplyr::mutate(dplyr::across(.cols = c(
-        "GDP deflator",
-        "MER (LCU per US$)",
-        "PPP conversion factor, GDP (LCU per international $)"),
-        ~ if (is.na(.x)) 1 else .x)) %>%
+      dplyr::mutate(dplyr::across(c("GDP deflator",
+                                    "MER (LCU per US$)",
+                                    "PPP conversion factor, GDP (LCU per international $)"),
+                                  ~ if (is.na(.x)) 1 else .x)) %>%
       dplyr::ungroup()
   }
 
