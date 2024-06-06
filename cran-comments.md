@@ -1,8 +1,7 @@
-### Re-submission after email from Victoria Wimmer from the 17th of July
+### Major update to the package
 
-* Package description was amended following the recommendations (doesn't start with "function to").
-* Missing "value" section in documentation of a function was added (the recommended "No return value, called for side effects" was used.)
-* As I understand it, the package was previously archived because of the warning "Does not use Suggests conditionally". This issue was addressed, by making sure that the packages listed under "suggests" are now used conditionally in the package tests and vignettes. I do not get any warnings anymore when checking, only the "checking CRAN incoming feasibility" note, indicating that the package was archived. 
+* Update of the package sysdata.
+* Addition of 2 quality-of-life functions, that act as shortcuts for common function calls. 
 
 ### R CMD check results
 
