@@ -68,12 +68,18 @@ test_that("convertGDP magpie object", {
                                  years = c(2001, 2002),
                                  names = c("ssp1", "ssp2"),
                                  fill = 100)
-  magclass::getSets(gdp_in)[1] <- c("iso3c")
+  gdp_in2 <- magclass::new.magpie("USA.FRA",
+                                  years = c(2001, 2002),
+                                  names = c("ssp1", "ssp2"),
+                                  fill = 100)
+  gdp_conv  <- convertGDP(gdp_in, "current LCU", "constant 2017 Int$PPP")
+  gdp_conv2 <- convertGDP(gdp_in2, "current LCU", "constant 2017 Int$PPP")
 
-  gdp_conv <- convertGDP(gdp_in, "current LCU", "constant 2017 Int$PPP")
 
   expect_s4_class(gdp_conv, "magpie")
-  expect_mapequal(magclass::getSets(gdp_in), magclass::getSets(gdp_conv))
+  expect_s4_class(gdp_conv2, "magpie")
+  expect_mapequal(magclass::getSets(gdp_in),  magclass::getSets(gdp_conv))
+  expect_mapequal(magclass::getSets(gdp_in2), magclass::getSets(gdp_conv2))
 })
 
 
