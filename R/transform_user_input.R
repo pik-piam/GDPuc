@@ -4,14 +4,21 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, use_USA_deflato
 
   # Convert to tibble, if necessary
   if (class(gdp)[1] == "magpie") {
-    # Check if the magpie object has 2 spatial dimensions
-    spat2 <- all(grepl("\\.", magclass::getItems(gdp, dim = 1)))
-    gdp <- tibble::as_tibble(gdp)
-    if (!spat2) {
-      gdp <- gdp %>% dplyr::rename("iso3c" = 1, "year" = 2)
-    } else {
-      gdp <- gdp %>% dplyr::rename("iso3c" = 1, "spatial2" = 2, "year" = 3)
+
+    tb <- tibble::as_tibble(gdp)
+
+    if (is.null(getItems(gdp, dim = 2))){
+      tb <- tb %>% tibble::add_column(year = 0, .after = 1)
     }
+
+    # Check if the magpie object has 2 spatial dimensions
+    if (magclass::ndim(gdp, dim = 1) == 1) {
+      tb <- tb %>% dplyr::rename("iso3c" = 1, "year" = 2)
+    } else {
+      tb <- tb %>% dplyr::rename("iso3c" = 1, "spatial2" = 2, "year" = 3)
+    }
+
+    gdp <- tb
   }
 
   # Extract base years if they exist, and adjust string
@@ -126,11 +133,10 @@ transform_internal <- function(x, gdp, with_regions, require_year_column) {
   # Transform into original gdp type
   if (class(gdp)[1] == "magpie") {
     # Check if the original magpie object had 2 spatial dimensions
-    spat2 <- all(grepl("\\.", magclass::getItems(gdp, dim = 1)))
-    if (!spat2) {
-      x <- magclass::as.magpie(x, spatial = "iso3c", temporal = "year")
+    if (magclass::ndim(gdp, dim = 1) == 1) {
+      x <- magclass::as.magpie(x, spatial = "iso3c", temporal = "year", datacol = "value")
     } else {
-      x <- magclass::as.magpie(x, spatial = c("iso3c", "spatial2"), temporal = "year")
+      x <- magclass::as.magpie(x, spatial = c("iso3c", "spatial2"), temporal = "year", datacol = "value")
     }
     magclass::getSets(x) <- magclass::getSets(gdp)
     return(x)
