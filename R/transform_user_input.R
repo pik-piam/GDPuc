@@ -7,7 +7,7 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, use_USA_deflato
 
     tb <- tibble::as_tibble(gdp)
 
-    if (is.null(getItems(gdp, dim = 2))){
+    if (is.null(magclass::getItems(gdp, dim = 2))) {
       tb <- tb %>% tibble::add_column(year = 0, .after = 1)
     }
 

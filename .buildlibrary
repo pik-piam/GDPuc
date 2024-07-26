@@ -1,8 +1,8 @@
-ValidationKey: '2027862'
+ValidationKey: '2072720'
 AutocreateReadme: no
 AcceptedWarnings:
 - 'Warning: package ''.*'' was built under R version'
 - 'Warning: namespace ''.*'' is not available and has been replaced'
-AcceptedNotes: ~
+AcceptedNotes: 'Namespace in Imports field not imported from: ‘crayon’'
 allowLinterWarnings: yes
 enforceVersionUpdate: no

@@ -12,7 +12,9 @@ check_user_input <- function(gdp,
                              verbose,
                              return_cfs) {
 
-  check_gdp(gdp)
+  require_year_column <- any(grepl("current", c(unit_in, unit_out)))
+
+  check_gdp(gdp, require_year_column)
   check_unit_in_out(unit_in, unit_out)
   source <- check_source(source)
   check_use_USA_deflator_for_all(use_USA_deflator_for_all, unit_in, unit_out)
@@ -27,7 +29,7 @@ check_user_input <- function(gdp,
 
 
 # Check 'gdp' input parameter
-check_gdp <- function(gdp) {
+check_gdp <- function(gdp, require_year_column) {
   if (is.data.frame(gdp)) {
     if (! "value" %in% colnames(gdp)) {
       abort("Invalid 'gdp' argument. 'gdp' does not have the required 'value' column.")
@@ -38,6 +40,12 @@ check_gdp <- function(gdp) {
   } else if (inherits(gdp, "magpie")) {
     # Check for magclass package
     rlang::check_installed("magclass", reason = "in order for magpie objects to be recognized.")
+
+    # Check if there is years info
+    if (is.null(magclass::getYears(gdp)) && require_year_column) {
+      abort("Invalid 'gdp' argument. No year information in {crayon::bold('magpie')} object.")
+    }
+
   } else {
     abort("Invalid 'gdp' argument. 'gdp' is neither a data-frame nor a 'magpie' object.")
   }

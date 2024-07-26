@@ -1,24 +1,29 @@
 test_that("gdp argument", {
   gdp <- tibble::tibble("iso3c" = "EUR", "year" = 2010, "value2" = 100)
-  expect_error(check_user_input(gdp), "Invalid 'gdp' argument. 'gdp' does not have the required 'value' column.")
+  expect_error(check_user_input(gdp, unit_in = "current LCU", unit_out = "constant 2017 Int$PPP"),
+               "Invalid 'gdp' argument. 'gdp' does not have the required 'value' column.")
 
   gdp <- tibble::tibble("iso3c" = "EUR", "year" = 2007, "value" = "100")
-  expect_error(check_user_input(gdp), "Invalid 'gdp' argument. The 'value' column is not numeric.")
+  expect_error(check_user_input(gdp, unit_in = "current LCU", unit_out = "constant 2017 Int$PPP"),
+               "Invalid 'gdp' argument. The 'value' column is not numeric.")
 
   gdp <- "blabla"
-  expect_error(check_user_input(gdp), "Invalid 'gdp' argument. 'gdp' is neither a data-frame nor a 'magpie' object.")
+  expect_error(check_user_input(gdp, unit_in = "current LCU", unit_out = "constant 2017 Int$PPP"),
+               "Invalid 'gdp' argument. 'gdp' is neither a data-frame nor a 'magpie' object.")
   gdp <- array()
-  expect_error(check_user_input(gdp), "Invalid 'gdp' argument. 'gdp' is neither a data-frame nor a 'magpie' object.")
+  expect_error(check_user_input(gdp, unit_in = "current LCU", unit_out = "constant 2017 Int$PPP"),
+               "Invalid 'gdp' argument. 'gdp' is neither a data-frame nor a 'magpie' object.")
 
   if (rlang::is_installed("magclass")) {
     gdp <- magclass::new.magpie()
-    expect_error(check_user_input(gdp), "Invalid 'gdp' argument. No year information in magpie object.")
+    expect_error(check_user_input(gdp, unit_in = "current LCU", unit_out = "constant 2017 Int$PPP"),
+                 "Invalid 'gdp' argument. No year information in magpie object.")
   }
 })
 
 test_that("unit arguments", {
   gdp <- tibble::tibble("iso3c" = "EUR", "year" = 2010, "value" = 100)
-  expect_error(check_user_input(gdp, unit_in = "blabla"), "Invalid 'unit_in' argument")
+  expect_error(check_user_input(gdp, unit_in = "blabla", unit_out = "blabla"), "Invalid 'unit_in' argument")
   expect_error(check_user_input(gdp, unit_in = "current LCU", unit_out = 2), "Invalid 'unit_out' argument")
 })
 
