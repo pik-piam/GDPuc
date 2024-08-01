@@ -5,13 +5,14 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, use_USA_deflato
   # Convert to tibble, if necessary
   if (class(gdp)[1] == "magpie") {
     # Check if the magpie object has 2 spatial dimensions
-    spat2 <- all(grepl("\\.", magclass::getItems(gdp, dim = 1)))
-    gdp <- tibble::as_tibble(gdp)
-    if (!spat2) {
-      gdp <- gdp %>% dplyr::rename("iso3c" = 1, "year" = 2)
-    } else {
-      gdp <- gdp %>% dplyr::rename("iso3c" = 1, "spatial2" = 2, "year" = 3)
-    }
+    spat2 <- magclass::ndim(gdp, dim = 1) == 2
+    # Check if the magpie object has year info
+    hasYears <- !is.null(magclass::getYears(gdp))
+    # Transform to tibble and rename columns
+    gdp <- gdp %>% tibble::as_tibble() %>% dplyr::rename("iso3c" = 1)
+    if (spat2) gdp <- dplyr::rename(gdp, "spatial2" = 2)
+    if (hasYears && !spat2) gdp <- dplyr::rename(gdp, "year" = 2)
+    if (hasYears && spat2) gdp <- dplyr::rename(gdp, "year" = 3)
   }
 
   # Extract base years if they exist, and adjust string
