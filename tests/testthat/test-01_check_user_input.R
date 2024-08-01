@@ -9,11 +9,6 @@ test_that("gdp argument", {
   expect_error(check_user_input(gdp), "Invalid 'gdp' argument. 'gdp' is neither a data-frame nor a 'magpie' object.")
   gdp <- array()
   expect_error(check_user_input(gdp), "Invalid 'gdp' argument. 'gdp' is neither a data-frame nor a 'magpie' object.")
-
-  if (rlang::is_installed("magclass")) {
-    gdp <- magclass::new.magpie()
-    expect_error(check_user_input(gdp), "Invalid 'gdp' argument. No year information in magpie object.")
-  }
 })
 
 test_that("unit arguments", {

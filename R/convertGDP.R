@@ -76,7 +76,7 @@
 #'     \item "regional_average": missing conversion factors in the source object are replaced with
 #'     the regional average of the region to which the country belongs. This requires a region-mapping to
 #'     be passed to the function, see the with_regions argument.
-#'     \item "with USA": missing conversion factors in the source object are replaced with
+#'     \item "with_USA": missing conversion factors in the source object are replaced with
 #'     the conversion factors of the USA.
 #'   }
 #'   Can also be a vector with "linear" as first element, e.g. c("linear", 0) or c("linear", "no_conversion"),
@@ -142,10 +142,9 @@ convertGDP <- function(gdp,
     {if ("base_x" %in% names(internal)) c(., "base_x" = internal$base_x) else .} %>%
     {if ("base_y" %in% names(internal)) c(., "base_y" = internal$base_y) else .}
 
-
-  cli_inform(function() cli::cli_alert_info(
-    "Converting GDP with conversion factors from {crayon::blue(internal$source_name)}:")
-  )
+  # At least one explicit call to a crayon:: function is required to avoid CRAN note.
+  h <- crayon::blue(internal$source_name)
+  cli_inform(function() cli::cli_alert_info("Converting GDP with conversion factors from {h}:"))
 
   # Call function
   x <- do.call(f, a)

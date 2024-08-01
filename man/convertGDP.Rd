@@ -83,7 +83,7 @@ For the extrapolation, the closest 5 data points are used.
 \item "regional_average": missing conversion factors in the source object are replaced with
 the regional average of the region to which the country belongs. This requires a region-mapping to
 be passed to the function, see the with_regions argument.
-\item "with USA": missing conversion factors in the source object are replaced with
+\item "with_USA": missing conversion factors in the source object are replaced with
 the conversion factors of the USA.
 }
 Can also be a vector with "linear" as first element, e.g. c("linear", 0) or c("linear", "no_conversion"),
