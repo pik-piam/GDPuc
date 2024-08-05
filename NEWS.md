@@ -1,3 +1,8 @@
+# GDPuc 1.0.4
+
+* Improve internal column detection
+* Allow magclass objects without years
+
 # GDPuc 1.0.0
 
 * Update wdi conversion factors and data
