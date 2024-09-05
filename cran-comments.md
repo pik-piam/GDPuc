@@ -1,7 +1,6 @@
-### Major update to the package
+### Minor update to the package
 
-* Update of the package sysdata.
-* Addition of 2 quality-of-life functions, that act as shortcuts for common function calls. 
+* Allow magclass objects without years.
 
 ### R CMD check results
 
