@@ -129,9 +129,9 @@ transform_internal <- function(x, gdp, with_regions, require_year_column) {
     # Check if the original magpie object had 2 spatial dimensions
     spat2 <- all(grepl("\\.", magclass::getItems(gdp, dim = 1)))
     if (!spat2) {
-      x <- magclass::as.magpie(x, spatial = "iso3c", temporal = "year")
+      x <- magclass::as.magpie(x, spatial = "iso3c", temporal = "year", datacol = "value")
     } else {
-      x <- magclass::as.magpie(x, spatial = c("iso3c", "spatial2"), temporal = "year")
+      x <- magclass::as.magpie(x, spatial = c("iso3c", "spatial2"), temporal = "year", datacol = "value")
     }
     magclass::getSets(x) <- magclass::getSets(gdp)
     return(x)
