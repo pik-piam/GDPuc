@@ -135,7 +135,7 @@ convertGDP <- function(gdp,
     gsub("_YYYY", "", .) %>%
     gsub("\\$", "", .) %>%
     # \u20ac is the ascii code for the € sign
-    gsub("\u20ac", "EURO", .)
+    gsub("\u20ac|EUR", "EURO", .)
 
   # Get list of function arguments
   a <- list("gdp" = internal$gdp, "source" = internal$source) %>%
