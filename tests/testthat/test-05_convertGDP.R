@@ -214,3 +214,24 @@ test_that("convertSingle", {
   expect_equal(gdp1_conv$value, gdp2_conv)
   expect_equal(gdp1_conv, gdp3_conv$result)
 })
+
+test_that("convert euros", {
+  gdp1_conv <- convertSingle(100, "USA",
+                             unit_in = "constant 2015 LCU",
+                             unit_out = "constant 2017 €")
+
+  gdp2_conv <- convertSingle(100, "USA",
+                             unit_in = "constant 2015 LCU",
+                             unit_out = "constant 2017 EUR")
+
+  gdp3_conv <- convertSingle(100, "DEU",
+                             unit_in = "constant 2010 LCU",
+                             unit_out = "constant 2017 €")
+
+  gdp4_conv <- convertSingle(100, "DEU",
+                             unit_in = "constant 2010 €",
+                             unit_out = "constant 2017 LCU")
+
+  expect_equal(gdp1_conv, gdp2_conv)
+  expect_equal(gdp3_conv, gdp4_conv)
+})

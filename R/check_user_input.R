@@ -47,13 +47,14 @@ check_gdp <- function(gdp) {
 # Check input parameters 'unit_in' and 'unit_out'
 check_unit_in_out <- function(unit_in, unit_out) {
   valid_units <- c(
-    "current LCU",
-    "current US\\$MER",
-    "current Int\\$PPP",
-    "constant .... LCU",
-    "constant .... US\\$MER",
-    "constant .... \u20ac",
-    "constant .... Int\\$PPP"
+    "^current LCU$",
+    "^current US\\$MER$",
+    "^current Int\\$PPP$",
+    "^constant .... LCU$",
+    "^constant .... US\\$MER$",
+    "^constant .... \u20ac$",
+    "^constant .... EUR$",
+    "^constant .... Int\\$PPP$"
   )
   if (!is.character(unit_in) || !any(sapply(valid_units, grepl, unit_in))) {
     abort("Invalid 'unit_in' argument.")
