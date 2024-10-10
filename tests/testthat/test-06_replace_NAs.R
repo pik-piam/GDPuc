@@ -81,7 +81,6 @@ test_that("convertGDP replace_NAs = NA", {
   expect_equal(gdp_1, gdp_2)
 })
 
-
 test_that("convertGDP replace_NAs = 'no_conversion'", {
   # wb_wi does not have info for AFG in 2022
   gdp <- tidyr::expand_grid("iso3c" = c("AFG", "DEU", "USA"),
@@ -118,11 +117,47 @@ test_that("convertGDP replace_NAs = linear", {
   expect_true(!any(is.na(gdp_conv$value)))
 })
 
+test_that("convertGDP replace_NAs = with_USA", {
+  # wb_wi does not have info for AIA at all, nor for AFG in 2022
+  gdp <- tidyr::expand_grid("iso3c" = c("AIA", "AFG", "DEU", "USA"),
+                            "year" = c(2010, 2015, 2025),
+                            "SSP" = c("SSP1", "SSP2"), "value" = 100)
+
+  expect_warning(convertGDP(gdp,
+                            unit_in = "constant 2005 Int$PPP",
+                            unit_out = "constant 2022 US$MER"))
+
+  gdp_conv <- convertGDP(gdp,
+                         unit_in = "constant 2005 Int$PPP",
+                         unit_out = "constant 2022 US$MER",
+                         replace_NAs = "with_USA",
+                         return_cfs = TRUE)
+
+  expect_true(!any(is.na(gdp_conv$result$value)))
+  expect_true(!any(is.na(gdp_conv$cfs)))
+  expect_identical(dplyr::filter(gdp_conv$cfs, .data$iso3c == "AIA") %>% dplyr::select(-"iso3c"),
+                   dplyr::filter(gdp_conv$cfs, .data$iso3c == "USA") %>% dplyr::select(-"iso3c"))
+
+  gdp_conv2 <- convertGDP(gdp,
+                          unit_in = "constant 2005 Int$PPP",
+                          unit_out = "constant 2022 US$MER",
+                          replace_NAs = c("linear"),
+                          return_cfs = TRUE)
+
+  gdp_conv3 <- convertGDP(gdp,
+                          unit_in = "constant 2005 Int$PPP",
+                          unit_out = "constant 2022 US$MER",
+                          replace_NAs = c("linear", "with_USA"),
+                          return_cfs = TRUE)
+
+  expect_true(any(is.na(gdp_conv2$result$value)))
+  expect_true(!any(is.na(gdp_conv3$result$value)))
+})
+
 test_that("lin_int_ext", {
   x <- c(NA,NA,NA,NA,NA,NA,2,3,4,5,NA,7,8,NA,NA,NA,NA,NA,NA)
   expect_equal(lin_int_ext(x), -4:14)
 })
-
 
 test_that("convertGDP replace_NAs = c('linear', 'no_conversion')", {
   # wb_wi does not have info for ABW in 2019

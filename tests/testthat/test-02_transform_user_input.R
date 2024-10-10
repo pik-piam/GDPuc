@@ -5,14 +5,14 @@ test_that("source and unit year compatibility", {
                                     unit_in = "constant 2010 LCU",
                                     unit_out = "constant 2100 LCU",
                                     source = "wb_wdi",
-                                    use_USA_deflator_for_all = FALSE,
+                                    use_USA_cf_for_all = FALSE,
                                     with_regions = NULL,
                                     replace_NAs = NULL))
   expect_error(transform_user_input(gdp,
                                     unit_in = "constant 2100 LCU",
                                     unit_out = "constant 2010 LCU",
                                     source = "wb_wdi",
-                                    use_USA_deflator_for_all = FALSE,
+                                    use_USA_cf_for_all = FALSE,
                                     with_regions = NULL,
                                     replace_NAs = NULL))
 
@@ -26,7 +26,7 @@ test_that("unit and year availability compatibility", {
                                     unit_in = "current LCU",
                                     unit_out = "constant 2010 LCU",
                                     source = "wb_wdi",
-                                    use_USA_deflator_for_all = FALSE,
+                                    use_USA_cf_for_all = FALSE,
                                     with_regions = NULL,
                                     replace_NAs = NULL),
                glue::glue("Invalid 'gdp' argument. 'gdp' does not have a 'year' column, required when \\
@@ -35,7 +35,7 @@ test_that("unit and year availability compatibility", {
                                     unit_in = "current LCU",
                                     unit_out = "constant 2010 LCU",
                                     source = "wb_wdi",
-                                    use_USA_deflator_for_all = FALSE,
+                                    use_USA_cf_for_all = FALSE,
                                     with_regions = NULL,
                                     replace_NAs = NULL),
                glue::glue("Invalid 'gdp' argument. 'gdp' does not have a 'year' column, required when \\

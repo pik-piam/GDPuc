@@ -172,7 +172,7 @@ test_that("convertGDP using US conversion factors", {
   gdp2_conv <- convertGDP(gdp_2,
                           unit_in = "constant 2015 LCU",
                           unit_out = "constant 2017 LCU",
-                          use_USA_deflator_for_all = TRUE)
+                          use_USA_cf_for_all = TRUE)
   gdp3_conv <- convertGDP(gdp_3,
                           unit_in = "constant 2015 LCU",
                           unit_out = "constant 2017 LCU",

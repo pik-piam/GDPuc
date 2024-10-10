@@ -1,18 +1,10 @@
-adapt_source_USA <- function(gdp, source, replace_NAs) {
-  source_USA <- source %>%
+adapt_source_USA <- function(gdp, source) {
+  # Filter for USA, and then complete source for all countries with the unique pairs of all columns in source,
+  # excluding iso3c.
+  source %>%
     dplyr::filter(.data$iso3c == "USA") %>%
-    dplyr::select("year", "USA_deflator" = "GDP deflator")
-
-  source_adapted <- source %>%
-    dplyr::left_join(source_USA, by = dplyr::join_by("year")) %>%
-    dplyr::mutate("GDP deflator" = .data$USA_deflator)
-
-  if (!is.null(replace_NAs) && replace_NAs[1] == "with_USA") {
-    source_USA <- source %>% dplyr::filter(.data$iso3c == "USA")
-    source_adapted <- purrr::map(unique(gdp$iso3c), ~dplyr::mutate(source_USA, "iso3c" = .x)) %>%
-      purrr::list_rbind()
-  }
-  source_adapted
+    tidyr::complete(iso3c = unique(gdp$iso3c),
+                    tidyr::nesting(!!!(rlang::syms(colnames(source)[-1]))))
 }
 
 #
@@ -97,6 +89,61 @@ adapt_source <- function(gdp, source, with_regions, replace_NAs, require_year_co
                                     "PPP conversion factor, GDP (LCU per international $)"),
                                   ~ if (is.na(.x)) 1 else .x)) %>%
       dplyr::ungroup()
+  }
+
+  if ("with_USA" %in% replace_NAs) {
+    USA_def_growth <- source %>%
+      dplyr::filter(.data$iso3c == "USA") %>%
+      dplyr::select("year", "gd" = "GDP deflator") %>%
+      dplyr::mutate("gd" = .data$gd / dplyr::lag(.data$gd))
+
+    source_adapted <- source_adapted %>%
+      dplyr::filter(.data$iso3c %in% unique(gdp$iso3c)) %>%
+      # Fill in the MER and PPPs with the growth rates from the USA (= 1)
+      dplyr::group_by(.data$iso3c) %>%
+      tidyr::fill(c("MER (LCU per US$)",
+                    "PPP conversion factor, GDP (LCU per international $)"),
+                  .direction = "downup") %>%
+      dplyr::ungroup() %>%
+      # For the deflator, we need to multiply the bordering values with the actual USA growth
+      dplyr::left_join(USA_def_growth, by = dplyr::join_by("year")) %>%
+      # Forward
+      dplyr::mutate(
+        `GDP deflator` = purrr::accumulate(
+          dplyr::row_number(),
+          ~ dplyr::coalesce(.data$`GDP deflator`[.y], .x * .data$gd[.y]),
+          .init = NA
+        )[-1],
+        .by = c("iso3c")
+      ) %>%
+      # Backward
+      dplyr::arrange(-.data$year) %>%
+      dplyr::mutate(
+        `GDP deflator` = purrr::accumulate(
+          dplyr::row_number(),
+          ~ dplyr::coalesce(.data$`GDP deflator`[.y], .x / .data$gd[.y]),
+          .init = NA
+        )[-1],
+        .by = c("iso3c")
+      ) %>%
+      dplyr::arrange(.data$iso3c, .data$year) %>%
+      dplyr::select(-"gd")
+
+    # If there is no data whatsoever for the country, use US values
+    ec <- dplyr::group_by(source_adapted, .data$iso3c) %>%
+      dplyr::filter(all(is.na(.data$`GDP deflator`))) %>%
+      dplyr::pull("iso3c") %>%
+      unique()
+
+    source_ec <- source %>%
+      dplyr::filter(.data$iso3c == "USA") %>%
+      tidyr::complete(iso3c = ec,
+                      tidyr::nesting(!!!(rlang::syms(colnames(source)[-1])))) %>%
+      dplyr::filter(.data$iso3c %in% ec)
+
+    source_adapted <- source_adapted %>%
+      dplyr::filter(!.data$iso3c %in% ec) %>%
+      dplyr::bind_rows(source_ec)
   }
 
   source_adapted
