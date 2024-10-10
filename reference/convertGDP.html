@@ -13,7 +13,7 @@ conversion factors (PPPs)."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">GDPuc</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -62,7 +62,7 @@ conversion factors (PPPs).</p>
 <span>  <span class="va">unit_in</span>,</span>
 <span>  <span class="va">unit_out</span>,</span>
 <span>  source <span class="op">=</span> <span class="st">"wb_wdi"</span>,</span>
-<span>  use_USA_deflator_for_all <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  use_USA_cf_for_all <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  with_regions <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  replace_NAs <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"GDPuc.verbose"</span>, default <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
@@ -117,10 +117,9 @@ Use <a href="https://pik-piam.github.io/GDPuc/reference/print_source_info.html">
 to learn about the available sources.</p></dd>
 
 
-<dt id="arg-use-usa-deflator-for-all">use_USA_deflator_for_all<a class="anchor" aria-label="anchor" href="#arg-use-usa-deflator-for-all"></a></dt>
-<dd><p>TRUE or FALSE (default). If TRUE, then only the USA deflator is used to adjust for
-inflation, regardless of the country codes provided. This is a very specific deviation from the correct conversion
-process, which nevertheless is often used in the integrated assessment community. Use carefully!</p></dd>
+<dt id="arg-use-usa-cf-for-all">use_USA_cf_for_all<a class="anchor" aria-label="anchor" href="#arg-use-usa-cf-for-all"></a></dt>
+<dd><p>TRUE or FALSE (default). If TRUE, then the USA conversion factors are used for all
+countries.</p></dd>
 
 
 <dt id="arg-with-regions">with_regions<a class="anchor" aria-label="anchor" href="#arg-with-regions"></a></dt>
@@ -141,8 +140,8 @@ For the extrapolation, the closest 5 data points are used.</p></li>
 <li><p>"regional_average": missing conversion factors in the source object are replaced with
 the regional average of the region to which the country belongs. This requires a region-mapping to
 be passed to the function, see the with_regions argument.</p></li>
-<li><p>"with_USA": missing conversion factors in the source object are replaced with
-the conversion factors of the USA.</p></li>
+<li><p>"with_USA": missing conversion factors in the source object are extended using US growth rates, or
+if missing entirely, replaced with the conversion factors of the USA.</p></li>
 </ul><p>Can also be a vector with "linear" as first element, e.g. c("linear", 0) or c("linear", "no_conversion"),
 in which case, the operations are done in sequence.</p></dd>
 
