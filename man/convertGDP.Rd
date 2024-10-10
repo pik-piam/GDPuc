@@ -11,7 +11,7 @@ convertGDP(
   unit_in,
   unit_out,
   source = "wb_wdi",
-  use_USA_deflator_for_all = FALSE,
+  use_USA_cf_for_all = FALSE,
   with_regions = NULL,
   replace_NAs = NULL,
   verbose = getOption("GDPuc.verbose", default = FALSE),
@@ -62,9 +62,8 @@ a data-frame that exists in the calling environment.
 Use \href{https://pik-piam.github.io/GDPuc/reference/print_source_info.html}{print_source_info()}
 to learn about the available sources.}
 
-\item{use_USA_deflator_for_all}{TRUE or FALSE (default). If TRUE, then only the USA deflator is used to adjust for
-inflation, regardless of the country codes provided. This is a very specific deviation from the correct conversion
-process, which nevertheless is often used in the integrated assessment community. Use carefully!}
+\item{use_USA_cf_for_all}{TRUE or FALSE (default). If TRUE, then the USA conversion factors are used for all
+countries.}
 
 \item{with_regions}{NULL or a data-frame. The data-frame should be "country to region
 mapping": one column named "iso3c" with iso3c country codes, and one column named
@@ -83,8 +82,8 @@ For the extrapolation, the closest 5 data points are used.
 \item "regional_average": missing conversion factors in the source object are replaced with
 the regional average of the region to which the country belongs. This requires a region-mapping to
 be passed to the function, see the with_regions argument.
-\item "with_USA": missing conversion factors in the source object are replaced with
-the conversion factors of the USA.
+\item "with_USA": missing conversion factors in the source object are extended using US growth rates, or
+if missing entirely, replaced with the conversion factors of the USA.
 }
 Can also be a vector with "linear" as first element, e.g. c("linear", 0) or c("linear", "no_conversion"),
 in which case, the operations are done in sequence.}

@@ -57,9 +57,8 @@
 #'   a data-frame that exists in the calling environment.
 #'   Use [print_source_info()](https://pik-piam.github.io/GDPuc/reference/print_source_info.html)
 #'   to learn about the available sources.
-#' @param use_USA_deflator_for_all TRUE or FALSE (default). If TRUE, then only the USA deflator is used to adjust for
-#'   inflation, regardless of the country codes provided. This is a very specific deviation from the correct conversion
-#'   process, which nevertheless is often used in the integrated assessment community. Use carefully!
+#' @param use_USA_cf_for_all TRUE or FALSE (default). If TRUE, then the USA conversion factors are used for all
+#'   countries.
 #' @param with_regions NULL or a data-frame. The data-frame should be "country to region
 #'   mapping": one column named "iso3c" with iso3c country codes, and one column named
 #'   "region" with region codes to which the countries belong. Any regions in the gdp
@@ -76,8 +75,8 @@
 #'     \item "regional_average": missing conversion factors in the source object are replaced with
 #'     the regional average of the region to which the country belongs. This requires a region-mapping to
 #'     be passed to the function, see the with_regions argument.
-#'     \item "with_USA": missing conversion factors in the source object are replaced with
-#'     the conversion factors of the USA.
+#'     \item "with_USA": missing conversion factors in the source object are extended using US growth rates, or
+#'     if missing entirely, replaced with the conversion factors of the USA.
 #'   }
 #'   Can also be a vector with "linear" as first element, e.g. c("linear", 0) or c("linear", "no_conversion"),
 #'   in which case, the operations are done in sequence.
@@ -104,7 +103,7 @@ convertGDP <- function(gdp,
                        unit_in,
                        unit_out,
                        source = "wb_wdi",
-                       use_USA_deflator_for_all = FALSE,
+                       use_USA_cf_for_all = FALSE,
                        with_regions = NULL,
                        replace_NAs = NULL,
                        verbose = getOption("GDPuc.verbose", default = FALSE),
@@ -125,7 +124,7 @@ convertGDP <- function(gdp,
   }
 
   # Transform user input for internal use, while performing some last consistency checks
-  internal <- transform_user_input(gdp, unit_in, unit_out, source, use_USA_deflator_for_all, with_regions, replace_NAs)
+  internal <- transform_user_input(gdp, unit_in, unit_out, source, use_USA_cf_for_all, with_regions, replace_NAs)
 
   # Avoid NOTE in package check for CRAN
   . <- NULL

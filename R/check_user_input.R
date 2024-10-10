@@ -6,7 +6,7 @@ check_user_input <- function(gdp,
                              unit_in,
                              unit_out,
                              source,
-                             use_USA_deflator_for_all,
+                             use_USA_cf_for_all,
                              with_regions,
                              replace_NAs,
                              verbose,
@@ -15,7 +15,7 @@ check_user_input <- function(gdp,
   check_gdp(gdp)
   check_unit_in_out(unit_in, unit_out)
   source <- check_source(source)
-  check_use_USA_deflator_for_all(use_USA_deflator_for_all, unit_in, unit_out)
+  check_use_USA_cf_for_all(use_USA_cf_for_all, unit_in, unit_out)
   check_with_regions(unit_in, unit_out, source, with_regions)
   check_replace_NAs(with_regions, replace_NAs)
   check_verbose(verbose)
@@ -97,12 +97,9 @@ check_source <- function(source) {
 }
 
 # Check input parameter 'verbose'
-check_use_USA_deflator_for_all <- function(use_USA_deflator_for_all, unit_in, unit_out) {
-  if (!is.logical(use_USA_deflator_for_all)) {
-    abort("Invalid 'use_USA_deflator_for_all' argument. Has to be either TRUE or FALSE.")
-  }
-  if (use_USA_deflator_for_all && any(grepl("current", c(unit_in, unit_out)))) {
-    abort("Setting 'use_USA_deflator_for_all' to TRUE should only be applied between conversion of constant units.")
+check_use_USA_cf_for_all <- function(use_USA_cf_for_all, unit_in, unit_out) {
+  if (!is.logical(use_USA_cf_for_all)) {
+    abort("Invalid 'use_USA_cf_for_all' argument. Has to be either TRUE or FALSE.")
   }
 }
 
