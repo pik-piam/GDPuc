@@ -13,7 +13,7 @@ conversion factors (PPPs)."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">GDPuc</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -71,7 +71,23 @@ conversion factors (PPPs).</p>
 <span></span>
 <span><span class="fu">convertCPI</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">convertSingle</span><span class="op">(</span><span class="va">x</span>, <span class="va">iso3c</span>, year <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">convertSingle</span><span class="op">(</span><span class="va">x</span>, <span class="va">iso3c</span>, year <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">unit_in</span>, <span class="va">unit_out</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">toolConvertGDP</span><span class="op">(</span></span>
+<span>  <span class="va">gdp</span>,</span>
+<span>  <span class="va">unit_in</span>,</span>
+<span>  <span class="va">unit_out</span>,</span>
+<span>  source <span class="op">=</span> <span class="st">"wb_wdi"</span>,</span>
+<span>  use_USA_cf_for_all <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  with_regions <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  replace_NAs <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"GDPuc.verbose"</span>, default <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
+<span>  return_cfs <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">toolConvertSingle</span><span class="op">(</span><span class="va">x</span>, <span class="va">iso3c</span>, year <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">unit_in</span>, <span class="va">unit_out</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">toolConvertCPI</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -198,6 +214,9 @@ wit PPP exchange rate values.</p></li>
 <ul><li><p><code>convertCPI()</code>: Short cut for <code>convertGDP(..., source = "wb_wdi_cpi")</code></p></li>
 <li><p><code>convertSingle()</code>: Convert a single value, while specifying iso3c code and year. Simpler than creating a
 single row tibble.</p></li>
+<li><p><code>toolConvertGDP()</code>: Madrat wrapper around <code>convertGDP()</code></p></li>
+<li><p><code>toolConvertSingle()</code>: Madrat wrapper around <code>convertSingle()</code></p></li>
+<li><p><code>toolConvertCPI()</code>: Madrat wrapper around <code>convertCPI(...)</code></p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
