@@ -4,6 +4,9 @@
 \alias{convertGDP}
 \alias{convertCPI}
 \alias{convertSingle}
+\alias{toolConvertGDP}
+\alias{toolConvertSingle}
+\alias{toolConvertCPI}
 \title{Convert GDP data}
 \usage{
 convertGDP(
@@ -20,7 +23,23 @@ convertGDP(
 
 convertCPI(...)
 
-convertSingle(x, iso3c, year = NULL, ...)
+convertSingle(x, iso3c, year = NULL, unit_in, unit_out, ...)
+
+toolConvertGDP(
+  gdp,
+  unit_in,
+  unit_out,
+  source = "wb_wdi",
+  use_USA_cf_for_all = FALSE,
+  with_regions = NULL,
+  replace_NAs = NULL,
+  verbose = getOption("GDPuc.verbose", default = FALSE),
+  return_cfs = FALSE
+)
+
+toolConvertSingle(x, iso3c, year = NULL, unit_in, unit_out, ...)
+
+toolConvertCPI(...)
 }
 \arguments{
 \item{gdp}{A tibble, data frame or magpie object, the latter of which
@@ -136,6 +155,12 @@ wit PPP exchange rate values.
 
 \item \code{convertSingle()}: Convert a single value, while specifying iso3c code and year. Simpler than creating a
 single row tibble.
+
+\item \code{toolConvertGDP()}: Madrat wrapper around \code{convertGDP()}
+
+\item \code{toolConvertSingle()}: Madrat wrapper around \code{convertSingle()}
+
+\item \code{toolConvertCPI()}: Madrat wrapper around \code{convertCPI(...)}
 
 }}
 \examples{

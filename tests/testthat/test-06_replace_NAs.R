@@ -184,3 +184,19 @@ test_that("convertGDP replace_NAs = c('linear', 'no_conversion')", {
   expect_identical(dplyr::pull(gdp_conv[19:24, "value"]), rep(0, 6))
 })
 
+test_that("convertGDP use_USA_cf_for_all = TRUE", {
+  gdp <- tidyr::expand_grid("iso3c" = c("AIA", "DEU", "USA", "AFG"),
+                            "year" = c(2010, 2015, 2025),
+                            "SSP" = c("SSP1", "SSP2"), "value" = 100)
+
+  gdp_conv <- convertGDP(gdp,
+                         unit_in = "constant 2005 Int$PPP",
+                         unit_out = "constant 2019 US$MER",
+                         use_USA_cf_for_all = TRUE)
+
+  expect_true(!any(is.na(gdp_conv)))
+  expect_identical(dplyr::filter(gdp_conv, .data$iso3c == "AIA") %>% dplyr::select(-"iso3c"),
+                   dplyr::filter(gdp_conv, .data$iso3c == "USA") %>% dplyr::select(-"iso3c"),
+                   dplyr::filter(gdp_conv, .data$iso3c == "DEU") %>% dplyr::select(-"iso3c"),
+                   dplyr::filter(gdp_conv, .data$iso3c == "AFG") %>% dplyr::select(-"iso3c"))
+})
