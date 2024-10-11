@@ -1,7 +1,9 @@
 .onAttach <- function(libname, pkgname) {
-  madrat::madratAttach(pkgname)
+  if (rlang::is_installed("madrat"))
+    madrat::madratAttach(pkgname)
 }
 
 .onDetach <- function(libpath) {
-  madrat::madratDetach(libpath)
+  if (rlang::is_installed("madrat"))
+    madrat::madratDetach(libpath)
 }
