@@ -9,6 +9,6 @@
 #' @name GDPuc-package
 #' @aliases GDPuc-package GDPuc
 #' @importFrom magrittr %>%
-#' @importFrom rlang !! := .data
+#' @importFrom rlang !! !!! := .data
 #' @keywords internal
 "_PACKAGE"

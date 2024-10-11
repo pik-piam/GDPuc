@@ -108,6 +108,11 @@ convertGDP <- function(gdp,
                        replace_NAs = NULL,
                        verbose = getOption("GDPuc.verbose", default = FALSE),
                        return_cfs = FALSE) {
+  # The following line needs to be updated every time the output of convertGDP is affected by an update!
+  # This is a trick, so that madrat caching works correctly. For more information, see the documentation of the madrat
+  # R-package.
+  "last changes 2024-10-11"
+
   # Save all function arguments as list
   arg <- as.list(environment())
 
@@ -184,7 +189,10 @@ convertGDP <- function(gdp,
 #'              unit_out = "constant 2015 Int$PPP")
 #'
 #' @export
-convertCPI <- function(...) convertGDP(..., source = "wb_wdi_cpi")
+convertCPI <- function(...) {
+  "!# @monitor GDPuc::convertGDP"
+  convertGDP(..., source = "wb_wdi_cpi")
+}
 
 #' @describeIn convertGDP Convert a single value, while specifying iso3c code and year. Simpler than creating a
 #'   single row tibble.
@@ -199,18 +207,56 @@ convertCPI <- function(...) convertGDP(..., source = "wb_wdi_cpi")
 #'                 unit_in = "current LCU",
 #'                 unit_out = "constant 2015 Int$PPP")
 #' @export
-convertSingle <- function(x, iso3c, year = NULL, ...) {
+convertSingle <- function(x, iso3c, year = NULL, unit_in, unit_out, ...) {
+  "!# @monitor GDPuc::convertGDP"
   tib <- tibble::tibble("iso3c" = iso3c, "value" = x)
 
   if (!is.null(year)) {
     tib <- tibble::add_column(tib, "year" = year, .before = "value")
   }
 
-  tib_c <- convertGDP(gdp = tib, ...)
+  tib_c <- convertGDP(gdp = tib, unit_in, unit_out, ...)
 
   if (tibble::is_tibble(tib_c)) {
     return(tib_c$value)
   } else {
     return(tib_c)
   }
+}
+
+#' @describeIn convertGDP Madrat wrapper around `convertGDP()`
+#' @export
+toolConvertGDP <- function(gdp,
+                           unit_in,
+                           unit_out,
+                           source = "wb_wdi",
+                           use_USA_cf_for_all = FALSE,
+                           with_regions = NULL,
+                           replace_NAs = NULL,
+                           verbose = getOption("GDPuc.verbose", default = FALSE),
+                           return_cfs = FALSE) {
+  "!# @monitor GDPuc::convertGDP"
+  convertGDP(gdp,
+             unit_in,
+             unit_out,
+             source,
+             use_USA_cf_for_all,
+             with_regions,
+             replace_NAs,
+             verbose,
+             return_cfs)
+}
+
+#' @describeIn convertGDP Madrat wrapper around `convertSingle()`
+#' @export
+toolConvertSingle <- function(x, iso3c, year = NULL, unit_in, unit_out, ...) {
+  "!# @monitor GDPuc::convertSingle"
+  convertSingle(x, iso3c, year = NULL, unit_in, unit_out, ...)
+}
+
+#' @describeIn convertGDP Madrat wrapper around `convertCPI(...)`
+#' @export
+toolConvertCPI <- function(...) {
+  "!# @monitor GDPuc::convertCPI"
+  convertCPI(...)
 }
