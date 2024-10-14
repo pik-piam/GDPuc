@@ -103,19 +103,10 @@ adapt_source <- function(gdp, source, with_regions, replace_NAs, require_year_co
       dplyr::group_by(.data$iso3c) %>%
       tidyr::fill(c("MER (LCU per US$)",
                     "PPP conversion factor, GDP (LCU per international $)"),
-                  .direction = "downup") %>%
+                  .direction = "updown") %>%
       dplyr::ungroup() %>%
       # For the deflator, we need to multiply the bordering values with the actual USA growth
       dplyr::left_join(USA_def_growth, by = dplyr::join_by("year")) %>%
-      # Forward
-      dplyr::mutate(
-        `GDP deflator` = purrr::accumulate(
-          dplyr::row_number(),
-          ~ dplyr::coalesce(.data$`GDP deflator`[.y], .x * .data$gd[.y]),
-          .init = NA
-        )[-1],
-        .by = c("iso3c")
-      ) %>%
       # Backward
       dplyr::arrange(-.data$year) %>%
       dplyr::mutate(
@@ -127,9 +118,25 @@ adapt_source <- function(gdp, source, with_regions, replace_NAs, require_year_co
         .by = c("iso3c")
       ) %>%
       dplyr::arrange(.data$iso3c, .data$year) %>%
+      # Forward
+      dplyr::mutate(
+        `GDP deflator` = purrr::accumulate(
+          dplyr::row_number(),
+          ~ dplyr::coalesce(.data$`GDP deflator`[.y], .x * .data$gd[.y]),
+          .init = NA
+        )[-1],
+        .by = c("iso3c")
+      ) %>%
       dplyr::select(-"gd")
 
-    # If there is no data whatsoever for the country, use US values
+    # If there is no PPP data whatsoever for the country, use MERs
+    source_adapted <- source_adapted  %>%
+      dplyr::mutate("PPP conversion factor, GDP (LCU per international $)" =
+                      dplyr::if_else(is.na(.data$`PPP conversion factor, GDP (LCU per international $)`),
+                                     .data$`MER (LCU per US$)`,
+                                     .data$`PPP conversion factor, GDP (LCU per international $)`))
+
+    # If there is no deflator data whatsoever for the country, use US values
     ec <- dplyr::group_by(source_adapted, .data$iso3c) %>%
       dplyr::filter(all(is.na(.data$`GDP deflator`))) %>%
       dplyr::pull("iso3c") %>%
