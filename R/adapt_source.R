@@ -129,7 +129,12 @@ adapt_source <- function(gdp, source, with_regions, replace_NAs, require_year_co
       dplyr::arrange(.data$iso3c, .data$year) %>%
       dplyr::select(-"gd")
 
-    # If there is no data whatsoever for the country, use US values
+    # Replace missing MER and PPP values with US values (=1)
+    source_adapted <- source_adapted %>%
+      tidyr::replace_na(list("MER (LCU per US$)" = 1,
+                             "PPP conversion factor, GDP (LCU per international $)" = 1))
+
+    # If there is no deflator data whatsoever for the country, use US values
     ec <- dplyr::group_by(source_adapted, .data$iso3c) %>%
       dplyr::filter(all(is.na(.data$`GDP deflator`))) %>%
       dplyr::pull("iso3c") %>%
