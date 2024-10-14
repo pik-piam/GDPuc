@@ -27,6 +27,7 @@ Imports:
     tidyselect,
     withr
 Suggests:
+    countrycode,
     covr,
     knitr,
     magclass,
