@@ -154,6 +154,15 @@ test_that("convertGDP replace_NAs = with_USA", {
   expect_true(!any(is.na(gdp_conv3$result$value)))
 })
 
+test_that("convertGDP replace_NAs = with_USA, no NAs for MADRAT countries", {
+  gdp <- tibble::tibble("iso3c" = madrat::toolGetMapping("regionmappingH12.csv")$CountryCode,
+                        value = 1) %>%
+    convertGDP(unit_in = "constant 2005 US$MER",
+               unit_out = "constant 2017 Int$PPP",
+               replace_NAs = "with_USA")
+  expect_true(!any(is.na(gdp$value)))
+})
+
 test_that("lin_int_ext", {
   x <- c(NA,NA,NA,NA,NA,NA,2,3,4,5,NA,7,8,NA,NA,NA,NA,NA,NA)
   expect_equal(lin_int_ext(x), -4:14)
