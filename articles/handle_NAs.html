@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">GDPuc</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -293,14 +293,13 @@ misleading results, use with care!</strong></p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> VEN    <span style="text-decoration: underline;">2</span>014 0.504</span></span>
 <span></span>
 <span><span class="va">x</span><span class="op">$</span><span class="va">cfs</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 4</span></span></span>
-<span><span class="co">#&gt;   iso3c \033[34m2005 PPP convers…¹ \033[34m2019 value o…² \033[34m2019 PPP con…³</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> VEN                        0.842                   1.18                   205.</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 3</span></span></span>
+<span><span class="co">#&gt;   iso3c \033[34m2019 value of base 2005 GDP deflator\03…¹ \033[34m2019 PPP con…²</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> VEN                                                1.18                   205.</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ abbreviated names:</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   ¹​`\033[34m2005 PPP conversion factor\033[39m in (LCU per international $)`,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   ²​`\033[34m2019 value of base 2005 GDP deflator\033[39m in (constant 2019 LCU per constant 2005 LCU)`,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   ³​`\033[34m2019 PPP conversion factor\033[39m in (LCU per international $)`</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ¹​`\033[34m2019 value of base 2005 GDP deflator\033[39m in (constant 2019 LCU per constant 2005 LCU)`,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ²​`\033[34m2019 PPP conversion factor\033[39m in (LCU per international $)`</span></span></span>
 <span></span>
 <span><span class="co"># Compare the 2019 PPP with the 2005 PPP. They are not in the same order of magnitude. </span></span>
 <span><span class="co"># Obviously, being a part of the same region, does not mean the currencies are of the same strength.</span></span></code></pre></div>
@@ -343,64 +342,56 @@ missing conversion factors still lead to NAs, these are replaced with
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> XXX    <span style="text-decoration: underline;">2</span>010    0</span></span>
 <span></span>
 <span><span class="va">x</span><span class="op">$</span><span class="va">cfs</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 4</span></span></span>
-<span><span class="co">#&gt;   iso3c \033[34m2005 PPP convers…¹ \033[34m2019 value o…² \033[34m2019 PPP con…³</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> VEN                        0.842                   14.4                   5.97</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> XXX                       <span style="color: #BB0000;">NA</span>                       <span style="color: #BB0000;">NA</span>                    <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 3</span></span></span>
+<span><span class="co">#&gt;   iso3c \033[34m2019 value of base 2005 GDP deflator\03…¹ \033[34m2019 PPP con…²</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> VEN                                                14.4                   5.97</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> XXX                                                <span style="color: #BB0000;">NA</span>                    <span style="color: #BB0000;">NA</span>   </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ abbreviated names:</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   ¹​`\033[34m2005 PPP conversion factor\033[39ms in (LCU per international $)`,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   ²​`\033[34m2019 value of base 2005 GDP deflator\033[39ms in (constant 2019 LCU per constant 2005 LCU)`,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   ³​`\033[34m2019 PPP conversion factor\033[39ms in (LCU per international $)`</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ¹​`\033[34m2019 value of base 2005 GDP deflator\033[39ms in (constant 2019 LCU per constant 2005 LCU)`,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ²​`\033[34m2019 PPP conversion factor\033[39ms in (LCU per international $)`</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="deprecated-replace_nas-1">Deprecated: <code>replace_NAs</code> = 1<a class="anchor" aria-label="anchor" href="#deprecated-replace_nas-1"></a>
+<h3 id="replace_nas-with_usa">
+<code>replace_NAs</code> = “with_USA”<a class="anchor" aria-label="anchor" href="#replace_nas-with_usa"></a>
 </h3>
-<p>If set to <code>1</code>, missing conversion factors are set to 1.
-<strong>To be deprecated, use with care!</strong></p>
+<p>If set to “with_USA”, missing conversion factors are extended using
+the growth rates of the USA. If that is not possible (for instance if
+there is no data for any years at all) the data for these countries is
+converted using the conversion factors of the USA.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
-<span>  iso3c <span class="op">=</span> <span class="st">"VEN"</span>,</span>
-<span>  year <span class="op">=</span> <span class="fl">2010</span><span class="op">:</span><span class="fl">2014</span>,</span>
-<span>  value <span class="op">=</span> <span class="fl">100</span><span class="op">:</span><span class="fl">104</span></span>
+<code class="sourceCode R"><span><span class="co"># Venezuela is only missing conversion factors in 2019, AIA has no conversion factors at all.</span></span>
+<span><span class="va">my_gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span>  iso3c <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"VEN"</span>, <span class="st">"AIA"</span>, <span class="st">"USA"</span><span class="op">)</span>,</span>
+<span>  value <span class="op">=</span> <span class="fl">100</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/convertGDP.html">convertGDP</a></span><span class="op">(</span></span>
 <span>  gdp <span class="op">=</span> <span class="va">my_gdp</span>,</span>
 <span>  unit_in <span class="op">=</span> <span class="st">"constant 2005 Int$PPP"</span>,</span>
 <span>  unit_out <span class="op">=</span> <span class="st">"constant 2019 Int$PPP"</span>,</span>
-<span>  replace_NAs <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  replace_NAs <span class="op">=</span> <span class="st">"with_USA"</span>,</span>
 <span>  return_cfs <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: The `replace_NAs` argument of `convertGDP()` should not be 1 as of GDPuc 0.7.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">GDPuc</span> package.</span></span>
-<span><span class="co">#&gt;   Please report the issue at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/pik-piam/GDPuc/issues&gt;</span>.</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
 <span><span class="va">x</span><span class="op">$</span><span class="va">result</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 3</span></span></span>
-<span><span class="co">#&gt;   iso3c  year value</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> VEN    <span style="text-decoration: underline;">2</span>010  12.9</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> VEN    <span style="text-decoration: underline;">2</span>011  13.0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> VEN    <span style="text-decoration: underline;">2</span>012  13.1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> VEN    <span style="text-decoration: underline;">2</span>013  13.3</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> VEN    <span style="text-decoration: underline;">2</span>014  13.4</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 2</span></span></span>
+<span><span class="co">#&gt;   iso3c value</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> VEN    264.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> AIA    128.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> USA    128.</span></span>
 <span></span>
 <span><span class="va">x</span><span class="op">$</span><span class="va">cfs</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 4</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 4</span></span></span>
 <span><span class="co">#&gt;   iso3c \033[34m2005 PPP convers…¹ \033[34m2019 value o…² \033[34m2019 PPP con…³</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> VEN                        0.842                  0.153                      1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> USA                        1                       1.28                   1   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> VEN                        0.842                   8.40                   2.68</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> AIA                        1                       1.28                   1   </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ abbreviated names:</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   ¹​`\033[34m2005 PPP conversion factor\033[39m in (LCU per international $)`,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   ²​`\033[34m2019 value of base 2005 GDP deflator\033[39m in (constant 2019 LCU per constant 2005 LCU)`,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   ³​`\033[34m2019 PPP conversion factor\033[39m in (LCU per international $)`</span></span></span>
-<span></span>
-<span><span class="co"># Why is the deflator above not 1? That is because for VEN, only the deflator value in 2019 was set to 1. </span></span>
-<span><span class="co"># In 2005 the deflator was in the order of magnitude of 100. Obviously setting the deflator to 1 in 2019 is </span></span>
-<span><span class="co"># completely misleading.</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ¹​`\033[34m2005 PPP conversion factor\033[39ms in (LCU per international $)`,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ²​`\033[34m2019 value of base 2005 GDP deflator\033[39ms in (constant 2019 LCU per constant 2005 LCU)`,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ³​`\033[34m2019 PPP conversion factor\033[39ms in (LCU per international $)`</span></span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

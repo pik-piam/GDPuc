@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">GDPuc</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,16 +74,23 @@
 <div class="section level2">
 <h2 id="the-with_regions-argument">The <code>with_regions</code> argument<a class="anchor" aria-label="anchor" href="#the-with_regions-argument"></a>
 </h2>
-<p>Use the <code>with_regions</code> argument in <code>convertGDP</code>
-to convert aggregated GDP data, e.g. regional-level data.</p>
-<p>The default value is <code>NULL</code>, but if passed a data-frame
-with a country-to-region mapping, then custom regional codons will be
-recognized. The data-frame should have two columns, one named “iso3c”
-with iso3c country codes, and one named “region” with the corresponding
-region codes. The conversion of regional values is then undertaken by
-disaggregating the regions to a country level (using the mapping and
-weighed by the GDP (in $PPP) shares of countries within that region in
-the base year of <code>unit_in</code>).</p>
+<p>Use the <code>with_regions</code> argument (default
+<code>NULL</code>) in <code>convertGDP</code> to convert aggregated GDP
+data, e.g. regional-level data.</p>
+<div class="section level3">
+<h3 id="with_regions-a-data-frame-with-a-country-to-region-mapping">
+<code>with_regions =</code> a data-frame with a country-to-region
+mapping<a class="anchor" aria-label="anchor" href="#with_regions-a-data-frame-with-a-country-to-region-mapping"></a>
+</h3>
+<p>If passed a data-frame with a country-to-region mapping, then custom
+regional codons will be recognized. The data-frame should have two
+columns, one named “iso3c” with iso3c country codes, and one named
+“region” with the corresponding region codes. The conversion of regional
+values is then undertaken by disaggregating the regions to a country
+level using the mapping, and weighed by the GDP shares of countries
+within that region in the base year of <code>unit_in</code> (to compute
+the shares, the source object needs to have GDP data for the countries
+within the region).</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/pik-piam/GDPuc" class="external-link">GDPuc</a></span><span class="op">)</span></span>
 <span></span>
@@ -105,6 +112,7 @@ the base year of <code>unit_in</code>).</p>
 <span>  with_regions <span class="op">=</span> <span class="va">my_mapping_data_frame</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Dissaggreagting regions using GDP in constant 2005 Int$PPP as weights.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Converting GDP with conversion factors from <span style="color: #0000BB;">wb_wdi</span>:</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">constant 2005 Int$PPP</span> <span style="color: #00BB00;">→</span> <span style="font-weight: bold;">constant 2005 LCU</span></span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">2005 PPP conversion factor</span>s in (LCU per international $) used:</span></span>
@@ -134,7 +142,34 @@ the base year of <code>unit_in</code>).</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> EUR    <span style="text-decoration: underline;">2</span>013  144.</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> EUR    <span style="text-decoration: underline;">2</span>014  145.</span></span></code></pre></div>
 </div>
-  </main>
+<div class="section level3">
+<h3 id="with_regions-a-string-with-a-madrat-regionmapping">
+<code>with_regions =</code> a string with a madrat
+regionmapping<a class="anchor" aria-label="anchor" href="#with_regions-a-string-with-a-madrat-regionmapping"></a>
+</h3>
+<p>If passed a string, then a corresponding regionmapping will be loaded
+with <code><a href="https://rdrr.io/pkg/madrat/man/toolGetMapping.html" class="external-link">madrat::toolGetMapping</a></code>. Requires madrat to be
+installed, and the regionmapping to exist.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">my_gdp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span>  iso3c <span class="op">=</span> <span class="st">"EUR"</span>, </span>
+<span>  value <span class="op">=</span> <span class="fl">100</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/convertGDP.html">convertGDP</a></span><span class="op">(</span></span>
+<span>  gdp <span class="op">=</span> <span class="va">my_gdp</span>, </span>
+<span>  unit_in <span class="op">=</span> <span class="st">"constant 2005 Int$PPP"</span>, </span>
+<span>  unit_out <span class="op">=</span> <span class="st">"constant 2017 Int$PPP"</span>,</span>
+<span>  with_regions <span class="op">=</span> <span class="st">"regionmappingH12.csv"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 2</span></span></span>
+<span><span class="co">#&gt;   iso3c value</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> EUR    138.</span></span></code></pre></div>
+</div>
+</div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
