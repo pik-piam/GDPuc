@@ -3,8 +3,10 @@ title: "Converting regional GDP data"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Converting regional GDP data}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r, include = FALSE}
@@ -48,3 +50,19 @@ convertGDP(
 ### `with_regions = ` a string with a madrat regionmapping
 
 If passed a string, then a corresponding regionmapping will be loaded with `madrat::toolGetMapping`. Requires madrat to be installed, and the regionmapping to exist.
+
+
+```{r}
+my_gdp <- tibble::tibble(
+  iso3c = "EUR", 
+  value = 100
+)
+
+convertGDP(
+  gdp = my_gdp, 
+  unit_in = "constant 2005 Int$PPP", 
+  unit_out = "constant 2017 Int$PPP",
+  with_regions = "regionmappingH12.csv"
+)
+```
+

@@ -10,6 +10,9 @@ get_conversion_factors <- function(...) {
   # explicitly here to avoid mistakes.
   x <- testthat::evaluate_promise(convertGDP(..., verbose = TRUE, return_cfs = FALSE))
 
+  # If using with_regions, drop first message
+  if (!is.null(list(...)$with_regions)) x$messages <- x$messages[-1]
+
   # Get number of countries = number of lines in the 2 message, - 2
   my_message_lines <- purrr::map(x$messages, strsplit, "\\n")
   n_c <- length(my_message_lines[[2]][[1]]) - 2

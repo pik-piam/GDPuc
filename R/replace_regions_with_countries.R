@@ -50,6 +50,8 @@ disaggregate_regions <- function(gdp, with_regions, unit_in, base_x, source) {
     dplyr::select(-"year") %>%
     suppressWarnings()
 
+  cli_inform(function() cli::cli_alert_info("Dissaggreagting regions using GDP in {unit_out} as weights."))
+
   # Dissagregate regions
   gdp %>%
     dplyr::rename("gdpuc_region" = "iso3c") %>%
