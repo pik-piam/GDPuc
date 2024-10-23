@@ -40,13 +40,19 @@ disaggregate_regions <- function(gdp, with_regions, unit_in, base_x, source) {
     unit_out <- paste("constant", weight_year, "US$MER")
   }
 
-  # Convert the GDP data from source, to that of the user's unit_in (here unit_out) and get regional shares
+  # Convert the GDP data from source, to that of the users unit_in (here unit_out) and get regional shares
   shares <- source %>%
+    dplyr::filter(.data$year == weight_year) %>%
+    # Keep only countries with all conversion factors available
+    tidyr::drop_na(c(
+      "GDP deflator",
+      "MER (LCU per US$)",
+      "PPP conversion factor, GDP (LCU per international $)")) %>%
     dplyr::select("iso3c", "year", "value" = tidyselect::all_of(share_var)) %>%
     dplyr::left_join(with_regions, by = "iso3c") %>%
-    dplyr::filter(.data$year == weight_year, !is.na(.data$gdpuc_region)) %>%
+    tidyr::drop_na("gdpuc_region") %>%
     convertGDP(unit_in, unit_out, source = source, verbose = FALSE) %>%
-    dplyr::mutate(share = .data$value / sum(.data$value, na.rm = TRUE), .keep = "unused", .by = "gdpuc_region") %>%
+    dplyr::mutate(share = .data$value / sum(.data$value), .keep = "unused", .by = "gdpuc_region") %>%
     dplyr::select(-"year") %>%
     suppressWarnings()
 
@@ -55,7 +61,6 @@ disaggregate_regions <- function(gdp, with_regions, unit_in, base_x, source) {
   # Dissagregate regions
   gdp %>%
     dplyr::rename("gdpuc_region" = "iso3c") %>%
-    dplyr::left_join(with_regions, by = "gdpuc_region", relationship = "many-to-many") %>%
-    dplyr::left_join(shares, by = c("gdpuc_region", "iso3c")) %>%
+    dplyr::left_join(shares, by = c("gdpuc_region"), relationship = "many-to-many") %>%
     dplyr::mutate(value = .data$value * .data$share, .keep = "unused")
 }
