@@ -9,10 +9,8 @@ replace_regions_with_countries <- function(gdp, unit_in, base_x, with_regions, s
   gdp <- dplyr::filter(gdp, ! .data$iso3c %in% my_reg)
 
   # Disaggregate regions
-  weight_unit <- sub("\\$", "", regmatches(unit_in, regexpr("\\$(...)", unit_in)))
-  weight_year <- base_x
   with_regions <- dplyr::rename(with_regions, "gdpuc_region" = "region")
-  gdp_reg <- disaggregate_regions(gdp_reg, with_regions, weight_unit, weight_year, source)
+  gdp_reg <- disaggregate_regions(gdp_reg, with_regions, unit_in, base_x, source)
 
   # Bind original countries and countries from disaggregation (duplicates now possible)
   gdp <- dplyr::bind_rows(gdp, gdp_reg)
@@ -20,32 +18,35 @@ replace_regions_with_countries <- function(gdp, unit_in, base_x, with_regions, s
 
 
 
-# Take gdp data at regional level and disaggregate to country level according
-# to a region mapping.
-disaggregate_regions <- function(gdp, with_regions, weight_unit, weight_year, source) {
+# Take gdp data at regional level and disaggregate to country level according to a region mapping.
+disaggregate_regions <- function(gdp, with_regions, unit_in, base_x, source) {
+  weight_unit <- sub("\\$", "", regmatches(unit_in, regexpr("\\$(...)", unit_in)))
+  weight_year <- base_x
 
-  # Get GDP variable from source object, with its unit
-  regex_var <- "GDP, PPP \\(constant .... international \\$\\)"
-  regex_year <- "GDP, PPP \\(constant (....) international \\$\\)"
-  share_var <- grep(regex_var, colnames(source), value = TRUE)[1]
-  share_year <- regmatches(share_var, regexpr("[[:digit:]]{4}", share_var))
-  unit_in <- paste("constant", share_year, "Int$PPP")
-
-  # Convert that variable to desired unit, and compute shares of GDP per region
+  # Convert the GDP data from source, to that of unit_in (here unit_in is already transformed)
   if (weight_unit == "PPP") {
+    regex_var <- "GDP, PPP \\(constant .... international \\$\\)"
+    regex_year <- "GDP, PPP \\(constant (....) international \\$\\)"
+    share_var <- grep(regex_var, colnames(source), value = TRUE)[1]
+    share_year <- regmatches(share_var, regexpr("[[:digit:]]{4}", share_var))
+    unit_in <- paste("constant", share_year, "Int$PPP")
     unit_out <- paste("constant", weight_year, "Int$PPP")
   } else {
+    regex_var <- "GDP \\(constant .... US\\$\\)"
+    regex_year <- "GDP \\(constant .... US\\$\\)"
+    share_var <- grep(regex_var, colnames(source), value = TRUE)[1]
+    share_year <- regmatches(share_var, regexpr("[[:digit:]]{4}", share_var))
+    unit_in <- paste("constant", share_year, "US$MER")
     unit_out <- paste("constant", weight_year, "US$MER")
   }
 
+  # Convert the GDP data from source, to that of the user's unit_in (here unit_out) and get regional shares
   shares <- source %>%
     dplyr::select("iso3c", "year", "value" = tidyselect::all_of(share_var)) %>%
     dplyr::left_join(with_regions, by = "iso3c") %>%
     dplyr::filter(.data$year == weight_year, !is.na(.data$gdpuc_region)) %>%
     convertGDP(unit_in, unit_out, source = source, verbose = FALSE) %>%
-    dplyr::group_by(.data$gdpuc_region) %>%
-    dplyr::mutate(share = .data$value / sum(.data$value, na.rm = TRUE), .keep = "unused") %>%
-    dplyr::ungroup() %>%
+    dplyr::mutate(share = .data$value / sum(.data$value, na.rm = TRUE), .keep = "unused", .by = "gdpuc_region") %>%
     dplyr::select(-"year") %>%
     suppressWarnings()
 

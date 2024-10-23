@@ -1,8 +1,6 @@
 #' Convert GDP data
 #'
 #' @description
-#' `r lifecycle::badge("stable")`
-#'
 #' convertGDP() converts GDP time series data from one unit to another, using GDP
 #' deflators, market exchange rates (MERs) and purchasing power parity
 #' conversion factors (PPPs).
@@ -59,12 +57,17 @@
 #'   to learn about the available sources.
 #' @param use_USA_cf_for_all TRUE or FALSE (default). If TRUE, then the USA conversion factors are used for all
 #'   countries.
-#' @param with_regions NULL or a data-frame. The data-frame should be "country to region
-#'   mapping": one column named "iso3c" with iso3c country codes, and one column named
-#'   "region" with region codes to which the countries belong. Any regions in the gdp
-#'   object will then be disaggregated according to the region mapping and weighed by the
-#'   GDP share of countries in that region in the year of the unit, converted on a country
-#'   level, and re-aggregated before being returned.
+#' @param with_regions  NULL by default, meaning no regional codons are recognized. To convert regional data, a
+#' "country to region mapping" must be passed to the function. Any regions will then be disaggregated according to the
+#' region mapping and weighed by the GDP share of countries in that region in the year of the unit (only constant units
+#' are compatible with with_regions not equal NULL), converted on a country level, and re-aggregated before being
+#' returned. Can be set to one of the following:
+#'   \itemize{
+#'     \item A character string referring to a madrat regionmapping. Requires madrat to be installed, and the mapping
+#'     to be accessible via `madrat::toolGetMapping()`.
+#'     \item A data-frame with a country to region mapping: one column named "iso3c" with iso3c country codes,
+#'     and one column named "region" with region codes to which the countries belong.
+#'   }
 #' @param replace_NAs NULL by default, meaning no NA replacement. Can be set to one of the following:
 #'   \itemize{
 #'     \item 0: resulting NAs are simply replaced with 0.
@@ -75,8 +78,10 @@
 #'     \item "regional_average": missing conversion factors in the source object are replaced with
 #'     the regional average of the region to which the country belongs. This requires a region-mapping to
 #'     be passed to the function, see the with_regions argument.
-#'     \item "with_USA": missing conversion factors in the source object are extended using US growth rates, or
-#'     if missing entirely, replaced with the conversion factors of the USA.
+#'     \item "with_USA": missing conversion factors in the source object are extended using US growth rates. If that
+#'     is not possible (for instance if the conversion factor is missing entirely) the conversion factors are replaced
+#'     with US ones. For example, if the conversion requires PPPs and deflators, but the PPPs are missing entirely,
+#'     then even though there is deflator data, it is the the US deflator that is used.
 #'   }
 #'   Can also be a vector with "linear" as first element, e.g. c("linear", 0) or c("linear", "no_conversion"),
 #'   in which case, the operations are done in sequence.
@@ -111,7 +116,7 @@ convertGDP <- function(gdp,
   # The following line needs to be updated every time the output of convertGDP is affected by an update!
   # This is a trick, so that madrat caching works correctly. For more information, see the documentation of the madrat
   # R-package.
-  "last changes 2024-10-14"
+  "last changes 2024-10-23"
 
   # Save all function arguments as list
   arg <- as.list(environment())
@@ -251,7 +256,7 @@ toolConvertGDP <- function(gdp,
 #' @export
 toolConvertSingle <- function(x, iso3c, year = NULL, unit_in, unit_out, ...) {
   "!# @monitor GDPuc::convertSingle"
-  convertSingle(x, iso3c, year = NULL, unit_in, unit_out, ...)
+  convertSingle(x, iso3c, year, unit_in, unit_out, ...)
 }
 
 #' @describeIn convertGDP Madrat wrapper around `convertCPI(...)`

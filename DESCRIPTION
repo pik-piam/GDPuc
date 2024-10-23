@@ -19,7 +19,6 @@ Imports:
     crayon,
     dplyr,
     glue,
-    lifecycle,
     magrittr,
     rlang (>= 1.0.0),
     tibble,

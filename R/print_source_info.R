@@ -1,7 +1,6 @@
 #' Print information on sources
 #'
 #' @description
-#'  `r lifecycle::badge("stable")`
 #'
 #' Print detailed information on conversion factor sources to the screen. Information includes the name, origin, date,
 #'  html-link and an associated note. Calling the function without any argument will print information on all

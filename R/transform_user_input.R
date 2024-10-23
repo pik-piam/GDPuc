@@ -50,9 +50,12 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, use_USA_cf_for_
   source_name <- if (is.character(source)) source else "user_provided"
   source <- check_source(source)
 
-  # If a region mapping is available and a region code (that isn't a
-  # country-region) is detected, replace the region with the countries it
-  # comprises.
+  # If a region mapping is available and a region code (that isn't a country-region) is detected, replace the region
+  # with the countries it comprises.
+  if (is.character(with_regions)) {
+    with_regions <- madrat::toolGetMapping(with_regions) %>%
+      dplyr::select("iso3c" = "CountryCode", "region" = "RegionCode")
+  }
   if (!is.null(with_regions) &&
       any(gdp$iso3c %in% with_regions$region & !gdp$iso3c %in% with_regions$iso3c)) {
     gdp <- replace_regions_with_countries(gdp, unit_in, base_x, with_regions, source)
