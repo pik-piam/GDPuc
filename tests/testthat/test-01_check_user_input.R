@@ -51,7 +51,16 @@ test_that("with_regions argument", {
                                 unit_out,
                                 source = s,
                                 use_USA_cf_for_all = FALSE,
-                                with_regions = "blabla"))
+                                with_regions = 1),
+               "Invalid 'with_regions' argument. Has to be either a string, or a data.frame.")
+
+  expect_error(check_user_input(gdp,
+                                unit_in,
+                                unit_out,
+                                source = s,
+                                use_USA_cf_for_all = FALSE,
+                                with_regions = "badMapping"),
+               "Invalid 'with_regions' argument. Unknown regionmapping.")
 
   with_regions <- tibble::tibble("blabla" = "FRA", "region" = "USA")
   expect_error(check_user_input(gdp,
@@ -92,24 +101,30 @@ test_that("replace_NAs argument", {
   unit_out <- "current US$MER"
   s <- wb_wdi
 
-  expect_error(check_user_input(gdp,
-                                unit_in,
-                                unit_out,
-                                source = s,
-                                use_USA_cf_for_all = FALSE,
-                                replace_NAs = 2,
-                                with_regions = NULL),
-               glue::glue("Invalid 'replace_NAs' argument. Has to be either NULL, NA, 0, 1, no_conversion, linear, \\
-                          regional_average, with_USA or a combination of the above."))
-  expect_error(check_user_input(gdp,
-                                unit_in,
-                                unit_out,
-                                source = s,
-                                use_USA_cf_for_all = FALSE,
-                                replace_NAs = c(0, 1),
-                                with_regions = NULL),
-               glue::glue("Invalid 'replace_NAs' argument. The only accepted combinations of arguments start with \\
-                          'linear', e.g. c\\('linear', 'no_conversion'\\)."))
+  expect_error(
+    check_user_input(gdp,
+                     unit_in,
+                     unit_out,
+                     source = s,
+                     use_USA_cf_for_all = FALSE,
+                     replace_NAs = 2,
+                     with_regions = NULL),
+    glue::glue("Invalid 'replace_NAs' argument. Has to be either NULL, NA, 0, no_conversion, linear, \\
+                          regional_average, with_USA or a combination of the above.")
+  )
+
+  expect_error(
+    check_user_input(gdp,
+                     unit_in,
+                     unit_out,
+                     source = s,
+                     use_USA_cf_for_all = FALSE,
+                     replace_NAs = c(0, "linear"),
+                     with_regions = NULL),
+    glue::glue("Invalid 'replace_NAs' argument. The only accepted combinations of arguments start with \\
+                          'linear', e.g. c\\('linear', 'no_conversion'\\).")
+  )
+
   expect_error(
     check_user_input(gdp,
                      unit_in,

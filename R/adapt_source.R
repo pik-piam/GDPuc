@@ -80,17 +80,6 @@ adapt_source <- function(gdp, source, with_regions, replace_NAs, require_year_co
       dplyr::ungroup()
   }
 
-  if (1 %in% replace_NAs) {
-    source_adapted <- source_adapted %>%
-      # Mutate the 3 important columns
-      dplyr::rowwise() %>%
-      dplyr::mutate(dplyr::across(c("GDP deflator",
-                                    "MER (LCU per US$)",
-                                    "PPP conversion factor, GDP (LCU per international $)"),
-                                  ~ if (is.na(.x)) 1 else .x)) %>%
-      dplyr::ungroup()
-  }
-
   if ("with_USA" %in% replace_NAs) {
     USA_def_growth <- source %>%
       dplyr::filter(.data$iso3c == "USA") %>%

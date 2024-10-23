@@ -3,8 +3,10 @@ title: "Converting regional GDP data"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Converting regional GDP data}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r, include = FALSE}
@@ -16,9 +18,11 @@ knitr::opts_chunk$set(
 
 ## The `with_regions` argument
 
-Use the `with_regions` argument in `convertGDP` to convert aggregated GDP data, e.g. regional-level data. 
-  
-The default value is `NULL`, but if passed a data-frame with a country-to-region mapping, then custom regional codons will be recognized. The data-frame should have two columns, one named "iso3c" with iso3c country codes, and one named "region" with the corresponding region codes. The conversion of regional values is then undertaken by disaggregating the regions to a country level (using the mapping and weighed by the GDP (in $PPP) shares of countries within that region in the base year of `unit_in`).
+Use the `with_regions` argument (default `NULL`) in `convertGDP` to convert aggregated GDP data, e.g. regional-level data. 
+ 
+### `with_regions = ` a data-frame with a country-to-region mapping
+
+If passed a data-frame with a country-to-region mapping, then custom regional codons will be recognized. The data-frame should have two columns, one named "iso3c" with iso3c country codes, and one named "region" with the corresponding region codes. The conversion of regional values is then undertaken by disaggregating the regions to a country level using the mapping, and weighed by the GDP shares of countries within that region in the base year of `unit_in` (to compute the shares, the source object needs to have GDP data for the countries within the region).
 
 ```{r}
 library(GDPuc)
@@ -40,6 +44,25 @@ convertGDP(
   unit_out = "constant 2017 Int$PPP",
   with_regions = my_mapping_data_frame,
   verbose = TRUE
+)
+```
+
+### `with_regions = ` a string with a madrat regionmapping
+
+If passed a string, then a corresponding regionmapping will be loaded with `madrat::toolGetMapping`. Requires madrat to be installed, and the regionmapping to exist.
+
+
+```{r}
+my_gdp <- tibble::tibble(
+  iso3c = "EUR", 
+  value = 100
+)
+
+convertGDP(
+  gdp = my_gdp, 
+  unit_in = "constant 2005 Int$PPP", 
+  unit_out = "constant 2017 Int$PPP",
+  with_regions = "regionmappingH12.csv"
 )
 ```
 

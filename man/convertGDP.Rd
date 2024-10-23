@@ -84,12 +84,17 @@ to learn about the available sources.}
 \item{use_USA_cf_for_all}{TRUE or FALSE (default). If TRUE, then the USA conversion factors are used for all
 countries.}
 
-\item{with_regions}{NULL or a data-frame. The data-frame should be "country to region
-mapping": one column named "iso3c" with iso3c country codes, and one column named
-"region" with region codes to which the countries belong. Any regions in the gdp
-object will then be disaggregated according to the region mapping and weighed by the
-GDP share of countries in that region in the year of the unit, converted on a country
-level, and re-aggregated before being returned.}
+\item{with_regions}{NULL by default, meaning no regional codons are recognized. To convert regional data, a
+"country to region mapping" must be passed to the function. Any regions will then be disaggregated according to the
+region mapping and weighed by the GDP share of countries in that region in the year of the unit (only constant units
+are compatible with with_regions not equal NULL), converted on a country level, and re-aggregated before being
+returned. Can be set to one of the following:
+\itemize{
+\item A character string referring to a madrat regionmapping. Requires madrat to be installed, and the mapping
+to be accessible via \code{madrat::toolGetMapping()}.
+\item A data-frame with a country to region mapping: one column named "iso3c" with iso3c country codes,
+and one column named "region" with region codes to which the countries belong.
+}}
 
 \item{replace_NAs}{NULL by default, meaning no NA replacement. Can be set to one of the following:
 \itemize{
@@ -101,8 +106,10 @@ For the extrapolation, the closest 5 data points are used.
 \item "regional_average": missing conversion factors in the source object are replaced with
 the regional average of the region to which the country belongs. This requires a region-mapping to
 be passed to the function, see the with_regions argument.
-\item "with_USA": missing conversion factors in the source object are extended using US growth rates, or
-if missing entirely, replaced with the conversion factors of the USA.
+\item "with_USA": missing conversion factors in the source object are extended using US growth rates. If that
+is not possible (for instance if the conversion factor is missing entirely) the conversion factors are replaced
+with US ones. For example, if the conversion requires PPPs and deflators, but the PPPs are missing entirely,
+then even though there is deflator data, it is the the US deflator that is used.
 }
 Can also be a vector with "linear" as first element, e.g. c("linear", 0) or c("linear", "no_conversion"),
 in which case, the operations are done in sequence.}
@@ -128,8 +135,6 @@ return_cfs is TRUE, then a list is returned with the converted GDP under "result
 factors used under "cfs".
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
-
 convertGDP() converts GDP time series data from one unit to another, using GDP
 deflators, market exchange rates (MERs) and purchasing power parity
 conversion factors (PPPs).
