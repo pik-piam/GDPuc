@@ -50,11 +50,13 @@ check_unit_in_out <- function(unit_in, unit_out) {
     "^current LCU$",
     "^current US\\$MER$",
     "^current Int\\$PPP$",
+    "^current ..._CU$",
     "^constant .... LCU$",
     "^constant .... US\\$MER$",
     "^constant .... \u20ac$",
     "^constant .... EUR$",
-    "^constant .... Int\\$PPP$"
+    "^constant .... Int\\$PPP$",
+    "^constant .... ..._CU$"
   )
   if (!is.character(unit_in) || !any(sapply(valid_units, grepl, unit_in))) {
     abort("Invalid 'unit_in' argument.")

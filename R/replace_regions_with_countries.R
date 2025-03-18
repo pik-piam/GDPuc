@@ -20,11 +20,10 @@ replace_regions_with_countries <- function(gdp, unit_in, base_x, with_regions, s
 
 # Take gdp data at regional level and disaggregate to country level according to a region mapping.
 disaggregate_regions <- function(gdp, with_regions, unit_in, base_x, source) {
-  weight_unit <- sub("\\$", "", regmatches(unit_in, regexpr("\\$(...)", unit_in)))
   weight_year <- base_x
 
   # Convert the GDP data from source, to that of unit_in (here unit_in is already transformed)
-  if (weight_unit == "PPP") {
+  if (grepl("IntPPP", unit_in)) {
     regex_var <- "GDP, PPP \\(constant .... international \\$\\)"
     regex_year <- "GDP, PPP \\(constant (....) international \\$\\)"
     share_var <- grep(regex_var, colnames(source), value = TRUE)[1]

@@ -10,18 +10,12 @@ current_LCU_2_constant_IntPPP_base_y <- function(gdp, base_y, source) {
     constant_LCU_2_constant_IntPPP(base_y, source)
 }
 
-# Convert from current LCU to constant US$MER base y
-current_LCU_2_constant_USMER_base_y <- function(gdp, base_y, source) {
+# Convert from current LCU to constant xCU base y
+current_LCU_2_constant_xCU_base_y <- function(gdp, iso3c_y, base_y, source) {
   gdp %>%
     current_LCU_2_constant_LCU_base_y(base_y, source) %>e%
-    constant_LCU_2_constant_USMER(base = base_y, source)
-}
-
-# Convert from current LCU to constant € base y
-current_LCU_2_constant_EURO_base_y <- function(gdp, base_y, source) {
-  gdp %>%
-    current_LCU_2_constant_USMER_base_y(base_y, source) %>e%
-    constant_USMER_2_constant_EURO(base = base_y, source)
+    constant_LCU_2_constant_USMER(base = base_y, source) %>e%
+    constant_USMER_2_constant_xCU(iso3c_unit = iso3c_y, base = base_y, source)
 }
 
 #------------------------------------------------------------
@@ -50,11 +44,12 @@ current_IntPPP_2_constant_IntPPP_base_y <- function(gdp, base_y, source) {
     constant_LCU_2_constant_IntPPP(base = base_y, source)
 }
 
-# Convert from current Int$PPP to constant US$MER base y
-current_IntPPP_2_constant_USMER_base_y <- function(gdp, base_y, source) {
+# Convert from current Int$PPP to constant xCU base y
+current_IntPPP_2_constant_xCU_base_y <- function(gdp, iso3c_y, base_y, source) {
   gdp %>%
     current_IntPPP_2_constant_LCU_base_y(base_y, source) %>e%
-    constant_LCU_2_constant_USMER(base = base_y, source)
+    constant_LCU_2_constant_USMER(base = base_y, source) %>e%
+    constant_USMER_2_constant_xCU(iso3c_unit = iso3c_y, base = base_y, source)
 }
 
 #------------------------------------------------------------
@@ -76,13 +71,6 @@ current_USMER_2_constant_LCU_base_y <- function(gdp, base_y, source) {
     current_LCU_2_constant_LCU_base_y(base_y, source)
 }
 
-# Convert from current US$MER to constant US$MER base y
-current_USMER_2_constant_USMER_base_y <- function(gdp, base_y, source) {
-  gdp %>%
-    current_USMER_2_constant_LCU_base_y(base_y, source) %>e%
-    constant_LCU_2_constant_USMER(base = base_y, source)
-}
-
 # Convert from current US$MER to constant Int$PPP base y
 current_USMER_2_constant_IntPPP_base_y <- function(gdp, base_y, source) {
   gdp %>%
@@ -90,11 +78,12 @@ current_USMER_2_constant_IntPPP_base_y <- function(gdp, base_y, source) {
     constant_LCU_2_constant_IntPPP(base = base_y, source)
 }
 
-# Convert from current US$MER to constant € base y
-current_USMER_2_constant_EURO_base_y <- function(gdp, base_y, source) {
+# Convert from current US$MER to constant xCU base y
+current_USMER_2_constant_xCU_base_y <- function(gdp, iso3c_y, base_y, source) {
   gdp %>%
-    current_USMER_2_constant_USMER_base_y(base_y, source) %>e%
-    constant_USMER_2_constant_EURO(base = base_y, source)
+    current_USMER_2_constant_LCU_base_y(base_y, source) %>e%
+    constant_LCU_2_constant_USMER(base = base_y, source)
+    constant_USMER_2_constant_xCU(iso3c_unit = iso3c_y, base = base_y, source)
 }
 
 #------------------------------------------------------------
@@ -123,19 +112,12 @@ constant_LCU_base_x_2_constant_IntPPP_base_y <- function(gdp, base_x, base_y, so
     constant_LCU_2_constant_IntPPP(base = base_y, source)
 }
 
-
-# Convert from constant LCU in one base year to constant US$MER of another
-constant_LCU_base_x_2_constant_USMER_base_y <- function(gdp, base_x, base_y, source) {
+# Convert from constant LCU in one base year to constant xCU of another
+constant_LCU_base_x_2_constant_xCU_base_y <- function(gdp, base_x, iso3c_y, base_y, source) {
   gdp %>%
     constant_LCU_base_x_2_constant_LCU_base_y(base_x, base_y, source) %>e%
-    constant_LCU_2_constant_USMER(base = base_y, source)
-}
-
-# Convert from constant LCU in one base year to constant € of another
-constant_LCU_base_x_2_constant_EURO_base_y <- function(gdp, base_x, base_y, source) {
-  gdp %>%
-    constant_LCU_base_x_2_constant_USMER_base_y(base_x, base_y, source) %>e%
-    constant_USMER_2_constant_EURO(base = base_y, source)
+    constant_LCU_2_constant_USMER(base = base_y, source) %>e%
+    constant_USMER_2_constant_xCU(iso3c_unit = iso3c_y, base = base_y, source)
 }
 
 #------------------------------------------------------------
@@ -178,44 +160,26 @@ constant_IntPPP_base_x_2_constant_IntPPP_base_y <- function(gdp, base_x, base_y,
     constant_LCU_2_constant_IntPPP(base = base_y, source)
 }
 
-# Convert from constant Int$PPP in one base year to constant US$MER of another
-constant_IntPPP_base_x_2_constant_USMER_base_y <- function(gdp, base_x, base_y, source) {
+# Convert from constant Int$PPP in one base year to constant xCU of another
+constant_IntPPP_base_x_2_constant_xCU_base_y <- function(gdp, base_x, iso3c_y, base_y, source) {
   gdp %>%
     constant_IntPPP_base_x_2_constant_LCU_base_y(base_x, base_y, source) %>e%
-    constant_LCU_2_constant_USMER(base = base_y, source)
+    constant_LCU_2_constant_USMER(base = base_y, source) %>e%
+    constant_USMER_2_constant_xCU(iso3c_unit = iso3c_y, base = base_y, source)
 }
 
-# Convert from constant Int$PPP in one base year to constant € of another
-constant_IntPPP_base_x_2_constant_EURO_base_y <- function(gdp, base_x, base_y, source) {
-  gdp %>%
-    constant_IntPPP_base_x_2_constant_USMER_base_y(base_x, base_y, source) %>e%
-    constant_USMER_2_constant_EURO(base = base_y, source)
-}
 
 #------------------------------------------------------------
 #------------------------------------------------------------
 #------------------------------------------------------------
-# Unit_in = constant US$MER
+# Unit_in = constant xCU
+## Helpers, Unit_in = constant US$MER
 
 # Convert from constant US$MER base year x to current LCU
 constant_USMER_base_x_2_current_LCU <- function(gdp, base_x, source) {
   gdp %>%
     constant_USMER_2_constant_LCU(base = base_x, source) %>e%
     constant_LCU_base_x_2_current_LCU(base_x, source)
-}
-
-# Convert from constant US$MER base year x to current Int$PPP
-constant_USMER_base_x_2_current_IntPPP <- function(gdp, base_x, source) {
-  gdp %>%
-    constant_USMER_base_x_2_current_LCU(base_x, source) %>e%
-    current_LCU_2_current_IntPPP(source)
-}
-
-# Convert from constant US$MER base year x to current US$MER
-constant_USMER_base_x_2_current_USMER <- function(gdp, base_x, source) {
-  gdp %>%
-    constant_USMER_base_x_2_current_LCU(base_x, source) %>e%
-    current_LCU_2_current_USMER(source)
 }
 
 # Convert from constant US$MER in one base year to constant LCU of another
@@ -227,75 +191,49 @@ constant_USMER_base_x_2_constant_LCU_base_y <- function(gdp, base_x, base_y, sou
 
 # Convert constant US$MER series from one base year to another
 constant_USMER_base_x_2_constant_USMER_base_y <- function(gdp, base_x, base_y, source) {
+  if (base_x == base_y) {
+    return(gdp)
+  }
   gdp %>%
     constant_USMER_base_x_2_constant_LCU_base_y(base_x, base_y, source) %>e%
     constant_LCU_2_constant_USMER(base = base_y, source)
 }
 
-# Convert from constant US$MER in one base year to constant Int$PPP of another
-constant_USMER_base_x_2_constant_IntPPP_base_y <- function(gdp, base_x, base_y, source) {
+# Convert from constant xCU base year x to current LCU
+constant_xCU_base_x_2_current_LCU <- function(gdp, iso3c_x, base_x, source) {
   gdp %>%
+    constant_xCU_2_constant_USMER(iso3c_unit = iso3c_x, base = base_x, source) %>e%
+    constant_USMER_base_x_2_current_LCU(base_x, source)
+}
+
+# Convert from constant xCU base year x to current Int$PPP
+constant_xCU_base_x_2_current_IntPPP <- function(gdp, iso3c_x, base_x, source) {
+  gdp %>%
+    constant_xCU_2_constant_USMER(iso3c_unit = iso3c_x, base = base_x, source) %>e%
+    constant_USMER_base_x_2_current_LCU(base_x, source) %>e%
+    current_LCU_2_current_IntPPP(source)
+}
+
+# Convert from constant xCU base year x to current US$MER
+constant_xCU_base_x_2_current_USMER <- function(gdp, iso3c_x, base_x, source) {
+  gdp %>%
+    constant_xCU_2_constant_USMER(iso3c_unit = iso3c_x, base = base_x, source) %>e%
+    constant_USMER_base_x_2_current_LCU(base_x, source) %>e%
+    current_LCU_2_current_USMER(source)
+}
+
+# Convert from constant xCU in one base year to constant Int$PPP of another
+constant_xCU_base_x_2_constant_IntPPP_base_y <- function(gdp, iso3c_x, base_x, base_y, source) {
+  gdp %>%
+    constant_xCU_2_constant_USMER(iso3c_unit = iso3c_x, base = base_x, source) %>e%
     constant_USMER_base_x_2_constant_LCU_base_y(base_x, base_y, source) %>e%
     constant_LCU_2_constant_IntPPP(base = base_y, source)
 }
 
-# Convert from constant US$MER in one base year to constant € of another
-constant_USMER_base_x_2_constant_EURO_base_y <- function(gdp, base_x, base_y, source) {
+# Convert from constant xCU in one base year to constant xCU of another
+constant_xCU_base_x_2_constant_xCU_base_y <- function(gdp, iso3c_x, base_x, iso3c_y, base_y, source) {
   gdp %>%
+    constant_xCU_2_constant_USMER(iso3c_unit = iso3c_x, base = base_x, source) %>e%
     constant_USMER_base_x_2_constant_USMER_base_y(base_x, base_y, source) %>e%
-    constant_USMER_2_constant_EURO(base = base_y, source)
-}
-
-#------------------------------------------------------------
-#------------------------------------------------------------
-#------------------------------------------------------------
-# Unit_in = constant €
-
-# Convert from constant € base year x to current LCU
-constant_EURO_base_x_2_current_LCU <- function(gdp, base_x, source) {
-  gdp %>%
-    constant_EURO_2_constant_USMER(base = base_x, source) %>e%
-    constant_USMER_base_x_2_current_LCU(base_x, source)
-}
-
-# Convert from constant € base year x to current Int$PPP
-constant_EURO_base_x_2_current_IntPPP <- function(gdp, base_x, source) {
-  gdp %>%
-    constant_EURO_2_constant_USMER(base = base_x, source) %>e%
-    constant_USMER_base_x_2_current_IntPPP(base_x, source)
-}
-
-# Convert from constant € base year x to current US$MER
-constant_EURO_base_x_2_current_USMER <- function(gdp, base_x, source) {
-  gdp %>%
-    constant_EURO_2_constant_USMER(base = base_x, source) %>e%
-    constant_USMER_base_x_2_current_USMER(base_x, source)
-}
-
-# Convert constant € series from one base year to another
-constant_EURO_base_x_2_constant_USMER_base_y <- function(gdp, base_x, base_y, source) {
-  gdp %>%
-    constant_EURO_2_constant_USMER(base = base_x, source) %>e%
-    constant_USMER_base_x_2_constant_USMER_base_y(base_x, base_y, source)
-}
-
-# Convert from constant € in one base year to constant LCU of another
-constant_EURO_base_x_2_constant_LCU_base_y <- function(gdp, base_x, base_y, source) {
-  gdp %>%
-    constant_EURO_2_constant_USMER(base = base_x, source) %>e%
-    constant_USMER_base_x_2_constant_LCU_base_y(base_x, base_y, source)
-}
-
-# Convert from constant € in one base year to constant Int$PPP of another
-constant_EURO_base_x_2_constant_IntPPP_base_y <- function(gdp, base_x, base_y, source) {
-  gdp %>%
-    constant_EURO_2_constant_USMER(base = base_x, source) %>e%
-    constant_USMER_base_x_2_constant_IntPPP_base_y(base_x, base_y, source)
-}
-
-# Convert from constant € in one base year to constant € of another
-constant_EURO_base_x_2_constant_EURO_base_y <- function(gdp, base_x, base_y, source) {
-  gdp %>%
-    constant_EURO_2_constant_USMER(base = base_x, source) %>e%
-    constant_USMER_base_x_2_constant_EURO_base_y(base_x, base_y, source)
+    constant_USMER_2_constant_xCU(iso3c_unit = iso3c_y, base = base_y, source)
 }

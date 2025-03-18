@@ -22,7 +22,7 @@ current_LCU_2_current_IntPPP <- function(gdp, source) {
                   .keep = "unused")
 }
 
-# Convert from current LCU to current US$MER
+# Convert from current LCU to current xLCU
 current_LCU_2_current_USMER <- function(gdp, source) {
   MER <-  source %>%
     dplyr::select("iso3c", "year", "MER (LCU per US$)")
@@ -155,10 +155,7 @@ constant_LCU_base_x_2_current_LCU <- function(gdp, base_x, source) {
 }
 
 # Convert constant LCU series from one base year to another
-constant_LCU_base_x_2_constant_LCU_base_y <- function(gdp,
-                                                      base_x,
-                                                      base_y,
-                                                      source) {
+constant_LCU_base_x_2_constant_LCU_base_y <- function(gdp, base_x, base_y, source) {
   if (base_x == base_y) {
     return(gdp)
   }
@@ -270,57 +267,62 @@ constant_USMER_2_constant_LCU <- function(gdp, base, source) {
 
   gdp %>%
     dplyr::left_join(MER_base, by = "iso3c") %>%
-    dplyr::mutate(value = .data$value * .data$`MER (LCU per US$)`,
-                  .keep = "unused")
+    dplyr::mutate(value = .data$value * .data$`MER (LCU per US$)`, .keep = "unused")
 }
 
-# Convert from constant US$MER to constant EURO
-constant_USMER_2_constant_EURO <- function(gdp, base, source) {
-  MER_EURO_per_DOLLAR <- source %>%
-    dplyr::filter(.data$year == base, .data$iso3c == "DEU") %>%
+# Convert from constant US$MER to constant xCU
+constant_USMER_2_constant_xCU <- function(gdp, iso3c_unit, base, source) {
+  if (iso3c_unit == "USA") {
+    return(gdp)
+  }
+
+  xCU_per_DOLLAR <- source %>%
+    dplyr::filter(.data$year == base, .data$iso3c == iso3c_unit) %>%
     dplyr::pull(.data$`MER (LCU per US$)`)
 
   MER_base <- source %>%
     dplyr::filter(.data$year == base) %>%
-    dplyr::mutate("MER (LCU per US$)" = MER_EURO_per_DOLLAR) %>%
+    dplyr::mutate("MER (LCU per US$)" = xCU_per_DOLLAR) %>%
     dplyr::select("iso3c", "MER (LCU per US$)")
 
   cli_elemental(from = glue::glue("constant {base} US$MER"),
-                to = glue::glue("constant {base} \u20ac"),
+                to = glue::glue("constant {base} {iso3c_unit}_CU"),
                 with = glue::glue("{base} MER"),
-                unit = "(\u20ac per US$)",
+                unit = glue::glue("({iso3c_unit}_CU per US$MER)"),
                 val = dplyr::filter(MER_base, .data$iso3c %in% unique(gdp$iso3c)))
 
   gdp %>%
     dplyr::left_join(MER_base, by = "iso3c") %>%
-    dplyr::mutate(value = .data$value * .data$`MER (LCU per US$)`,
-                  .keep = "unused")
+    dplyr::mutate(value = .data$value * .data$`MER (LCU per US$)`, .keep = "unused")
 }
 
 
 #------------------------------------------------------------
 #------------------------------------------------------------
 #------------------------------------------------------------
-# Unit_in = constant €
+# Unit_in = constant xCU
 
-constant_EURO_2_constant_USMER <- function(gdp, base, source) {
-  MER_EURO_per_DOLLAR <- source %>%
-    dplyr::filter(.data$year == base, .data$iso3c == "DEU") %>%
+constant_xCU_2_constant_USMER <- function(gdp, iso3c_unit, base, source) {
+  if (iso3c_unit == "USA") {
+    return(gdp)
+  }
+
+  xCU_per_DOLLAR <- source %>%
+    dplyr::filter(.data$year == base, .data$iso3c == iso3c_unit) %>%
     dplyr::pull(.data$`MER (LCU per US$)`)
 
   MER_base <- source %>%
     dplyr::filter(.data$year == base) %>%
-    dplyr::mutate("MER (LCU per US$)" = MER_EURO_per_DOLLAR) %>%
+    dplyr::mutate("MER (LCU per US$)" = xCU_per_DOLLAR) %>%
     dplyr::select("iso3c", "MER (LCU per US$)")
 
-  cli_elemental(from = glue::glue("constant {base} \u20ac"),
+  cli_elemental(from = glue::glue("constant {base} {iso3c_unit}_CU"),
                 to = glue::glue("constant {base} US$MER"),
                 with = glue::glue("{base} MER"),
-                unit = "(\u20ac per US$)",
+                unit = glue::glue("({iso3c_unit}_CU per US$MER)"),
                 val = dplyr::filter(MER_base, .data$iso3c %in% unique(gdp$iso3c)))
 
   gdp %>%
     dplyr::left_join(MER_base, by = "iso3c") %>%
-    dplyr::mutate(value = .data$value / .data$`MER (LCU per US$)`,
-                  .keep = "unused")
+    dplyr::mutate(value = .data$value / .data$`MER (LCU per US$)`, .keep = "unused")
 }
