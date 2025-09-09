@@ -8,9 +8,9 @@
 <title>Easily Convert GDP Data • GDPuc</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/Source_Sans_Pro-0.4.9/font.css" rel="stylesheet">
-<link href="deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/Source_Sans_Pro-0.4.10/font.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Easily Convert GDP Data">
 <meta name="description" content="Convert GDP time series data from one unit to another. All common GDP units are included, i.e. current and constant local currency units, US$ via market exchange rates and international dollars via purchasing power parities.">
 <meta property="og:description" content="Convert GDP time series data from one unit to another. All common GDP units are included, i.e. current and constant local currency units, US$ via market exchange rates and international dollars via purchasing power parities.">
@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="index.html">GDPuc</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.4.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,7 +73,7 @@
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"GDPuc"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Or the development version from GitHub</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"pik-piam/GDPuc"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"pik-piam/GDPuc"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
@@ -179,6 +179,11 @@
 <li><p>convert regional GDP data (see <a href="https://pik-piam.github.io/GDPuc/articles/with_regions.html">“Converting regional GDP data”</a>)</p></li>
 </ul>
 </div>
+<div class="section level2">
+<h2 id="madrat-wrappers">Madrat wrappers<a class="anchor" aria-label="anchor" href="#madrat-wrappers"></a>
+</h2>
+<p>When using GDPuc functions within the madrat ecosystem, it is recommended to use the wrappers starting with <code>tool</code>, i.e. <code><a href="reference/convertGDP.html">GDPuc::toolConvertGDP()</a></code> and <code><a href="reference/convertGDP.html">GDPuc::toolConvertSingle()</a></code>, for the madrat caching to work and include the GDPuc function.</p>
+</div>
 </div>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
@@ -208,7 +213,7 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Johannes Koch <br><small class="roles"> Author, maintainer </small>  </li>
+<li>Johannes Koch <br><small class="roles"> Author, maintainer </small>   </li>
 </ul>
 </div>
 
@@ -230,7 +235,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>
