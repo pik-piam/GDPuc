@@ -26,7 +26,6 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, use_USA_cf_for_
     }
 
     x <- sub("US\\$MER", "USA_CU", x)
-    x <- sub("EUR", "DEU_CU", x)
     x <- sub("\u20ac|EUR", "DEU_CU", x)
     x <- sub("Int\\$PPP", "IntPPP", x)
 

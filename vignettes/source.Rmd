@@ -16,19 +16,11 @@ knitr::opts_chunk$set(
 
 ## The `source` argument
 
-Use the `source` argument in `convertGDP` to control the source of the underlying conversion factors (GDP deflators, MERs and PPPs). This can be a user-defined object or one of the sources shipped with the package.
+Use the `source` argument in `convertGDP` to control the source of the underlying conversion factors (GDP deflators, MERs and PPPs). This can be one of the sources shipped with the package or a user-defined object.
 
-##  User-defined 'source' objects
+### Package internal 'sources'
 
-Any tibble with columns:
-
--   "iso3c" (character),
--   "year" (numeric),
--   "GDP deflator" (numeric),
--   "MER (LCU per US$)" (numeric),
--   "PPP conversion factor, GDP (LCU per international $)" (numeric)
-
-can be used as a source of conversion factors.
+There are two `source` options shipped with the package, `wb_wdi` and `wb_wdi_linked`, **with `wb_wdi` set as the default**. Pass the name of a shipped source to the source argument to use it.
 
 ```{r}
 library(GDPuc)
@@ -39,29 +31,6 @@ my_gdp <- tibble::tibble(
   value = 100:104
 )
 
-my_custom_source <- tibble::tibble(
-  iso3c = "USA", 
-  year = 2010:2014, 
-  "GDP deflator" = seq(1, 1.1, 0.025),
-  "MER (LCU per US$)" = 1,
-  "PPP conversion factor, GDP (LCU per international $)" = 1,
-)
-print(my_custom_source)
-
-convertGDP(
-  gdp = my_gdp, 
-  unit_in = "constant 2010 LCU", 
-  unit_out = "constant 2014 Int$PPP",
-  source = my_custom_source,
-  verbose = TRUE
-)
-```
-
-## Shipped 'sources'
-
-There are two `source` options shipped with the package, `wb_wdi` and `wb_wdi_linked`, **with `wb_wdi` set as the default**. Pass the name of a shipped source to the source argument to use it.
-
-```{r}
 convertGDP(
   gdp = my_gdp, 
   unit_in = "constant 2010 LCU", 
@@ -82,4 +51,63 @@ Use the `:::` operator to take a closer look at sources shipped with GDPuc.
 
 ```{r, eval=FALSE}
 GDPuc:::wb_wdi
+```
+
+###  User-defined 'source' objects
+
+Any tibble with columns:
+
+-   "iso3c" (character),
+-   "year" (numeric),
+-   "GDP deflator" (numeric),
+-   "MER (LCU per US$)" (numeric),
+-   "PPP conversion factor, GDP (LCU per international $)" (numeric)
+
+can be used as a source of conversion factors.
+
+```{r}
+my_custom_source <- tibble::tibble(
+  iso3c = "USA", 
+  year = 2010:2014, 
+  "GDP deflator" = seq(1, 1.1, 0.025),
+  "MER (LCU per US$)" = 1,
+  "PPP conversion factor, GDP (LCU per international $)" = 1,
+)
+print(my_custom_source)
+
+convertGDP(
+  gdp = my_gdp, 
+  unit_in = "constant 2010 LCU", 
+  unit_out = "constant 2014 Int$PPP",
+  source = my_custom_source,
+  verbose = TRUE
+)
+```
+
+## The `use_USA_cf_for_all` argument
+
+In some cases it may be desirable to use the US conversion factors for all countries. For instance, when converting global scenario data from modelling efforts, in US$MER, to another base year. Setting the `use_USA_cf_for_all` to `TRUE` ensures that all countries are converted with the US conversion factors. 
+
+```{r}
+my_gdp <- tibble::tibble(
+  iso3c = c("USA", "IND"), 
+  value = 100
+)
+
+# Normal conversion, with country specific conversion factors
+convertGDP(
+  gdp = my_gdp, 
+  unit_in = "constant 2005 US$MER", 
+  unit_out = "constant 2020 US$MER",
+  verbose = TRUE
+)
+
+# Using the US conversion factors for both countries
+convertGDP(
+  gdp = my_gdp, 
+  unit_in = "constant 2005 US$MER", 
+  unit_out = "constant 2020 US$MER",
+  use_USA_cf_for_all = TRUE,
+  verbose = TRUE
+)
 ```

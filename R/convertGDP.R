@@ -53,7 +53,7 @@
 #'     \item "constant YYYY xxx_CU"
 #'   }
 #'   where YYYY should be replaced with a year e.g. "2010" or "2017", and xxx with a valid iso3c country code,
-#'   e.g. "JPN_CU" to pick the currency unit of a given country, here Japan.
+#'   e.g. "JPN_CU" to pick the currency unit of Japan.
 #'
 #' @param source A string referring to a package internal data frame containing the conversion factors, or
 #'   a data-frame that exists in the calling environment.

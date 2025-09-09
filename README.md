@@ -152,3 +152,10 @@ convertSingle(
 
 - convert regional GDP data (see [“Converting regional GDP
   data”](https://pik-piam.github.io/GDPuc/articles/with_regions.html))
+
+## Madrat wrappers
+
+When using GDPuc functions within the madrat ecosystem, it is
+recommended to use the wrappers starting with `tool`,
+i.e. `GDPuc::toolConvertGDP()` and `GDPuc::toolConvertSingle()`, for the
+madrat caching to work and include the GDPuc function.
