@@ -37,7 +37,8 @@
 #'     \item "constant YYYY LCU"
 #'     \item "constant YYYY Int$PPP"
 #'     \item "constant YYYY US$MER"
-#'     \item "constant YYYY €"
+#'     \item "constant YYYY €" or "constant YYYY EUR"
+#'     \item "constant YYYY xxx_CU"
 #'   }
 #'   where YYYY should be replaced with a year e.g. "2010" or "2017".
 #' @param unit_out A string with the outgoing GDP unit, one of:
@@ -48,9 +49,12 @@
 #'     \item "constant YYYY LCU"
 #'     \item "constant YYYY Int$PPP"
 #'     \item "constant YYYY US$MER"
-#'     \item "constant YYYY €"
+#'     \item "constant YYYY €" or "constant YYYY EUR"
+#'     \item "constant YYYY xxx_CU"
 #'   }
-#'   where YYYY should be replaced with a year e.g. "2010" or "2017".
+#'   where YYYY should be replaced with a year e.g. "2010" or "2017", and xxx with a valid iso3c country code,
+#'   e.g. "JPN_CU" to pick the currency unit of Japan.
+#'
 #' @param source A string referring to a package internal data frame containing the conversion factors, or
 #'   a data-frame that exists in the calling environment.
 #'   Use [print_source_info()](https://pik-piam.github.io/GDPuc/reference/print_source_info.html)
@@ -116,7 +120,7 @@ convertGDP <- function(gdp,
   # The following line needs to be updated every time the output of convertGDP is affected by an update!
   # This is a trick, so that madrat caching works correctly. For more information, see the documentation of the madrat
   # R-package.
-  "last changes 2024-10-23"
+  "last changes 2025-03-18"
 
   # Save all function arguments as list
   arg <- as.list(environment())
@@ -136,20 +140,17 @@ convertGDP <- function(gdp,
   # Transform user input for internal use, while performing some last consistency checks
   internal <- transform_user_input(gdp, unit_in, unit_out, source, use_USA_cf_for_all, with_regions, replace_NAs)
 
+  # Get appropriate function
+  f <- paste0(internal$unit_in, "_2_", internal$unit_out)
+
   # Avoid NOTE in package check for CRAN
   . <- NULL
-  # Get appropriate function
-  f <- paste0(internal$unit_in, "_2_", internal$unit_out) %>%
-    gsub(" ", "_", .) %>%
-    gsub("_YYYY", "", .) %>%
-    gsub("\\$", "", .) %>%
-    # \u20ac is the ascii code for the € sign
-    gsub("\u20ac|EUR", "EURO", .)
-
   # Get list of function arguments
   a <- list("gdp" = internal$gdp, "source" = internal$source) %>%
-    {if ("base_x" %in% names(internal)) c(., "base_x" = internal$base_x) else .} %>%
-    {if ("base_y" %in% names(internal)) c(., "base_y" = internal$base_y) else .}
+    {if (!rlang::is_empty(internal$iso3c_x)) c(., "iso3c_x" = internal$iso3c_x) else .} %>%
+    {if (!rlang::is_empty(internal$iso3c_y)) c(., "iso3c_y" = internal$iso3c_y) else .} %>%
+    {if (!is.null(internal$base_x)) c(., "base_x" = internal$base_x) else .} %>%
+    {if (!is.null(internal$base_y)) c(., "base_y" = internal$base_y) else .}
 
   # At least one explicit call to a crayon:: function is required to avoid CRAN note.
   h <- crayon::blue(internal$source_name)

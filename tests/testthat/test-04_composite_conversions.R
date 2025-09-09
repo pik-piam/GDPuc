@@ -23,12 +23,12 @@ test_that("current_LCU_2_constant_IntPPP_base_y", {
   }
 })
 
-test_that("current_LCU_2_constant_USMER_base_y", {
+test_that("current_LCU_2_constant_xCU_base_y", {
   gdp_in <- wb_wdi %>%
     dplyr::filter(!is.na(!!rlang::sym(var_USMER))) %>%
     dplyr::select("iso3c", "year", "value" = `GDP (current LCU)`)
 
-  gdp_conv <- current_LCU_2_constant_USMER_base_y(gdp_in, year_USMER, wb_wdi)%>%
+  gdp_conv <- current_LCU_2_constant_xCU_base_y(gdp_in, "USA", year_USMER, wb_wdi)%>%
     dplyr::filter(!is.na(value))
 
   gdp_out <- wb_wdi %>%
@@ -143,7 +143,7 @@ test_that("current_IntPPP_2_constant_IntPPP", {
 })
 
 
-test_that("current_IntPPP_2_constant_USMER", {
+test_that("current_IntPPP_2_constant_xCU_base_y", {
   gdp_in <- wb_wdi %>%
     dplyr::filter(!is.na(!!rlang::sym(var_USMER))) %>%
     # Convert the PPP current series from one based on the linked LCU series
@@ -153,7 +153,7 @@ test_that("current_IntPPP_2_constant_USMER", {
                     `GDP deflator: linked series (base year varies by country)`) %>%
     dplyr::select("iso3c", "year", "value")
 
-  gdp_conv <- current_IntPPP_2_constant_USMER_base_y(gdp_in, year_USMER, wb_wdi)%>%
+  gdp_conv <- current_IntPPP_2_constant_xCU_base_y(gdp_in, "USA", year_USMER, wb_wdi)%>%
     dplyr::filter(!is.na(value))
 
   gdp_out <- wb_wdi %>%
@@ -199,12 +199,12 @@ test_that("current_USMER_2_current_IntPPP", {
   }
 })
 
-test_that("current_USMER_2_constant_USMER", {
+test_that("current_USMER_2_constant_xCU_base_y", {
   gdp_in <- wb_wdi %>%
     dplyr::filter(!is.na(!!rlang::sym(var_USMER))) %>%
     dplyr::select("iso3c", "year", "value" = `GDP (current US$)`)
 
-  gdp_conv <- current_USMER_2_constant_USMER_base_y(gdp_in, year_USMER, wb_wdi) %>%
+  gdp_conv <- current_USMER_2_constant_xCU_base_y(gdp_in, "USA", year_USMER, wb_wdi) %>%
     dplyr::filter(!is.na(value))
 
   gdp_out <- wb_wdi %>%
@@ -362,7 +362,7 @@ test_that("constant_LCU_base_x_2_constant_IntPPP_base_y", {
   }
 })
 
-test_that("constant_LCU_base_x_2_constant_USMER_base_y", {
+test_that("constant_LCU_base_x_2_constant_xCU_base_y", {
   country_base_years <- wb_wdi %>%
     dplyr::filter(`GDP deflator (base year varies by country)` == 100) %>%
     dplyr::select("iso3c", "year")
@@ -383,7 +383,7 @@ test_that("constant_LCU_base_x_2_constant_USMER_base_y", {
                     !is.na(!!rlang::sym(var_USMER))) %>%
       dplyr::select("iso3c", "year", "value" = `GDP (constant LCU)`)
 
-    gdp_conv <- constant_LCU_base_x_2_constant_USMER_base_y(gdp_in, my_base_year, year_USMER, wb_wdi) %>%
+    gdp_conv <- constant_LCU_base_x_2_constant_xCU_base_y(gdp_in, my_base_year, "USA", year_USMER, wb_wdi) %>%
       dplyr::filter(!is.na(value))
 
     gdp_out <- wb_wdi %>%
@@ -501,12 +501,12 @@ test_that("constant_IntPPP_base_x_2_constant_LCU_base_y", {
   }
 })
 
-test_that("constant_IntPPP_base_x_2_constant_USMER_base_y", {
+test_that("constant_IntPPP_base_x_2_constant_xCU_base_y", {
   gdp_in <- wb_wdi %>%
     dplyr::filter(!is.na(!!rlang::sym(var_USMER))) %>%
     dplyr::select("iso3c", "year", "value" = tidyselect::matches(regex_var_IntPPP))
 
-  gdp_conv <- constant_IntPPP_base_x_2_constant_USMER_base_y(gdp_in, year_IntPPP, year_USMER, wb_wdi)%>%
+  gdp_conv <- constant_IntPPP_base_x_2_constant_xCU_base_y(gdp_in, year_IntPPP, "USA", year_USMER, wb_wdi)%>%
     dplyr::filter(!is.na(value))
 
   gdp_out <- wb_wdi %>%
@@ -521,22 +521,23 @@ test_that("constant_IntPPP_base_x_2_constant_USMER_base_y", {
   }
 })
 
-test_that("constant_IntPPP_base_x_2_constant_EURO_base_y", {
+test_that("constant_IntPPP_base_x_2_constant_xCU_base_y", {
   gdp_in <- wb_wdi %>%
-    dplyr::filter(!is.na(!!rlang::sym(var_USMER)), iso3c %in% euro_countries) %>%
+    dplyr::filter(!is.na(!!rlang::sym(var_USMER))) %>%
     dplyr::select("iso3c", "year", "value" = tidyselect::matches(regex_var_IntPPP))
 
-  gdp_conv <- constant_IntPPP_base_x_2_constant_EURO_base_y(gdp_in, year_IntPPP, year_USMER, wb_wdi)%>%
-    dplyr::filter(!is.na(value))
+  for (country in unique(gdp_in$iso3c)) {
+    gdp_in <- dplyr::filter(gdp_in, iso3c == country)
 
-  gdp_out <-constant_IntPPP_base_x_2_constant_LCU_base_y(gdp_in, year_IntPPP, year_USMER, wb_wdi)%>%
-    dplyr::filter(!is.na(value))
+    gdp_conv <- constant_IntPPP_base_x_2_constant_xCU_base_y(gdp_in, year_IntPPP, country, year_USMER, wb_wdi)%>%
+      dplyr::filter(!is.na(value))
 
-  for (country in unique(gdp_conv$iso3c)) {
+    gdp_out <-constant_IntPPP_base_x_2_constant_LCU_base_y(gdp_in, year_IntPPP, year_USMER, wb_wdi)%>%
+      dplyr::filter(!is.na(value))
+
     if (country %in% bad_countries) next
-    expect_equal(gdp_conv %>% dplyr::filter(iso3c == country),
-                 gdp_out %>% dplyr::filter(iso3c == country),
-                 label = country)
+
+    expect_equal(gdp_conv, gdp_out, label = country)
   }
 })
 
@@ -564,12 +565,12 @@ test_that("constant_USMER_base_x_2_current_LCU", {
   }
 })
 
-test_that("constant_USMER_base_x_2_current_IntPPP", {
+test_that("constant_xCU_base_x_2_current_IntPPP", {
   gdp_in <- wb_wdi %>%
     dplyr::filter(!is.na(`GDP, PPP (current international $)`)) %>%
     dplyr::select("iso3c", "year", "value" = tidyselect::matches(regex_var_USMER))
 
-  gdp_conv <- constant_USMER_base_x_2_current_IntPPP(gdp_in, year_USMER, wb_wdi) %>%
+  gdp_conv <- constant_xCU_base_x_2_current_IntPPP(gdp_in, "USA", year_USMER, wb_wdi) %>%
     dplyr::filter(!is.na(value))
 
   gdp_out <- wb_wdi %>%
@@ -589,12 +590,12 @@ test_that("constant_USMER_base_x_2_current_IntPPP", {
   }
 })
 
-test_that("constant_USMER_base_x_2_current_USMER", {
+test_that("constant_xCU_base_x_2_current_USMER", {
   gdp_in <- wb_wdi %>%
     dplyr::filter(!is.na(`GDP (current US$)`)) %>%
     dplyr::select("iso3c", "year", "value" = tidyselect::matches(regex_var_USMER))
 
-  gdp_conv <- constant_USMER_base_x_2_current_USMER(gdp_in, year_USMER, wb_wdi) %>%
+  gdp_conv <- constant_xCU_base_x_2_current_USMER(gdp_in, "USA", year_USMER, wb_wdi) %>%
     dplyr::filter(!is.na(value))
 
   gdp_out <- wb_wdi %>%
@@ -609,12 +610,12 @@ test_that("constant_USMER_base_x_2_current_USMER", {
   }
 })
 
-test_that("constant_USMER_base_x_2_constant_IntPPP_base_y", {
+test_that("constant_xCU_base_x_2_constant_IntPPP_base_y", {
   gdp_in <- wb_wdi %>%
     dplyr::filter(!is.na(!!rlang::sym(var_IntPPP))) %>%
     dplyr::select("iso3c", "year", "value" = tidyselect::matches(regex_var_USMER))
 
-  gdp_conv <- constant_USMER_base_x_2_constant_IntPPP_base_y(gdp_in, year_USMER, year_IntPPP, wb_wdi)%>%
+  gdp_conv <- constant_xCU_base_x_2_constant_IntPPP_base_y(gdp_in, "USA", year_USMER, year_IntPPP, wb_wdi)%>%
     dplyr::filter(!is.na(value))
 
   gdp_out <- wb_wdi %>%
@@ -665,7 +666,7 @@ test_that("constant_USMER_base_x_2_constant_LCU_base_y", {
 })
 
 
-test_that("constant_USMER_base_x_2_constant_EURO_base_y", {
+test_that("constant_xCU_base_x_2_constant_xCU_base_y", {
   country_base_years <- wb_wdi %>%
     dplyr::filter(`GDP deflator (base year varies by country)` == 100) %>%
     dplyr::select("iso3c", "year")
@@ -678,23 +679,21 @@ test_that("constant_USMER_base_x_2_constant_EURO_base_y", {
 
   for (my_base_year in my_years) {
     my_countries <- country_base_years %>%
-      dplyr::filter(year == my_base_year, iso3c %in% euro_countries) %>%
+      dplyr::filter(year == my_base_year) %>%
       dplyr::pull(iso3c)
 
+    for (country in my_countries) {
     gdp_in <- wb_wdi %>%
-      dplyr::filter(iso3c %in% my_countries) %>%
+      dplyr::filter(iso3c == country) %>%
       dplyr::select("iso3c", "year", "value" = tidyselect::matches(regex_var_USMER))
 
-    gdp_conv <- constant_USMER_base_x_2_constant_EURO_base_y(gdp_in, year_USMER, my_base_year, wb_wdi) %>%
+    gdp_conv <- constant_xCU_base_x_2_constant_xCU_base_y(gdp_in, "USA", year_USMER, country, my_base_year, wb_wdi) %>%
       dplyr::filter(!is.na(value))
 
     gdp_out <- constant_USMER_base_x_2_constant_LCU_base_y(gdp_in, year_USMER, my_base_year, wb_wdi) %>%
       dplyr::filter(!is.na(value))
 
-    for (country in unique(gdp_conv$iso3c)) {
-      expect_equal(gdp_conv %>% dplyr::filter(iso3c == country),
-                   gdp_out %>% dplyr::filter(iso3c == country),
-                   label = country)
+      expect_equal(gdp_conv, gdp_out, label = country)
     }
   }
 })

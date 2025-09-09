@@ -60,7 +60,8 @@ package to be installed. The data-frame needs to have at least 2 columns, in som
 \item "constant YYYY LCU"
 \item "constant YYYY Int$PPP"
 \item "constant YYYY US$MER"
-\item "constant YYYY €"
+\item "constant YYYY €" or "constant YYYY EUR"
+\item "constant YYYY xxx_CU"
 }
 where YYYY should be replaced with a year e.g. "2010" or "2017".}
 
@@ -72,9 +73,11 @@ where YYYY should be replaced with a year e.g. "2010" or "2017".}
 \item "constant YYYY LCU"
 \item "constant YYYY Int$PPP"
 \item "constant YYYY US$MER"
-\item "constant YYYY €"
+\item "constant YYYY €" or "constant YYYY EUR"
+\item "constant YYYY xxx_CU"
 }
-where YYYY should be replaced with a year e.g. "2010" or "2017".}
+where YYYY should be replaced with a year e.g. "2010" or "2017", and xxx with a valid iso3c country code,
+e.g. "JPN_CU" to pick the currency unit of Japan.}
 
 \item{source}{A string referring to a package internal data frame containing the conversion factors, or
 a data-frame that exists in the calling environment.

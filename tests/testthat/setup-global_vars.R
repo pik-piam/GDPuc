@@ -11,7 +11,3 @@ var_IntPPP <- paste("GDP, PPP (constant", year_IntPPP, "international $)")
 # The WDI is not always consistent. In January 2024 only PAN was causing problems. In April 2024 a couple of
 # additional countries are not consistent in every year. These countries are removed from the tests.
 bad_countries <- c("PAN", "SWE", "NOR", "JPN", "CZE", "FIN", "CAN")
-
-# Countries with the euro as currency
-euro_countries <- c("AUT", "BEL", "HRV", "EST", "FIN", "FRA", "DEU", "GRC", "IRL",
-                    "ITA", "LVA", "LTU", "LUX", "NLD", "PRT", "SVK", "SVN", "ESP")
