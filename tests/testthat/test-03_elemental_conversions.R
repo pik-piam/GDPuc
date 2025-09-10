@@ -164,6 +164,25 @@ test_that("current_USMER_2_current_LCU", {
   }
 })
 
+test_that("current_xCU_2_current_USMER", {
+  gdp_in <- wb_wdi %>%
+    dplyr::filter(!is.na(`GDP (current LCU)`)) %>%
+    dplyr::select("iso3c", "year", "value" = `GDP (current US$)`)
+
+  for (country in unique(gdp_in$iso3c)) {
+    gdp_conv <- current_xCU_2_current_USMER(gdp_in, country, wb_wdi) %>%
+      dplyr::filter(!is.na(value))
+
+    gdp_out <- wb_wdi %>%
+      dplyr::right_join(gdp_conv, by = c("iso3c", "year")) %>%
+      dplyr::select("iso3c", "year", "value" = `GDP (current LCU)`)
+
+    expect_equal(gdp_conv %>% dplyr::filter(iso3c == country),
+                 gdp_out %>% dplyr::filter(iso3c == country),
+                 label = country)
+  }
+})
+
 #------------------------------------------------------------
 #------------------------------------------------------------
 #------------------------------------------------------------

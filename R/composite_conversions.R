@@ -55,33 +55,36 @@ current_IntPPP_2_constant_xCU_base_y <- function(gdp, iso3c_y, base_y, source) {
 #------------------------------------------------------------
 #------------------------------------------------------------
 #------------------------------------------------------------
-# Unit_in = current_USMER
+# Unit_in = current_xCU
 
-# Convert from current US$MER to current Int$PPP
-current_USMER_2_current_IntPPP <- function(gdp, source) {
+current_xCU_2_current_IntPPP <- function(gdp, iso3c_x, source) {
   gdp %>%
+    current_xCU_2_current_USMER(iso3c_x, source) %>e%
     current_USMER_2_current_LCU(source) %>e%
     current_LCU_2_current_IntPPP(source)
 }
 
-# Convert from current US$MER to constant LCU base y
-current_USMER_2_constant_LCU_base_y <- function(gdp, base_y, source) {
+current_xCU_2_constant_LCU_base_y <- function(gdp, iso3c_x, base_y, source) {
   gdp %>%
+    current_xCU_2_current_USMER(iso3c_x, source) %>e%
     current_USMER_2_current_LCU(source) %>e%
     current_LCU_2_constant_LCU_base_y(base_y, source)
 }
 
-# Convert from current US$MER to constant Int$PPP base y
-current_USMER_2_constant_IntPPP_base_y <- function(gdp, base_y, source) {
+current_xCU_2_constant_IntPPP_base_y <- function(gdp, iso3c_x, base_y, source) {
   gdp %>%
-    current_USMER_2_constant_LCU_base_y(base_y, source) %>e%
+    current_xCU_2_current_USMER(iso3c_x, source) %>e%
+    current_USMER_2_current_LCU(source) %>e%
+    current_LCU_2_constant_LCU_base_y(base_y, source) %>e%
     constant_LCU_2_constant_IntPPP(base = base_y, source)
 }
 
-# Convert from current US$MER to constant xCU base y
-current_USMER_2_constant_xCU_base_y <- function(gdp, iso3c_y, base_y, source) {
+# Convert from current xCU to constant xCU base y
+current_xCU_2_constant_xCU_base_y <- function(gdp, iso3c_x, iso3c_y, base_y, source) {
   gdp %>%
-    current_USMER_2_constant_LCU_base_y(base_y, source) %>e%
+    current_xCU_2_current_USMER(iso3c_x, source) %>e%
+    current_USMER_2_current_LCU(source) %>e%
+    current_LCU_2_constant_LCU_base_y(base_y, source) %>e%
     constant_LCU_2_constant_USMER(base = base_y, source) %>e%
     constant_USMER_2_constant_xCU(iso3c_unit = iso3c_y, base = base_y, source)
 }

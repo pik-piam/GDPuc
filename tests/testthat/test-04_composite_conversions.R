@@ -172,14 +172,14 @@ test_that("current_IntPPP_2_constant_xCU_base_y", {
 #------------------------------------------------------------
 #------------------------------------------------------------
 #------------------------------------------------------------
-# Unit_in = current US$MER
+# Unit_in = current xCU
 
-test_that("current_USMER_2_current_IntPPP", {
+test_that("current_xCU_2_current_IntPPP", {
   gdp_in <- wb_wdi %>%
     dplyr::filter(!is.na(`GDP, PPP (current international $)`)) %>%
     dplyr::select("iso3c", "year", "value" = `GDP (current US$)`)
 
-  gdp_conv <- current_USMER_2_current_IntPPP(gdp_in, wb_wdi)%>%
+  gdp_conv <- current_xCU_2_current_IntPPP(gdp_in, "USA", wb_wdi)%>%
     dplyr::filter(!is.na(value))
 
   gdp_out <- wb_wdi %>%
@@ -199,12 +199,12 @@ test_that("current_USMER_2_current_IntPPP", {
   }
 })
 
-test_that("current_USMER_2_constant_xCU_base_y", {
+test_that("current_xCU_2_constant_xCU_base_y", {
   gdp_in <- wb_wdi %>%
     dplyr::filter(!is.na(!!rlang::sym(var_USMER))) %>%
     dplyr::select("iso3c", "year", "value" = `GDP (current US$)`)
 
-  gdp_conv <- current_USMER_2_constant_xCU_base_y(gdp_in, "USA", year_USMER, wb_wdi) %>%
+  gdp_conv <- current_xCU_2_constant_xCU_base_y(gdp_in, "USA", "USA", year_USMER, wb_wdi) %>%
     dplyr::filter(!is.na(value))
 
   gdp_out <- wb_wdi %>%
@@ -218,12 +218,12 @@ test_that("current_USMER_2_constant_xCU_base_y", {
   }
 })
 
-test_that("current_USMER_2_constant_IntPPP", {
+test_that("current_xCU_2_constant_IntPPP", {
   gdp_in <- wb_wdi %>%
     dplyr::filter(!is.na(!!rlang::sym(var_IntPPP))) %>%
     dplyr::select("iso3c", "year", "value" = `GDP (current US$)`)
 
-  gdp_conv <- current_USMER_2_constant_IntPPP_base_y(gdp_in, year_IntPPP, wb_wdi) %>%
+  gdp_conv <- current_xCU_2_constant_IntPPP_base_y(gdp_in, "USA", year_IntPPP, wb_wdi) %>%
     dplyr::filter(!is.na(value))
 
   gdp_out <- wb_wdi %>%
