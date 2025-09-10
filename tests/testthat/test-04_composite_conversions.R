@@ -425,12 +425,12 @@ test_that("constant_IntPPP_base_x_2_current_LCU", {
   }
 })
 
-test_that("constant_IntPPP_base_x_2_current_USMER", {
+test_that("constant_IntPPP_base_x_2_current_xCU", {
   gdp_in <- wb_wdi %>%
     dplyr::filter(!is.na(`GDP (current US$)`)) %>%
     dplyr::select("iso3c", "year", "value" = tidyselect::matches(regex_var_IntPPP))
 
-  gdp_conv <- constant_IntPPP_base_x_2_current_USMER(gdp_in, year_IntPPP, wb_wdi) %>%
+  gdp_conv <- constant_IntPPP_base_x_2_current_xCU(gdp_in, year_IntPPP, "USA", wb_wdi) %>%
     dplyr::filter(!is.na(value))
 
   gdp_out <- wb_wdi %>%
