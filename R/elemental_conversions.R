@@ -136,6 +136,26 @@ current_xCU_2_current_USMER <- function(gdp, iso3c_x, source) {
 
   gdp %>%
     dplyr::left_join(MER %>% dplyr::select(-"iso3c"), by = "year") %>%
+    dplyr::mutate(value = .data$value / .data$`MER (LCU per US$)`, .keep = "unused")
+}
+
+current_USMER_2_current_xCU <- function(gdp, iso3c_y, source) {
+  if (iso3c_y == "USA") {
+    return(gdp)
+  }
+
+  MER <- source %>%
+    dplyr::filter(.data$iso3c == iso3c_y) %>%
+    dplyr::select("iso3c", "year", "MER (LCU per US$)")
+
+  cli_elemental(from = "current US$MER",
+                to = glue::glue("current {iso3c_y}_CU"),
+                with = "MER",
+                unit = glue::glue("{iso3c_y}_CU per US$"),
+                val = dplyr::filter(MER, .data$year %in% unique(gdp$year)))
+
+  gdp %>%
+    dplyr::left_join(MER %>% dplyr::select(-"iso3c"), by = "year") %>%
     dplyr::mutate(value = .data$value * .data$`MER (LCU per US$)`, .keep = "unused")
 }
 
