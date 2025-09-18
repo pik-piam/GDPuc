@@ -1,7 +1,7 @@
 Package: GDPuc
 Title: Easily Convert GDP Data
-Version: 1.5.2
-Date: 2025-09-10
+Version: 1.5.3
+Date: 2025-09-18
 Authors@R:
     person("Johannes", "Koch", , "jokoch@pik-potsdam.de", role = c("aut", "cre"))
 Description: Convert GDP time series data from one unit to
