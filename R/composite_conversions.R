@@ -3,6 +3,12 @@
 #------------------------------------------------------------
 # Unit_in = current_LCU
 
+current_LCU_2_current_xCU <- function(gdp, iso3c_y, source) {
+  gdp %>%
+    current_LCU_2_current_USMER(source) %>e%
+    current_USMER_2_current_xCU(iso3c_y, source)
+}
+
 # Convert from current LCU to constant Int$PPP base y
 current_LCU_2_constant_IntPPP_base_y <- function(gdp, base_y, source) {
   gdp %>%
@@ -63,6 +69,12 @@ current_IntPPP_2_constant_xCU_base_y <- function(gdp, iso3c_y, base_y, source) {
 #------------------------------------------------------------
 #------------------------------------------------------------
 # Unit_in = current_xCU
+
+current_xCU_2_current_LCU <- function(gdp, iso3c_x, source) {
+  gdp %>%
+    current_xCU_2_current_USMER(iso3c_x, source) %>e%
+    current_USMER_2_current_LCU(source)
+}
 
 current_xCU_2_current_xCU <- function(gdp, iso3c_x, iso3c_y, source) {
   gdp %>%
