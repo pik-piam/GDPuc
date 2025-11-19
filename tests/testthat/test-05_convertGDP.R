@@ -184,6 +184,7 @@ test_that("convertGDP with regions, custom data-frame", {
 })
 
 test_that("convertGDP with regions, madrat data-frame", {
+  skip_if_not_installed("madrat")
   gdp <- tibble::tibble("iso3c" = c("JPN", "EUR", "DEU"), "value" = 100)
   expect_no_warning(convertGDP(gdp,
                                unit_in = "constant 2015 Int$PPP",
@@ -193,6 +194,8 @@ test_that("convertGDP with regions, madrat data-frame", {
 })
 
 test_that("convertGDP using US conversion factors", {
+  skip_if_not_installed("zoo")
+
   gdp_1 <- tibble::tibble("iso3c" = "USA", "year" = 2010, "value" = 100)
   gdp_2 <- tibble::tibble("iso3c" = "DEU", "year" = 2010, "value" = 100)
   gdp_3 <- tibble::tibble("iso3c" = "JJJ", "year" = 2010, "value" = 100)

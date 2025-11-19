@@ -9,8 +9,6 @@
 status](https://www.r-pkg.org/badges/version/GDPuc)](https://CRAN.R-project.org/package=GDPuc)
 [![check](https://github.com/pik-piam/GDPuc/actions/workflows/check.yaml/badge.svg)](https://github.com/pik-piam/GDPuc/actions/workflows/check.yaml)
 [![codecov](https://codecov.io/gh/pik-piam/GDPuc/branch/main/graph/badge.svg?token=3GHXFQXARX)](https://app.codecov.io/gh/pik-piam/GDPuc)
-![Lifecycle:
-stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)
 <!-- badges: end -->
 
 GDPuc (a.k.a. the GDP unit-converter) provides a simple function to
