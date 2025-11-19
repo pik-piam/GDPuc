@@ -11,7 +11,7 @@ conversion factors (PPPs)."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">GDPuc</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.6.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,7 +63,9 @@ conversion factors (PPPs).</p>
 <span>  with_regions <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  replace_NAs <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"GDPuc.verbose"</span>, default <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
-<span>  return_cfs <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  return_cfs <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  iso3c_column <span class="op">=</span> <span class="st">"iso3c"</span>,</span>
+<span>  year_column <span class="op">=</span> <span class="st">"year"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">convertCPI</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
@@ -79,7 +81,9 @@ conversion factors (PPPs).</p>
 <span>  with_regions <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  replace_NAs <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"GDPuc.verbose"</span>, default <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
-<span>  return_cfs <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  return_cfs <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  iso3c_column <span class="op">=</span> <span class="st">"iso3c"</span>,</span>
+<span>  year_column <span class="op">=</span> <span class="st">"year"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">toolConvertSingle</span><span class="op">(</span><span class="va">x</span>, <span class="va">iso3c</span>, year <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">unit_in</span>, <span class="va">unit_out</span>, <span class="va">...</span><span class="op">)</span></span>
@@ -176,6 +180,14 @@ GDPuc.verbose option, which is FALSE if not set to TRUE by the user.</p></dd>
 <dd><p>TRUE or FALSE. Set to TRUE to additionally return a tibble with the conversion factors
 used. In that case a list is returned with the converted GDP under "result", and the conversion factors
 used under "cfs".</p></dd>
+
+
+<dt id="arg-iso-c-column">iso3c_column<a class="anchor" aria-label="anchor" href="#arg-iso-c-column"></a></dt>
+<dd><p>String designating the name of the column containing the iso3c codes. Defaults to "iso3c".</p></dd>
+
+
+<dt id="arg-year-column">year_column<a class="anchor" aria-label="anchor" href="#arg-year-column"></a></dt>
+<dd><p>String designating the name of the column containing the years. Defaults to "year".</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -278,7 +290,7 @@ single row tibble.</p></li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
