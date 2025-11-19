@@ -18,7 +18,7 @@ test_that("convertGDP different column names", {
   gdp_in1 <- wb_wdi %>%
     dplyr::filter(!iso3c %in% bad_countries,
                   !is.na(`GDP, PPP (constant 2017 international $)`)) %>%
-    dplyr::select("r"=iso3c, year, "value" = `GDP (current LCU)`)
+    dplyr::select("r" = iso3c, year, "value" = `GDP (current LCU)`)
   gdp_in1b <- dplyr::mutate(gdp_in1, r = "")
 
   gdp_in2 <- wb_wdi %>%
@@ -30,11 +30,17 @@ test_that("convertGDP different column names", {
   expect_warning(
       convertGDP(gdp_in1, "current LCU", "constant 2017 Int$PPP", wb_wdi)
     )
+  expect_no_warning(
+    convertGDP(gdp_in1, "current LCU", "constant 2017 Int$PPP", wb_wdi, iso3c_column = "r")
+  )
   expect_error(
       convertGDP(gdp_in1b, "current LCU", "constant 2017 Int$PPP", wb_wdi)
   )
   expect_warning(
     convertGDP(gdp_in2, "current LCU", "constant 2017 Int$PPP", wb_wdi)
+  )
+  expect_no_warning(
+    convertGDP(gdp_in2, "current LCU", "constant 2017 Int$PPP", wb_wdi, year_column = "y")
   )
   expect_error(
     convertGDP(gdp_in2b, "current LCU", "constant 2017 Int$PPP", wb_wdi)

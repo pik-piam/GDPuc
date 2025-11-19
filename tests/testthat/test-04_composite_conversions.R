@@ -3,6 +3,24 @@
 #------------------------------------------------------------
 # Unit_in = current LCU
 
+test_that("current_LCU_2_current_xCU", {
+  # This test only checks that a conversion to a country's own currency returns the same value
+  gdp_in <- wb_wdi %>%
+    dplyr::select("iso3c", "year", "value" = `GDP (current LCU)`) %>%
+    dplyr::filter(!is.na(value))
+
+  for (country in unique(gdp_in$iso3c)) {
+    gdp_conv <- current_LCU_2_current_xCU(gdp_in, iso3c_y = country, wb_wdi) %>%
+      dplyr::filter(!is.na(value))
+
+    expect_equal(gdp_conv %>% dplyr::filter(iso3c == country),
+                 gdp_in %>% dplyr::semi_join(dplyr::filter(gdp_conv, iso3c == country),
+                                             by = dplyr::join_by("iso3c", "year")),
+                 label = country)
+  }
+
+})
+
 test_that("current_LCU_2_constant_IntPPP_base_y", {
   gdp_in <- wb_wdi %>%
     dplyr::filter(!is.na(!!rlang::sym(var_IntPPP))) %>%

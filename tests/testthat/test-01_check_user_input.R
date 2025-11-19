@@ -185,3 +185,37 @@ test_that("boolean arguments", {
     verbose = TRUE,
     return_cfs = TRUE))
 })
+
+test_that("character arguments", {
+
+  gdp <- tibble::tibble("iso3c" = "EUR", "year" = 2010, "value" = 100)
+  unit_in <- "current Int$PPP"
+  unit_out <- "current US$MER"
+  s <- wb_wdi
+
+  expect_error(check_user_input(gdp,
+                                unit_in,
+                                unit_out,
+                                source = s,
+                                use_USA_cf_for_all = FALSE,
+                                with_regions = NULL,
+                                replace_NAs = NULL,
+                                verbose = FALSE,
+                                return_cfs = FALSE,
+                                iso3c_column = TRUE,
+                                year_column = "year"),
+               "Invalid 'iso3c_column' argument. Has to be a string.")
+
+  expect_error(check_user_input(gdp,
+                                unit_in,
+                                unit_out,
+                                source = s,
+                                use_USA_cf_for_all = FALSE,
+                                with_regions = NULL,
+                                replace_NAs = NULL,
+                                verbose = FALSE,
+                                return_cfs = FALSE,
+                                iso3c_column = "iso3c",
+                                year_column = 2),
+               "Invalid 'year_column' argument. Has to be a string.")
+})
