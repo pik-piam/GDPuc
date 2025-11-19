@@ -18,7 +18,9 @@ convertGDP(
   with_regions = NULL,
   replace_NAs = NULL,
   verbose = getOption("GDPuc.verbose", default = FALSE),
-  return_cfs = FALSE
+  return_cfs = FALSE,
+  iso3c_column = "iso3c",
+  year_column = "year"
 )
 
 convertCPI(...)
@@ -34,7 +36,9 @@ toolConvertGDP(
   with_regions = NULL,
   replace_NAs = NULL,
   verbose = getOption("GDPuc.verbose", default = FALSE),
-  return_cfs = FALSE
+  return_cfs = FALSE,
+  iso3c_column = "iso3c",
+  year_column = "year"
 )
 
 toolConvertSingle(x, iso3c, year = NULL, unit_in, unit_out, ...)
@@ -123,6 +127,10 @@ GDPuc.verbose option, which is FALSE if not set to TRUE by the user.}
 \item{return_cfs}{TRUE or FALSE. Set to TRUE to additionally return a tibble with the conversion factors
 used. In that case a list is returned with the converted GDP under "result", and the conversion factors
 used under "cfs".}
+
+\item{iso3c_column}{String designating the name of the column containing the iso3c codes. Defaults to "iso3c".}
+
+\item{year_column}{String designating the name of the column containing the years. Defaults to "year".}
 
 \item{...}{Arguments passed on to \code{convertGDP()}}
 

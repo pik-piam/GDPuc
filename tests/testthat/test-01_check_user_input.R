@@ -54,14 +54,6 @@ test_that("with_regions argument", {
                                 with_regions = 1),
                "Invalid 'with_regions' argument. Has to be either a string, or a data.frame.")
 
-  expect_error(check_user_input(gdp,
-                                unit_in,
-                                unit_out,
-                                source = s,
-                                use_USA_cf_for_all = FALSE,
-                                with_regions = "badMapping"),
-               "Invalid 'with_regions' argument. Unknown regionmapping.")
-
   with_regions <- tibble::tibble("blabla" = "FRA", "region" = "USA")
   expect_error(check_user_input(gdp,
                                 unit_in,
@@ -93,6 +85,24 @@ test_that("with_regions argument", {
                                 use_USA_cf_for_all = FALSE,
                                 with_regions = with_regions))
 })
+
+test_that("with_regions argument - madrat mapping", {
+  skip_if_not_installed("madrat")
+
+  gdp <- tibble::tibble("iso3c" = "EUR", "year" = 2010, "value" = 100)
+  unit_in <- "current Int$PPP"
+  unit_out <- "current US$MER"
+  s <- wb_wdi
+
+  expect_error(check_user_input(gdp,
+                                unit_in,
+                                unit_out,
+                                source = s,
+                                use_USA_cf_for_all = FALSE,
+                                with_regions = "badMapping"),
+               "Invalid 'with_regions' argument. Unknown regionmapping.")
+})
+
 
 test_that("replace_NAs argument", {
 
@@ -184,4 +194,38 @@ test_that("boolean arguments", {
     replace_NAs = NULL,
     verbose = TRUE,
     return_cfs = TRUE))
+})
+
+test_that("character arguments", {
+
+  gdp <- tibble::tibble("iso3c" = "EUR", "year" = 2010, "value" = 100)
+  unit_in <- "current Int$PPP"
+  unit_out <- "current US$MER"
+  s <- wb_wdi
+
+  expect_error(check_user_input(gdp,
+                                unit_in,
+                                unit_out,
+                                source = s,
+                                use_USA_cf_for_all = FALSE,
+                                with_regions = NULL,
+                                replace_NAs = NULL,
+                                verbose = FALSE,
+                                return_cfs = FALSE,
+                                iso3c_column = TRUE,
+                                year_column = "year"),
+               "Invalid 'iso3c_column' argument. Has to be a string.")
+
+  expect_error(check_user_input(gdp,
+                                unit_in,
+                                unit_out,
+                                source = s,
+                                use_USA_cf_for_all = FALSE,
+                                with_regions = NULL,
+                                replace_NAs = NULL,
+                                verbose = FALSE,
+                                return_cfs = FALSE,
+                                iso3c_column = "iso3c",
+                                year_column = 2),
+               "Invalid 'year_column' argument. Has to be a string.")
 })

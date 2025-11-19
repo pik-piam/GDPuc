@@ -10,7 +10,9 @@ check_user_input <- function(gdp,
                              with_regions,
                              replace_NAs,
                              verbose,
-                             return_cfs) {
+                             return_cfs,
+                             iso3c_column,
+                             year_column) {
 
   check_gdp(gdp)
   check_unit_in_out(unit_in, unit_out)
@@ -20,6 +22,7 @@ check_user_input <- function(gdp,
   check_replace_NAs(with_regions, replace_NAs)
   check_verbose(verbose)
   check_return_cfs(return_cfs)
+  check_custom_column_names(iso3c_column, year_column)
 
   TRUE
 }
@@ -160,5 +163,14 @@ check_verbose <- function(verbose) {
 check_return_cfs <- function(return_cfs) {
   if (!is.logical(return_cfs)) {
     abort("Invalid 'return_cfs' argument. Has to be either TRUE or FALSE.")
+  }
+}
+
+check_custom_column_names <- function (iso3c_column, year_column) {
+  if (!is.character(iso3c_column)) {
+    abort("Invalid 'iso3c_column' argument. Has to be a string.")
+  }
+  if (!is.character(year_column)) {
+    abort("Invalid 'year_column' argument. Has to be a string.")
   }
 }

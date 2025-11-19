@@ -94,6 +94,8 @@
 #' @param return_cfs TRUE or FALSE. Set to TRUE to additionally return a tibble with the conversion factors
 #'   used. In that case a list is returned with the converted GDP under "result", and the conversion factors
 #'   used under "cfs".
+#' @param iso3c_column String designating the name of the column containing the iso3c codes. Defaults to "iso3c".
+#' @param year_column String designating the name of the column containing the years. Defaults to "year".
 #' @return The gdp argument, with the values in the "value" column, converted to unit_out. If the argument
 #'   return_cfs is TRUE, then a list is returned with the converted GDP under "result", and the conversion
 #'   factors used under "cfs".
@@ -116,11 +118,13 @@ convertGDP <- function(gdp,
                        with_regions = NULL,
                        replace_NAs = NULL,
                        verbose = getOption("GDPuc.verbose", default = FALSE),
-                       return_cfs = FALSE) {
+                       return_cfs = FALSE,
+                       iso3c_column = "iso3c",
+                       year_column = "year") {
   # The following line needs to be updated every time the output of convertGDP is affected by an update!
   # This is a trick, so that madrat caching works correctly. For more information, see the documentation of the madrat
   # R-package.
-  "last changes 2025-03-18"
+  "last changes 2025-11-19"
 
   # Save all function arguments as list
   arg <- as.list(environment())
@@ -138,7 +142,15 @@ convertGDP <- function(gdp,
   }
 
   # Transform user input for internal use, while performing some last consistency checks
-  internal <- transform_user_input(gdp, unit_in, unit_out, source, use_USA_cf_for_all, with_regions, replace_NAs)
+  internal <- transform_user_input(gdp,
+                                   unit_in,
+                                   unit_out,
+                                   source,
+                                   use_USA_cf_for_all,
+                                   with_regions,
+                                   replace_NAs,
+                                   iso3c_column,
+                                   year_column)
 
   # Get appropriate function
   f <- paste0(internal$unit_in, "_2_", internal$unit_out)
@@ -172,7 +184,7 @@ convertGDP <- function(gdp,
   }
 
   # Return with original type and names
-  x <- transform_internal(x, gdp, with_regions, internal$require_year_column)
+  x <- transform_internal(x, gdp, with_regions, internal$require_year_column, iso3c_column, year_column)
 
   if (return_cfs) {
     return(list("result" = x, "cfs" = do.call(get_conversion_factors, arg[1:7])))
@@ -240,7 +252,9 @@ toolConvertGDP <- function(gdp,
                            with_regions = NULL,
                            replace_NAs = NULL,
                            verbose = getOption("GDPuc.verbose", default = FALSE),
-                           return_cfs = FALSE) {
+                           return_cfs = FALSE,
+                           iso3c_column = "iso3c",
+                           year_column = "year") {
   "!# @monitor GDPuc::convertGDP"
   convertGDP(gdp,
              unit_in,
@@ -250,7 +264,9 @@ toolConvertGDP <- function(gdp,
              with_regions,
              replace_NAs,
              verbose,
-             return_cfs)
+             return_cfs,
+             iso3c_column,
+             year_column)
 }
 
 #' @describeIn convertGDP Madrat wrapper around `convertSingle()`

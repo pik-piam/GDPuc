@@ -1,5 +1,13 @@
 # Transform user input for package internal use
-transform_user_input <- function(gdp, unit_in, unit_out, source, use_USA_cf_for_all, with_regions, replace_NAs) {
+transform_user_input <- function(gdp,
+                                 unit_in,
+                                 unit_out,
+                                 source,
+                                 use_USA_cf_for_all,
+                                 with_regions,
+                                 replace_NAs,
+                                 iso3c_column,
+                                 year_column) {
   . <- NULL
 
   # Convert to tibble, if necessary
@@ -48,21 +56,26 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, use_USA_cf_for_
 
   # Rename columns if necessary
   if (! "iso3c" %in% colnames(gdp)) {
-    i_iso3c <- smart_select_iso3c(gdp)
+    i_iso3c <- smart_select_iso3c(gdp, iso3c_column)
     if (length(i_iso3c) != 1) {
-      abort("Invalid 'gdp' argument. `gdp` has no 'iso3c' column, and no other \\
-               column could be identified in its stead.")
+      abort(glue::glue("Invalid 'gdp' argument. `gdp` has no '{iso3c_column}' column, and no other \\
+                        column could be identified in its stead."))
     }
-    warn("No 'iso3c' column in 'gdp' argument. Using '{i_iso3c}' column instead.")
+    if (i_iso3c != iso3c_column) {
+      warn(glue::glue("No '{iso3c_column}' column in 'gdp' argument. Using '{i_iso3c}' column instead."))
+    }
     gdp <- dplyr::rename(gdp, "iso3c" = !!rlang::sym(i_iso3c))
+
   }
   if (require_year_column && ! "year" %in% colnames(gdp)) {
-    i_year <- smart_select_year(gdp)
+    i_year <- smart_select_year(gdp, year_column)
     if (length(i_year) != 1) {
-      abort("Invalid 'gdp' argument. 'gdp' does not have a 'year' column, required when converting current values, \\
-             and no other column could be identified in its stead.")
+      abort(glue::glue("Invalid 'gdp' argument. 'gdp' does not have a '{year_column}' column, required when \\
+                          converting current values, and no other column could be identified in its stead."))
     }
-    warn("No 'year' column in 'gdp' argument. Using '{i_year}' column instead.")
+    if (i_year != year_column) {
+      warn(glue::glue("No '{year_column}' column in 'gdp' argument. Using '{i_year}' column instead."))
+    }
     gdp <- dplyr::rename(gdp, "year" = !!rlang::sym(i_year))
   }
 
@@ -124,7 +137,7 @@ transform_user_input <- function(gdp, unit_in, unit_out, source, use_USA_cf_for_
 
 
 # Transform user input for package internal use
-transform_internal <- function(x, gdp, with_regions, require_year_column) {
+transform_internal <- function(x, gdp, with_regions, require_year_column, iso3c_column, year_column) {
 
   if (!is.null(with_regions) && "gdpuc_region" %in% colnames(x)) {
     x_reg <- dplyr::filter(x, !is.na(.data$gdpuc_region))
@@ -159,11 +172,11 @@ transform_internal <- function(x, gdp, with_regions, require_year_column) {
 
   # Get original iso3c and year column names
   if (! "iso3c" %in% colnames(gdp)) {
-    i_iso3c <- smart_select_iso3c(gdp)
+    i_iso3c <- smart_select_iso3c(gdp, iso3c_column)
     x <- dplyr::rename(x, !!rlang::sym(i_iso3c) := "iso3c")
   }
   if (require_year_column && ! "year" %in% colnames(gdp)) {
-    i_year <- smart_select_year(gdp)
+    i_year <- smart_select_year(gdp, year_column)
     x <- dplyr::rename(x, !!rlang::sym(i_year) := "year")
   }
 
