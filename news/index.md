@@ -1,6 +1,12 @@
 # Changelog
 
+## GDPuc 1.6.1
+
+- Fix bug in selection of iso3c column
+
 ## GDPuc 1.6.0
+
+CRAN release: 2025-11-19
 
 - Fixes [\#30](https://github.com/pik-piam/GDPuc/issues/30),
   [\#32](https://github.com/pik-piam/GDPuc/issues/32),

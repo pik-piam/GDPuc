@@ -7,15 +7,15 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/pik-piam/GDPuc/blob/v1.6.0/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/pik-piam/GDPuc/blob/main/DESCRIPTION)
 
 Koch J (2025). *GDPuc: Easily Convert GDP Data*. R package version
-1.6.0, <https://github.com/pik-piam/GDPuc>.
+1.6.1, <https://github.com/pik-piam/GDPuc>.
 
     @Manual{,
       title = {GDPuc: Easily Convert GDP Data},
       author = {Johannes Koch},
       year = {2025},
-      note = {R package version 1.6.0},
+      note = {R package version 1.6.1},
       url = {https://github.com/pik-piam/GDPuc},
     }
