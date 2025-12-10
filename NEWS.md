@@ -1,3 +1,7 @@
+# GDPuc 1.6.1
+
+* Fix bug in selection of iso3c column
+
 # GDPuc 1.6.0
 
 * Fixes #30, #32, #36

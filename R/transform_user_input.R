@@ -150,7 +150,7 @@ transform_internal <- function(x, gdp, with_regions, require_year_column, iso3c_
       dplyr::summarise(value = sum(.data$value, na.rm = TRUE), .groups = "drop") %>%
       dplyr::rename("iso3c" = "gdpuc_region")
 
-    i_iso3c <- if (! "iso3c" %in% colnames(gdp)) smart_select_iso3c(gdp) else "iso3c"
+    i_iso3c <- if (! "iso3c" %in% colnames(gdp)) smart_select_iso3c(gdp, iso3c_column) else "iso3c"
 
     x <- x %>%
       dplyr::bind_rows(x_reg) %>%
