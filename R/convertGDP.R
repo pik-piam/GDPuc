@@ -6,6 +6,7 @@
 #' conversion factors (PPPs).
 #'
 #' @details
+#' # Using a custom source
 #' When providing a custom source to the function, a certain format is required.
 #' The source object must be a data frame or tibble with at least the following columns:
 #' \itemize{
@@ -17,43 +18,31 @@
 #'    The base year of the deflator can be any year, and can be country-specific.
 #'    \item a numeric column named "MER (LCU per US$)" with MER values,
 #'    \item a numeric column named "PPP conversion factor, GDP (LCU per international $)"
-#'    wit PPP exchange rate values.
+#'    with PPP exchange rate values.
 #'  }
 #'
-#' @param gdp A tibble, data frame or magpie object, the latter of which
-#'   requires the [magclass](https://github.com/pik-piam/magclass)
-#'   package to be installed. The data-frame needs to have at least 2 columns, in some cases 3:
+#' @param gdp A tibble, data frame or magpie (see [magclass](https://github.com/pik-piam/magclass)) object.
+#' The data-frame needs to have at least 2 columns, in some cases 3:
 #'   \itemize{
 #'     \item a character column with iso3c
 #'     ([wikipedia](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3)) country codes,
-#'     \item a numeric column with years (only required when converting from or to current currencies),
+#'     \item a numeric column with years (only required when converting from or to "current" currencies),
 #'     \item a numeric column named "value" with GDP values.
 #'  }
-#' @param unit_in A string with the incoming GDP unit, one of:
-#'   \itemize{
-#'     \item "current LCU"
-#'     \item "current Int$PPP"
-#'     \item "current US$MER"
-#'     \item "constant YYYY LCU"
-#'     \item "constant YYYY Int$PPP"
-#'     \item "constant YYYY US$MER"
-#'     \item "constant YYYY €" or "constant YYYY EUR"
-#'     \item "constant YYYY xxx_CU"
-#'   }
-#'   where YYYY should be replaced with a year e.g. "2010" or "2017".
-#' @param unit_out A string with the outgoing GDP unit, one of:
-#'   \itemize{
-#'     \item "current LCU"
-#'     \item "current Int$PPP"
-#'     \item "current US$MER"
-#'     \item "constant YYYY LCU"
-#'     \item "constant YYYY Int$PPP"
-#'     \item "constant YYYY US$MER"
-#'     \item "constant YYYY €" or "constant YYYY EUR"
-#'     \item "constant YYYY xxx_CU"
-#'   }
-#'   where YYYY should be replaced with a year e.g. "2010" or "2017", and xxx with a valid iso3c country code,
-#'   e.g. "JPN_CU" to pick the currency unit of Japan.
+#' @param unit_in,unit_out A string with the units to convert from and to. The following units are available:
+#'
+#' * "current LCU"
+#' * "current Int$PPP"
+#' * "current US$MER"
+#' * "current xxx_CU"
+#' * "constant yyyy LCU"
+#' * "constant yyyy Int$PPP"
+#' * "constant yyyy US$MER"
+#' * "constant yyyy €" or "constant yyyy EUR"
+#' * "constant yyyy xxx_CU"
+#'
+#' Here "LCU" stands for Local Currency Unit, "yyyy" is a placeholder for a year, e.g. "2010" or "2015", and xxx is a
+#' placeholder for a valid iso3c country code with for instance "JPN_CU" designating the currency unit of Japan
 #'
 #' @param source A string referring to a package internal data frame containing the conversion factors, or
 #'   a data-frame that exists in the calling environment.
@@ -124,7 +113,7 @@ convertGDP <- function(gdp,
   # The following line needs to be updated every time the output of convertGDP is affected by an update!
   # This is a trick, so that madrat caching works correctly. For more information, see the documentation of the madrat
   # R-package.
-  "last changes 2025-11-19"
+  "last changes 2026-07-15"
 
   # Save all function arguments as list
   arg <- as.list(environment())

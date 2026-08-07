@@ -1,29 +1,26 @@
 test_that("convertGDP", {
   gdp_in <- wb_wdi %>%
-    dplyr::filter(!iso3c %in% bad_countries,
-                  !is.na(`GDP, PPP (constant 2017 international $)`)) %>%
+    dplyr::filter(!iso3c %in% bad_countries, !is.na(!!rlang::sym(var_IntPPP))) %>%
     dplyr::select("iso3c", "year", "value" = `GDP (current LCU)`)
 
-  gdp_conv <- convertGDP(gdp_in, "current LCU", "constant 2017 Int$PPP") %>%
+  gdp_conv <- convertGDP(gdp_in, "current LCU", glue::glue("constant {year_IntPPP} Int$PPP")) %>%
     dplyr::filter(!is.na(value))
 
   gdp_out <- wb_wdi %>%
     dplyr::right_join(gdp_conv, by = c("iso3c", "year")) %>%
-    dplyr::select("iso3c", "year", "value" = `GDP, PPP (constant 2017 international $)`)
+    dplyr::select("iso3c", "year", "value" = tidyselect::matches(regex_var_IntPPP))
 
   expect_equal(gdp_conv, gdp_out)
 })
 
 test_that("convertGDP different column names", {
   gdp_in1 <- wb_wdi %>%
-    dplyr::filter(!iso3c %in% bad_countries,
-                  !is.na(`GDP, PPP (constant 2017 international $)`)) %>%
+    dplyr::filter(!iso3c %in% bad_countries, !is.na(!!rlang::sym(var_IntPPP))) %>%
     dplyr::select("r" = iso3c, year, "value" = `GDP (current LCU)`)
   gdp_in1b <- dplyr::mutate(gdp_in1, r = "")
 
   gdp_in2 <- wb_wdi %>%
-    dplyr::filter(!iso3c %in% bad_countries,
-                  !is.na(`GDP, PPP (constant 2017 international $)`)) %>%
+    dplyr::filter(!iso3c %in% bad_countries, !is.na(!!rlang::sym(var_IntPPP))) %>%
     dplyr::select(iso3c, "y" = year, "value" = `GDP (current LCU)`)
   gdp_in2b <- dplyr::mutate(gdp_in2, y = "")
 
@@ -47,20 +44,20 @@ test_that("convertGDP different column names", {
   )
 
   gdp_conv1 <- suppressWarnings(suppressMessages(
-    convertGDP(gdp_in1, "current LCU", "constant 2017 Int$PPP", wb_wdi) %>%
+    convertGDP(gdp_in1, "current LCU", glue::glue("constant {year_IntPPP} Int$PPP"), wb_wdi) %>%
       dplyr::filter(!is.na(value))
   ))
   gdp_conv2 <- suppressWarnings(suppressMessages(
-    convertGDP(gdp_in2, "current LCU", "constant 2017 Int$PPP", wb_wdi) %>%
+    convertGDP(gdp_in2, "current LCU", glue::glue("constant {year_IntPPP} Int$PPP"), wb_wdi) %>%
       dplyr::filter(!is.na(value))
   ))
 
   gdp_out1 <- wb_wdi %>%
     dplyr::right_join(gdp_conv1, by = c("iso3c" = "r", "year")) %>%
-    dplyr::select("r" = iso3c, year, "value" = `GDP, PPP (constant 2017 international $)`)
+    dplyr::select("r" = iso3c, year, "value" = tidyselect::matches(regex_var_IntPPP))
   gdp_out2 <- wb_wdi %>%
     dplyr::right_join(gdp_conv2, by = c("iso3c", "year" = "y")) %>%
-    dplyr::select( iso3c, "y" = year, "value" = `GDP, PPP (constant 2017 international $)`)
+    dplyr::select( iso3c, "y" = year, "value" = tidyselect::matches(regex_var_IntPPP))
 
   expect_equal(gdp_conv1, gdp_out1)
   expect_equal(gdp_conv2, gdp_out2)
@@ -113,8 +110,7 @@ test_that("convertGDP data.frame object", {
 
 test_that("convertGDP unit_in == unit_out", {
   gdp_in <- wb_wdi %>%
-    dplyr::filter(!iso3c %in% bad_countries,
-                  !is.na(`GDP, PPP (constant 2017 international $)`)) %>%
+    dplyr::filter(!iso3c %in% bad_countries, !is.na(!!rlang::sym(var_IntPPP))) %>%
     dplyr::select(iso3c, year, "value" = `GDP: linked series (current LCU)`)
 
   expect_message(convertGDP(gdp_in, "current LCU", "current LCU", verbose = TRUE),
@@ -154,10 +150,10 @@ test_that("convertGDP with regions, custom data-frame", {
   expect_true(all(!is.na(gdp_conv$value)))
 
   shares <- wb_wdi %>%
-    dplyr::select("iso3c", "year", "value" = "GDP, PPP (constant 2017 international $)") %>%
+    dplyr::select("iso3c", "year", "value" = tidyselect::matches(regex_var_IntPPP)) %>%
     dplyr::left_join(dplyr::rename(with_regions, "gdpuc_region" = "region"), by = "iso3c") %>%
     dplyr::filter(.data$year == 2015, !is.na(.data$gdpuc_region)) %>%
-    convertGDP("constant 2017 Int$PPP", "constant 2015 Int$PPP", source = wb_wdi, verbose = FALSE) %>%
+    convertGDP(glue::glue("constant {year_IntPPP} Int$PPP"), "constant 2015 Int$PPP", source = wb_wdi, verbose = FALSE) %>%
     dplyr::mutate(share = .data$value / sum(.data$value, na.rm = TRUE), .by = "gdpuc_region")
 
   gdp2 <- tibble::tibble("iso3c" = c("JPN", "DEU", "ESP", "FRA", "EUR"),
@@ -172,10 +168,9 @@ test_that("convertGDP with regions, custom data-frame", {
 
 
   shares <- wb_wdi %>%
-    dplyr::select("iso3c", "year", "value" = "GDP (constant 2015 US$)") %>%
+    dplyr::select("iso3c", "year", "value" = tidyselect::matches(regex_var_USMER)) %>%
     dplyr::left_join(dplyr::rename(with_regions, "gdpuc_region" = "region"), by = "iso3c") %>%
     dplyr::filter(.data$year == 2015, !is.na(.data$gdpuc_region)) %>%
-    convertGDP("constant 2015 US$MER", "constant 2015 US$MER", source = wb_wdi, verbose = FALSE) %>%
     dplyr::mutate(share = .data$value / sum(.data$value, na.rm = TRUE), .by = "gdpuc_region")
 
   gdp2 <- tibble::tibble("iso3c" = c("JPN", "DEU", "ESP", "FRA", "EUR"),

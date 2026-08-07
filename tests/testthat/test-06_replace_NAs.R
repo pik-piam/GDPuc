@@ -47,63 +47,63 @@ test_that("convertGDP replace missing conversion factors", {
 })
 
 test_that("convertGDP replace_NAs = NA", {
-  # wb_wi does not have info for AFG in 2022
+  # wb_wi does not have info for AFG in 2025
   gdp <- tidyr::expand_grid("iso3c" = c("AFG", "DEU", "USA"),
                             "year" = c(2010, 2015, 2025),
                             "SSP" = c("SSP1", "SSP2"), "value" = 100)
 
   expect_warning(convertGDP(gdp,
                             unit_in = "constant 2005 Int$PPP",
-                            unit_out = "constant 2022 US$MER"))
+                            unit_out = "constant 2025 US$MER"))
 
   expect_silent(convertGDP(gdp,
                            unit_in = "constant 2005 Int$PPP",
-                           unit_out = "constant 2022 US$MER",
+                           unit_out = "constant 2025 US$MER",
                            replace_NAs = NA))
 
   gdp_1 <- suppressWarnings(convertGDP(gdp,
                                        unit_in = "constant 2005 Int$PPP",
-                                       unit_out = "constant 2022 US$MER"))
+                                       unit_out = "constant 2025 US$MER"))
 
   gdp_2 <- convertGDP(gdp,
                       unit_in = "constant 2005 Int$PPP",
-                      unit_out = "constant 2022 US$MER",
+                      unit_out = "constant 2025 US$MER",
                       replace_NAs = NA)
 
   expect_equal(gdp_1, gdp_2)
 })
 
 test_that("convertGDP replace_NAs = 'no_conversion'", {
-  # wb_wi does not have info for AFG in 2022
+  # wb_wi does not have info for AFG in 2025
   gdp <- tidyr::expand_grid("iso3c" = c("AFG", "DEU", "USA"),
                             "year" = c(2010, 2015, 2025),
                             "SSP" = c("SSP1", "SSP2"), "value" = 100)
 
   expect_warning(convertGDP(gdp,
                             unit_in = "constant 2005 Int$PPP",
-                            unit_out = "constant 2022 US$MER"))
+                            unit_out = "constant 2025 US$MER"))
 
   gdp_conv <- convertGDP(gdp,
                          unit_in = "constant 2005 Int$PPP",
-                         unit_out = "constant 2022 US$MER",
+                         unit_out = "constant 2025 US$MER",
                          replace_NAs = "no_conversion")
 
   expect_identical(gdp[1:6,], gdp_conv[1:6,])
 })
 
 test_that("convertGDP replace_NAs = linear", {
-  # wb_wi does not have info for AFG in 2022
+  # wb_wi does not have info for AFG in 2025
   gdp <- tidyr::expand_grid("iso3c" = c("AFG", "DEU", "USA"),
                             "year" = c(2010, 2015, 2025),
                             "SSP" = c("SSP1", "SSP2"), "value" = 100)
 
   expect_warning(convertGDP(gdp,
                             unit_in = "constant 2005 Int$PPP",
-                            unit_out = "constant 2022 US$MER"))
+                            unit_out = "constant 2025 US$MER"))
 
   gdp_conv <- convertGDP(gdp,
                           unit_in = "constant 2005 Int$PPP",
-                          unit_out = "constant 2022 US$MER",
+                          unit_out = "constant 2025 US$MER",
                           replace_NAs = "linear")
 
   expect_true(!any(is.na(gdp_conv$value)))
@@ -117,11 +117,11 @@ test_that("convertGDP replace_NAs = with_USA", {
 
   expect_warning(convertGDP(gdp,
                             unit_in = "constant 2005 Int$PPP",
-                            unit_out = "constant 2022 US$MER"))
+                            unit_out = "constant 2025 US$MER"))
 
   gdp_conv <- convertGDP(gdp,
                          unit_in = "constant 2005 Int$PPP",
-                         unit_out = "constant 2022 US$MER",
+                         unit_out = "constant 2025 US$MER",
                          replace_NAs = "with_USA",
                          return_cfs = TRUE)
 
@@ -132,13 +132,13 @@ test_that("convertGDP replace_NAs = with_USA", {
 
   gdp_conv2 <- convertGDP(gdp,
                           unit_in = "constant 2005 Int$PPP",
-                          unit_out = "constant 2022 US$MER",
+                          unit_out = "constant 2025 US$MER",
                           replace_NAs = c("linear"),
                           return_cfs = TRUE)
 
   gdp_conv3 <- convertGDP(gdp,
                           unit_in = "constant 2005 Int$PPP",
-                          unit_out = "constant 2022 US$MER",
+                          unit_out = "constant 2025 US$MER",
                           replace_NAs = c("linear", "with_USA"),
                           return_cfs = TRUE)
 
