@@ -7,6 +7,7 @@ option `GDPuc.warn = FALSE`. This will affect all calls to `convertGDP`
 in the active R-session.
 
 ``` r
+
 options(GDPuc.warn = FALSE)
 ```
 

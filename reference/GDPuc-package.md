@@ -18,3 +18,7 @@ Useful links:
 ## Author
 
 **Maintainer**: Johannes Koch <jokoch@pik-potsdam.de>
+
+Authors:
+
+- Johannes Koch <jokoch@pik-potsdam.de>

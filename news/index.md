@@ -1,6 +1,18 @@
 # Changelog
 
+## GDPuc 1.6.2
+
+- Convert magpie objects that hold more than one value per country and
+  year by scaling them with their conversion factors, instead of melting
+  them into a long data frame with one row per value. Objects with
+  several data dimensions, or with a second spatial sub-dimension such
+  as bilateral trade matrices, are converted orders of magnitude faster
+  and without the memory peak of the melt. Objects with a single value
+  per country and year are unaffected.
+
 ## GDPuc 1.6.1
+
+CRAN release: 2025-12-10
 
 - Fix bug in selection of iso3c column
 

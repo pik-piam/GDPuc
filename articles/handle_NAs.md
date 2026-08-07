@@ -15,6 +15,7 @@ Below, the `return_cfs` argument is set to `TRUE` to inspect the
 conversion factors, along side the result.
 
 ``` r
+
 library(GDPuc)
 
 # Test with Venezuela -> iso3c = VEN
@@ -55,6 +56,7 @@ x$cfs
 To eliminate the warning:
 
 ``` r
+
 x <- convertGDP(
   gdp = my_gdp, 
   unit_in = "constant 2005 Int$PPP", 
@@ -72,6 +74,7 @@ warnings”](https://pik-piam.github.io/GDPuc/articles/warn.html)).
 If set to 0, resulting NAs are set to 0.
 
 ``` r
+
 my_gdp <- tibble::tibble(
   iso3c = "VEN",
   year = 2010:2014,
@@ -112,6 +115,7 @@ If set to “no_conversion”, NAs are replaced with the values in the gdp
 argument.
 
 ``` r
+
 my_gdp <- tibble::tibble(
   iso3c = "VEN",
   year = 2010:2014,
@@ -153,6 +157,7 @@ extrapolated linearly. For the extrapolation, the closest 5 data points
 are used.
 
 ``` r
+
 my_gdp <- tibble::tibble(
   iso3c = "VEN",
   year = 2010:2014,
@@ -195,6 +200,7 @@ GDP data at PPP, to be used as weight. **May lead to misleading results,
 use with care!**
 
 ``` r
+
 my_gdp <- tibble::tibble(
   iso3c = "VEN",
   year = 2010:2014,
@@ -245,6 +251,7 @@ conversion factors are first inter- and extrapolated linearly but if any
 missing conversion factors still lead to NAs, these are replaced with 0.
 
 ``` r
+
 # Create an imaginary country XXX, and add it to the Latin America region
 my_gdp <- tibble::tibble(
   iso3c = c("VEN", "XXX"),
@@ -291,6 +298,7 @@ is no data for any years at all) the data for these countries is
 converted using the conversion factors of the USA.
 
 ``` r
+
 # Venezuela is only missing conversion factors in 2019, AIA has no conversion factors at all.
 my_gdp <- tibble::tibble(
   iso3c = c("VEN", "AIA", "USA"),

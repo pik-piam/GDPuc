@@ -6,6 +6,7 @@ Set the `verbose` argument in `convertGDP` to `TRUE` to print out the
 underlying conversion steps and factors.
 
 ``` r
+
 library(GDPuc)
 
 my_gdp <- tibble::tibble(
@@ -41,6 +42,7 @@ convertGDP(
 The verbosity can also be controlled via the option `GDPuc.verbose`.
 
 ``` r
+
 options(GDPuc.verbose = TRUE)
 
 convertGDP(
@@ -74,6 +76,7 @@ Set the `return_cfs` argument in `convertGDP` to `TRUE` to return a list
 of length 2, with the result and a the conversion factors used.
 
 ``` r
+
 convertGDP(
   gdp = my_gdp,
   unit_in = "constant 2005 LCU",

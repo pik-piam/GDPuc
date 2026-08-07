@@ -18,6 +18,7 @@ the source object needs to have GDP data for the countries within the
 region).
 
 ``` r
+
 library(GDPuc)
 
 my_gdp <- tibble::tibble(
@@ -77,6 +78,7 @@ with
 Requires madrat to be installed, and the regionmapping to exist.
 
 ``` r
+
 my_gdp <- tibble::tibble(
   iso3c = "EUR", 
   value = 100

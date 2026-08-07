@@ -13,6 +13,7 @@ There are two `source` options shipped with the package, `wb_wdi` and
 a shipped source to the source argument to use it.
 
 ``` r
+
 library(GDPuc)
 
 my_gdp <- tibble::tibble(
@@ -50,6 +51,7 @@ Use the function `print_source_info` to print information on a specific,
 or all available sources.
 
 ``` r
+
 print_source_info("wb_wdi")
 #> ── wb_wdi ──────────────────────────────────────────────────────────────────────
 #> → Origin: The World Bank's World Development Indicator Database
@@ -83,6 +85,7 @@ Use the `:::` operator to take a closer look at sources shipped with
 GDPuc.
 
 ``` r
+
 GDPuc:::wb_wdi
 ```
 
@@ -99,6 +102,7 @@ Any tibble with columns:
 can be used as a source of conversion factors.
 
 ``` r
+
 my_custom_source <- tibble::tibble(
   iso3c = "USA", 
   year = 2010:2014, 
@@ -151,6 +155,7 @@ modelling efforts, in US\$MER, to another base year. Setting the
 with the US conversion factors.
 
 ``` r
+
 my_gdp <- tibble::tibble(
   iso3c = c("USA", "IND"), 
   value = 100

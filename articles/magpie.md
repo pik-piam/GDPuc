@@ -5,6 +5,7 @@
 argument.
 
 ``` r
+
 library(GDPuc)
 if (rlang::is_installed("magclass")) {
   my_gdp <- magclass::new.magpie(
