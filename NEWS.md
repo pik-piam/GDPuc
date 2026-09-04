@@ -1,10 +1,12 @@
-# GDPuc 1.6.2
+# unreleased
 
 * Convert magpie objects that hold more than one value per country and year by scaling them with
   their conversion factors, instead of melting them into a long data frame with one row per value.
   Objects with several data dimensions, or with a second spatial sub-dimension such as bilateral
   trade matrices, are converted orders of magnitude faster and without the memory peak of the melt.
-  Objects with a single value per country and year are unaffected.
+  Objects with a single value per country and year are unaffected. NA handling (`replace_NAs`,
+  including `"no_conversion"`) matches the generic path exactly, including for values that turn into
+  NA because their conversion factor is infinite rather than missing.
 
 # GDPuc 1.6.1
 

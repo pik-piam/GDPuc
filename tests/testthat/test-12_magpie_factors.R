@@ -62,6 +62,40 @@ test_that("NA handling through factors matches the generic path", {
 })
 
 
+test_that("a 0 value against an infinite conversion factor is handled like the generic path", {
+  # BLR has no CPI data in 1990, so its constant-to-current factor is infinite there, turning a 0 value
+  # into NaN even though the factor itself is not missing -- distinct from the "no factor at all" case
+  # covered above.
+  zero <- magclass::new.magpie("BLR", c(1990, 2020), c("i1", "i2"), fill = 0)
+
+  for (rna in list(NULL, NA, 0, "no_conversion", c("linear", "no_conversion"))) {
+    label <- if (is.null(rna)) "NULL" else paste(rna, collapse = "+")
+    fast <- suppressWarnings(convertGDP(zero, "constant 2017 US$MER", "current US$MER", replace_NAs = rna))
+    slow <- suppressWarnings(convertGDP(as_long(zero), "constant 2017 US$MER", "current US$MER", replace_NAs = rna))
+    expect_equal(as.vector(fast), slow$value, label = label)
+  }
+
+  # replace_NAs = "no_conversion" restores the original (0) value, rather than leaving NaN
+  restored <- suppressWarnings(convertGDP(zero, "constant 2017 US$MER", "current US$MER",
+                                          replace_NAs = "no_conversion"))
+  expect_equal(as.vector(restored), rep(0, length(zero)))
+
+  # without replace_NAs, the fast path warns exactly like the generic one
+  expect_warning(convertGDP(zero, "constant 2017 US$MER", "current US$MER"),
+                 "NAs have been generated for countries lacking conversion factors!")
+})
+
+
+test_that("no warning is raised when the only factor-less country has no non-NA data", {
+  # TWN has no conversion factors, but every one of its values is already NA, so neither path should
+  # warn about NAs being generated for it.
+  x <- magclass::new.magpie(c("USA", "TWN"), 2010:2012, c("i1", "i2"), fill = 2)
+  x["TWN", , ] <- NA
+
+  expect_no_warning(convertGDP(x, "current US$MER", "constant 2017 US$MER"))
+})
+
+
 test_that("one and the same object converted both ways gives the same values", {
   gdp <- magclass::new.magpie(c("USA.FRA", "FRA.USA", "USA.USA"), 2010:2013, c("i1", "i2"), fill = 0)
   gdp[, , ] <- seq_len(length(gdp)) * 1.5

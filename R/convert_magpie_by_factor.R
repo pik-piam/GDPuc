@@ -31,9 +31,9 @@ use_factors_for_magpie <- function(gdp, with_regions, return_cfs) {
 # So instead the conversion is run on an object holding a single 1 per country and year, which yields
 # the conversion factors.
 #
-# One deliberate difference: without replace_NAs, the warning about countries lacking conversion factors
-# is raised for every such country, whereas the generic path only raises it if that country also has
-# data that is not NA.
+# A factor can be infinite (e.g. no deflator that far back), which turns a 0 in gdp into NaN even though
+# the factor itself is known, not missing. So NA handling still has to happen out here after the
+# multiplication, mirroring convertGDP()'s own handling of the NAs its elemental conversions produce.
 convert_magpie_by_factor <- function(gdp,
                                      unit_in,
                                      unit_out,
@@ -48,13 +48,15 @@ convert_magpie_by_factor <- function(gdp,
   cf <- magclass::new.magpie(cells_and_regions = iso3c, years = magclass::getYears(gdp), fill = 1)
   magclass::getSets(cf) <- c("iso3c", "year", "data")
 
+  # NA is passed instead of NULL so that the inner call doesn't warn about missing conversion factors
+  # itself: the warning is raised once below, on the actual result, after the multiplication.
   cf <- convertGDP(gdp = cf,
                    unit_in = unit_in,
                    unit_out = unit_out,
                    source = source,
                    use_USA_cf_for_all = use_USA_cf_for_all,
                    with_regions = NULL,
-                   replace_NAs = replace_NAs,
+                   replace_NAs = if (is.null(replace_NAs)) NA else replace_NAs,
                    verbose = verbose,
                    return_cfs = FALSE,
                    iso3c_column = iso3c_column,
@@ -68,8 +70,15 @@ convert_magpie_by_factor <- function(gdp,
 
   x <- gdp * cf
 
-  # The generic path replaces every NA of the result, including those that were already NA in gdp.
+  # Handle NAs the multiplication generated, mirroring convertGDP()'s own handling (convertGDP.R).
   if (!is.null(replace_NAs) && 0 %in% replace_NAs) x[is.na(x)] <- 0
+  if (any(is.na(x) & !is.na(gdp))) {
+    if (!is.null(replace_NAs)) {
+      if ("no_conversion" %in% replace_NAs) x[is.na(x)] <- gdp[is.na(x)]
+    } else {
+      warn("NAs have been generated for countries lacking conversion factors!")
+    }
+  }
 
   magclass::getSets(x) <- magclass::getSets(gdp)
   x
