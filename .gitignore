@@ -6,3 +6,4 @@ playground.R
 figure/
 docs
 inst/doc
+data-raw/wdi_downloads/

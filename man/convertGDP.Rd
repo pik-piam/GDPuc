@@ -46,42 +46,30 @@ toolConvertSingle(x, iso3c, year = NULL, unit_in, unit_out, ...)
 toolConvertCPI(...)
 }
 \arguments{
-\item{gdp}{A tibble, data frame or magpie object, the latter of which
-requires the \href{https://github.com/pik-piam/magclass}{magclass}
-package to be installed. The data-frame needs to have at least 2 columns, in some cases 3:
+\item{gdp}{A tibble, data frame or magpie (see \href{https://github.com/pik-piam/magclass}{magclass}) object.
+The data-frame needs to have at least 2 columns, in some cases 3:
 \itemize{
 \item a character column with iso3c
 (\href{https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3}{wikipedia}) country codes,
-\item a numeric column with years (only required when converting from or to current currencies),
+\item a numeric column with years (only required when converting from or to "current" currencies),
 \item a numeric column named "value" with GDP values.
 }}
 
-\item{unit_in}{A string with the incoming GDP unit, one of:
+\item{unit_in, unit_out}{A string with the units to convert from and to. The following units are available:
 \itemize{
 \item "current LCU"
 \item "current Int$PPP"
 \item "current US$MER"
-\item "constant YYYY LCU"
-\item "constant YYYY Int$PPP"
-\item "constant YYYY US$MER"
-\item "constant YYYY €" or "constant YYYY EUR"
-\item "constant YYYY xxx_CU"
+\item "current xxx_CU"
+\item "constant yyyy LCU"
+\item "constant yyyy Int$PPP"
+\item "constant yyyy US$MER"
+\item "constant yyyy €" or "constant yyyy EUR"
+\item "constant yyyy xxx_CU"
 }
-where YYYY should be replaced with a year e.g. "2010" or "2017".}
 
-\item{unit_out}{A string with the outgoing GDP unit, one of:
-\itemize{
-\item "current LCU"
-\item "current Int$PPP"
-\item "current US$MER"
-\item "constant YYYY LCU"
-\item "constant YYYY Int$PPP"
-\item "constant YYYY US$MER"
-\item "constant YYYY €" or "constant YYYY EUR"
-\item "constant YYYY xxx_CU"
-}
-where YYYY should be replaced with a year e.g. "2010" or "2017", and xxx with a valid iso3c country code,
-e.g. "JPN_CU" to pick the currency unit of Japan.}
+Here "LCU" stands for Local Currency Unit, "yyyy" is a placeholder for a year, e.g. "2010" or "2015", and xxx is a
+placeholder for a valid iso3c country code with for instance "JPN_CU" designating the currency unit of Japan}
 
 \item{source}{A string referring to a package internal data frame containing the conversion factors, or
 a data-frame that exists in the calling environment.
@@ -150,21 +138,6 @@ convertGDP() converts GDP time series data from one unit to another, using GDP
 deflators, market exchange rates (MERs) and purchasing power parity
 conversion factors (PPPs).
 }
-\details{
-When providing a custom source to the function, a certain format is required.
-The source object must be a data frame or tibble with at least the following columns:
-\itemize{
-\item a character column named "iso3c" with iso3c
-(\href{https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3}{wikipedia}) country codes,
-\item a numeric column named "year" with years,
-\item a numeric column named "GDP deflator" with values of the GDP deflator divided
-by 100 (so that in the base year the GDP deflator is equal to 1, not 100).
-The base year of the deflator can be any year, and can be country-specific.
-\item a numeric column named "MER (LCU per US$)" with MER values,
-\item a numeric column named "PPP conversion factor, GDP (LCU per international $)"
-wit PPP exchange rate values.
-}
-}
 \section{Functions}{
 \itemize{
 \item \code{convertCPI()}: Short cut for \code{convertGDP(..., source = "wb_wdi_cpi")}
@@ -179,6 +152,22 @@ single row tibble.
 \item \code{toolConvertCPI()}: Madrat wrapper around \code{convertCPI(...)}
 
 }}
+\section{Using a custom source}{
+When providing a custom source to the function, a certain format is required.
+The source object must be a data frame or tibble with at least the following columns:
+\itemize{
+\item a character column named "iso3c" with iso3c
+(\href{https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3}{wikipedia}) country codes,
+\item a numeric column named "year" with years,
+\item a numeric column named "GDP deflator" with values of the GDP deflator divided
+by 100 (so that in the base year the GDP deflator is equal to 1, not 100).
+The base year of the deflator can be any year, and can be country-specific.
+\item a numeric column named "MER (LCU per US$)" with MER values,
+\item a numeric column named "PPP conversion factor, GDP (LCU per international $)"
+with PPP exchange rate values.
+}
+}
+
 \examples{
   my_tbble <- tibble::tibble(iso3c = "FRA",
                              year = 2013,
