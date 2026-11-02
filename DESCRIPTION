@@ -1,7 +1,7 @@
 Package: GDPuc
 Title: Easily Convert GDP Data
-Version: 1.6.3
-Date: 2026-09-04
+Version: 1.7.0
+Date: 2026-11-02
 Authors@R:
     person("Johannes", "Koch", , "jokoch@pik-potsdam.de", role = c("aut", "cre"))
 Description: Convert GDP time series data from one unit to
@@ -40,4 +40,4 @@ VignetteBuilder:
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-Config/roxygen2/version: 8.0.0
+Config/roxygen2/version: 8.1.1

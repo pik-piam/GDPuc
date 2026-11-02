@@ -63,10 +63,10 @@ test_that("NA handling through factors matches the generic path", {
 
 
 test_that("a 0 value against an infinite conversion factor is handled like the generic path", {
-  # BLR has no CPI data in 1990, so its constant-to-current factor is infinite there, turning a 0 value
+  # BLR has no CPI data in 1989, so its constant-to-current factor is infinite there, turning a 0 value
   # into NaN even though the factor itself is not missing -- distinct from the "no factor at all" case
   # covered above.
-  zero <- magclass::new.magpie("BLR", c(1990, 2020), c("i1", "i2"), fill = 0)
+  zero <- magclass::new.magpie("BLR", c(1989, 2020), c("i1", "i2"), fill = 0)
 
   for (rna in list(NULL, NA, 0, "no_conversion", c("linear", "no_conversion"))) {
     label <- if (is.null(rna)) "NULL" else paste(rna, collapse = "+")
