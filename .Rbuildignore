@@ -23,3 +23,5 @@
 ^Makefile$
 ^.*CITATION.cff$
 ^\.claude$
+^CODE_STYLE\.md$
+^CONTRIBUTING\.md$

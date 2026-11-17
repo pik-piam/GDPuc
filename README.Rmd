@@ -65,11 +65,15 @@ The `unit_in` and `unit_out` arguments specify the incoming and outgoing GDP uni
 -   current LCU
 -   current US$MER
 -   current Int$PPP
--   constant YYYY LCU
--   constant YYYY US$MER
--   constant YYYY Int$PPP
+-   current xxx_CU
+-   constant yyyy LCU
+-   constant yyyy US$MER
+-   constant yyyy Int$PPP
+-   constant yyyy € or constant yyyy EUR
+-   constant yyyy xxx_CU
 
-Here "YYYY" is a placeholder for a year, e.g. "2010" or "2015", and "LCU" stands for Local Currency Unit.
+Here "LCU" stands for Local Currency Unit, "YYYY" is a placeholder for a year, e.g. "2010" or "2015", and xxx is a
+placeholder for a valid iso3c country code with for instance "JPN_CU" designating the currency unit of Japan.
 
 For a quick conversion of a single value use `convertSingle`.
 
