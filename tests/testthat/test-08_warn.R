@@ -9,8 +9,5 @@ test_that("convertGDP with option GDPuc.warn", {
     list(GDPuc.warn = TRUE),
     convertGDP(gdp_in, "current Int$PPP", "current LCU")
   )))
-  expect_silent(withr::with_options(
-    list(GDPuc.warn = FALSE),
-    convertGDP(gdp_in, "current Int$PPP", "current LCU")
-  ))
+  expect_silent(withr::with_options(list(GDPuc.warn = FALSE), convertGDP(gdp_in, "current Int$PPP", "current LCU")))
 })

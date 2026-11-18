@@ -34,15 +34,17 @@ use_factors_for_magpie <- function(gdp, with_regions, return_cfs) {
 # A factor can be infinite (e.g. no deflator that far back), which turns a 0 in gdp into NaN even though
 # the factor itself is known, not missing. So NA handling still has to happen out here after the
 # multiplication, mirroring convertGDP()'s own handling of the NAs its elemental conversions produce.
-convert_magpie_by_factor <- function(gdp,
-                                     unit_in,
-                                     unit_out,
-                                     source,
-                                     use_USA_cf_for_all,
-                                     replace_NAs,
-                                     verbose,
-                                     iso3c_column,
-                                     year_column) {
+convert_magpie_by_factor <- function(
+  gdp,
+  unit_in,
+  unit_out,
+  source,
+  use_USA_cf_for_all,
+  replace_NAs,
+  verbose,
+  iso3c_column,
+  year_column
+) {
   iso3c <- unique(magclass::getItems(gdp, dim = 1.1))
 
   cf <- magclass::new.magpie(cells_and_regions = iso3c, years = magclass::getYears(gdp), fill = 1)
@@ -50,17 +52,19 @@ convert_magpie_by_factor <- function(gdp,
 
   # NA is passed instead of NULL so that the inner call doesn't warn about missing conversion factors
   # itself: the warning is raised once below, on the actual result, after the multiplication.
-  cf <- convertGDP(gdp = cf,
-                   unit_in = unit_in,
-                   unit_out = unit_out,
-                   source = source,
-                   use_USA_cf_for_all = use_USA_cf_for_all,
-                   with_regions = NULL,
-                   replace_NAs = if (is.null(replace_NAs)) NA else replace_NAs,
-                   verbose = verbose,
-                   return_cfs = FALSE,
-                   iso3c_column = iso3c_column,
-                   year_column = year_column)
+  cf <- convertGDP(
+    gdp = cf,
+    unit_in = unit_in,
+    unit_out = unit_out,
+    source = source,
+    use_USA_cf_for_all = use_USA_cf_for_all,
+    with_regions = NULL,
+    replace_NAs = if (is.null(replace_NAs)) NA else replace_NAs,
+    verbose = verbose,
+    return_cfs = FALSE,
+    iso3c_column = iso3c_column,
+    year_column = year_column
+  )
 
   # Line the factors up with the spatial dimension of gdp by country code. The
   # expanded factors stay one value wide in the data dimension.
@@ -71,7 +75,9 @@ convert_magpie_by_factor <- function(gdp,
   x <- gdp * cf
 
   # Handle NAs the multiplication generated, mirroring convertGDP()'s own handling (convertGDP.R).
-  if (!is.null(replace_NAs) && 0 %in% replace_NAs) x[is.na(x)] <- 0
+  if (!is.null(replace_NAs) && 0 %in% replace_NAs) {
+    x[is.na(x)] <- 0
+  }
   if (any(is.na(x) & !is.na(gdp))) {
     if (!is.null(replace_NAs)) {
       if ("no_conversion" %in% replace_NAs) x[is.na(x)] <- gdp[is.na(x)]

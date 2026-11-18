@@ -3,7 +3,7 @@ abort <- function(x, .envir = parent.frame()) {
   rlang::abort(glue::glue(x, .envir = .envir))
 }
 warn <- function(x, .envir = parent.frame()) {
-  if(getOption("GDPuc.warn", default = TRUE)) rlang::warn(glue::glue(x, .envir = .envir))
+  if (getOption("GDPuc.warn", default = TRUE)) rlang::warn(glue::glue(x, .envir = .envir))
 }
 
 # All console output must eventually go through cli_inform() so that
@@ -35,7 +35,9 @@ cli_source_info <- function(name, origin, date, html, note = NULL) {
     cli::cli_alert("Origin: {origin}")
     cli::cli_alert("Date: {date}")
     cli::cli_alert("Html: {html}")
-    if (!is.null(note)) cli::cli_alert("Note: {note}")
+    if (!is.null(note)) {
+      cli::cli_alert("Note: {note}")
+    }
     cli::cli_rule()
   })
 }

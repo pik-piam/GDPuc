@@ -18,16 +18,17 @@ test_that("convertCPI and toolConvertCPI", {
 test_that("convertSingle and toolConvertSingle", {
   gdp <- tibble::tibble("iso3c" = "DEU", year = 2010, "value" = 100)
   gdp_conv1 <- convertGDP(gdp, "constant 2015 LCU", "constant 2017 LCU")
-  gdp_conv2 <- convertSingle(100, "DEU", unit_in =  "constant 2015 LCU", unit_out =  "constant 2017 LCU")
-  gdp_conv3 <- toolConvertSingle(100, "DEU", year = 1000,
-                                 unit_in =  "constant 2015 LCU",
-                                 unit_out =  "constant 2017 LCU")
-  gdp_conv4 <- toolConvertSingle(100, "DEU", 2010,
-                                 unit_in = "constant 2015 LCU",
-                                 unit_out = "constant 2017 LCU",
-                                 return_cfs = TRUE)
+  gdp_conv2 <- convertSingle(100, "DEU", unit_in = "constant 2015 LCU", unit_out = "constant 2017 LCU")
+  gdp_conv3 <- toolConvertSingle(100, "DEU", year = 1000, unit_in = "constant 2015 LCU", unit_out = "constant 2017 LCU")
+  gdp_conv4 <- toolConvertSingle(
+    100,
+    "DEU",
+    2010,
+    unit_in = "constant 2015 LCU",
+    unit_out = "constant 2017 LCU",
+    return_cfs = TRUE
+  )
   expect_identical(gdp_conv1$value, gdp_conv2)
   expect_identical(gdp_conv1$value, gdp_conv3)
   expect_identical(gdp_conv1, gdp_conv4$result)
 })
-

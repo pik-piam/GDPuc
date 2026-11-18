@@ -99,17 +99,19 @@
 #'              unit_out = "constant 2015 Int$PPP")
 #'
 #' @export
-convertGDP <- function(gdp,
-                       unit_in,
-                       unit_out,
-                       source = "wb_wdi",
-                       use_USA_cf_for_all = FALSE,
-                       with_regions = NULL,
-                       replace_NAs = NULL,
-                       verbose = getOption("GDPuc.verbose", default = FALSE),
-                       return_cfs = FALSE,
-                       iso3c_column = "iso3c",
-                       year_column = "year") {
+convertGDP <- function(
+  gdp,
+  unit_in,
+  unit_out,
+  source = "wb_wdi",
+  use_USA_cf_for_all = FALSE,
+  with_regions = NULL,
+  replace_NAs = NULL,
+  verbose = getOption("GDPuc.verbose", default = FALSE),
+  return_cfs = FALSE,
+  iso3c_column = "iso3c",
+  year_column = "year"
+) {
   # The following line needs to be updated every time the output of convertGDP is affected by an update!
   # This is a trick, so that madrat caching works correctly. For more information, see the documentation of the madrat
   # R-package.
@@ -133,20 +135,31 @@ convertGDP <- function(gdp,
   # Convert magpie objects that hold more than one value per country and year through their conversion
   # factors, rather than by melting them into a long data frame. See convert_magpie_by_factor().
   if (use_factors_for_magpie(gdp, with_regions, return_cfs)) {
-    return(convert_magpie_by_factor(gdp, unit_in, unit_out, source, use_USA_cf_for_all, replace_NAs,
-                                    verbose, iso3c_column, year_column))
+    return(convert_magpie_by_factor(
+      gdp,
+      unit_in,
+      unit_out,
+      source,
+      use_USA_cf_for_all,
+      replace_NAs,
+      verbose,
+      iso3c_column,
+      year_column
+    ))
   }
 
   # Transform user input for internal use, while performing some last consistency checks
-  internal <- transform_user_input(gdp,
-                                   unit_in,
-                                   unit_out,
-                                   source,
-                                   use_USA_cf_for_all,
-                                   with_regions,
-                                   replace_NAs,
-                                   iso3c_column,
-                                   year_column)
+  internal <- transform_user_input(
+    gdp,
+    unit_in,
+    unit_out,
+    source,
+    use_USA_cf_for_all,
+    with_regions,
+    replace_NAs,
+    iso3c_column,
+    year_column
+  )
 
   # Get appropriate function
   f <- paste0(internal$unit_in, "_2_", internal$unit_out)
@@ -155,10 +168,18 @@ convertGDP <- function(gdp,
   . <- NULL
   # Get list of function arguments
   a <- list("gdp" = internal$gdp, "source" = internal$source) %>%
-    {if (!rlang::is_empty(internal$iso3c_x)) c(., "iso3c_x" = internal$iso3c_x) else .} %>%
-    {if (!rlang::is_empty(internal$iso3c_y)) c(., "iso3c_y" = internal$iso3c_y) else .} %>%
-    {if (!is.null(internal$base_x)) c(., "base_x" = internal$base_x) else .} %>%
-    {if (!is.null(internal$base_y)) c(., "base_y" = internal$base_y) else .}
+    {
+      if (!rlang::is_empty(internal$iso3c_x)) c(., "iso3c_x" = internal$iso3c_x) else .
+    } %>%
+    {
+      if (!rlang::is_empty(internal$iso3c_y)) c(., "iso3c_y" = internal$iso3c_y) else .
+    } %>%
+    {
+      if (!is.null(internal$base_x)) c(., "base_x" = internal$base_x) else .
+    } %>%
+    {
+      if (!is.null(internal$base_y)) c(., "base_y" = internal$base_y) else .
+    }
 
   # At least one explicit call to a crayon:: function is required to avoid CRAN note.
   h <- crayon::blue(internal$source_name)
@@ -168,7 +189,9 @@ convertGDP <- function(gdp,
   x <- do.call(f, a)
 
   # Handle NAs
-  if (!is.null(replace_NAs) && 0 %in% replace_NAs) x[is.na(x)] <- 0
+  if (!is.null(replace_NAs) && 0 %in% replace_NAs) {
+    x[is.na(x)] <- 0
+  }
   if (any(is.na(x$value) & !is.na(internal$gdp$value))) {
     if (!is.null(replace_NAs)) {
       if ("no_conversion" %in% replace_NAs) {
@@ -240,29 +263,33 @@ convertSingle <- function(x, iso3c, year = NULL, unit_in, unit_out, ...) {
 
 #' @describeIn convertGDP Madrat wrapper around `convertGDP()`
 #' @export
-toolConvertGDP <- function(gdp,
-                           unit_in,
-                           unit_out,
-                           source = "wb_wdi",
-                           use_USA_cf_for_all = FALSE,
-                           with_regions = NULL,
-                           replace_NAs = NULL,
-                           verbose = getOption("GDPuc.verbose", default = FALSE),
-                           return_cfs = FALSE,
-                           iso3c_column = "iso3c",
-                           year_column = "year") {
+toolConvertGDP <- function(
+  gdp,
+  unit_in,
+  unit_out,
+  source = "wb_wdi",
+  use_USA_cf_for_all = FALSE,
+  with_regions = NULL,
+  replace_NAs = NULL,
+  verbose = getOption("GDPuc.verbose", default = FALSE),
+  return_cfs = FALSE,
+  iso3c_column = "iso3c",
+  year_column = "year"
+) {
   "!# @monitor GDPuc::convertGDP"
-  convertGDP(gdp,
-             unit_in,
-             unit_out,
-             source,
-             use_USA_cf_for_all,
-             with_regions,
-             replace_NAs,
-             verbose,
-             return_cfs,
-             iso3c_column,
-             year_column)
+  convertGDP(
+    gdp,
+    unit_in,
+    unit_out,
+    source,
+    use_USA_cf_for_all,
+    with_regions,
+    replace_NAs,
+    verbose,
+    return_cfs,
+    iso3c_column,
+    year_column
+  )
 }
 
 #' @describeIn convertGDP Madrat wrapper around `convertSingle()`
