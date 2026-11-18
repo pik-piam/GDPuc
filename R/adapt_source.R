@@ -151,30 +151,55 @@ adapt_source <- function(gdp, source, with_regions, replace_NAs, require_year_co
 }
 
 
-# Linear inter- and extrapolation of numeric vector
-lin_int_ext <- function(x, n_ext = 5) {
-  # Interpolate
+# Linear inter- and extrapolation (max_ext points away) of numeric vector using OLS over the closest n_ext points
+lin_int_ext <- function(x, n_ext = 5, max_ext = 5) {
+  # Interpolate interior NAs
   x <- zoo::na.approx(x, na.rm = FALSE)
-  # Extrapolate linearly using the previous n_ext observations
-  if (length(x[!is.na(x)]) < n_ext) {
+
+  valid_idx <- which(!is.na(x))
+  if (length(valid_idx) < n_ext) {
     return(x)
   }
-  # extrapolate first in one direction...
-  n <- 0
-  for (i in seq_along(x)) {
-    if (is.na(x[i]) && n < n_ext) {
-      next
+
+  # Helper to compute OLS slope (beta) using all points in the window
+  get_regression_slope <- function(indices, values) {
+    if (length(indices) < 2) {
+      return(0)
     }
-    n <- n + 1
-    if (n > n_ext && is.na(x[i])) {
-      x[i] <- x[i - 1] + (x[i - 1] - x[i - 1 - n_ext]) / n_ext
+    stats::cov(indices, values) / stats::var(indices)
+  }
+
+  # 1. Forward extrapolation (tail)
+  last_valid <- utils::tail(valid_idx, 1)
+  if (last_valid < length(x)) {
+    # Get the last n_ext valid points and their indices
+    tail_indices <- utils::tail(valid_idx, n_ext)
+    tail_vals <- x[tail_indices]
+
+    slope_fwd <- get_regression_slope(tail_indices, tail_vals)
+
+    # Extrapolate forward up to max_ext steps away
+    end_extrap_idx <- min(length(x), last_valid + max_ext)
+    for (i in (last_valid + 1):end_extrap_idx) {
+      x[i] <- x[i - 1] + slope_fwd
     }
   }
-  # ...then in the other.
-  for (i in rev(seq_along(x))) {
-    if (is.na(x[i])) {
-      x[i] <- x[i + 1] + (x[i + 1] - x[i + 1 + n_ext]) / n_ext
+
+  # 2. Backward extrapolation (head)
+  first_valid <- valid_idx[1]
+  if (first_valid > 1) {
+    # Get the first n_ext valid points and their indices
+    head_indices <- utils::head(valid_idx, n_ext)
+    head_vals <- x[head_indices]
+
+    slope_bwd <- get_regression_slope(head_indices, head_vals)
+
+    # Backcast backward up to max_ext steps away
+    start_extrap_idx <- max(1, first_valid - max_ext)
+    for (i in (first_valid - 1):start_extrap_idx) {
+      x[i] <- x[i + 1] - slope_bwd
     }
   }
+
   x
 }

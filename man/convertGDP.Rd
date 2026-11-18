@@ -97,7 +97,7 @@ and one column named "region" with region codes to which the countries belong.
 \item NA: resulting NAs are explicitly kept as NA.
 \item "no_conversion": resulting NAs are simply replaced with the values from the gdp argument.
 \item "linear": missing conversion factors in the source object are inter- and extrapolated linearly.
-For the extrapolation, the closest 5 data points are used.
+The extrapolation uses the closest 5 years and extends the time series by a maximum of 5 years.
 \item "regional_average": missing conversion factors in the source object are replaced with
 the regional average of the region to which the country belongs. This requires a region-mapping to
 be passed to the function, see the with_regions argument.

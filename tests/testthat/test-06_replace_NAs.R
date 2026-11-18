@@ -165,7 +165,7 @@ test_that("convertGDP replace_NAs = with_USA, no NAs for MADRAT countries", {
 
 test_that("lin_int_ext", {
   x <- c(NA, NA, NA, NA, NA, NA, 2, 3, 4, 5, NA, 7, 8, NA, NA, NA, NA, NA, NA)
-  expect_equal(lin_int_ext(x), -4:14)
+  expect_equal(lin_int_ext(x), c(NA, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, NA))
 })
 
 test_that("convertGDP replace_NAs = c('linear', 'no_conversion')", {
