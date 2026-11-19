@@ -201,5 +201,8 @@ lin_int_ext <- function(x, n_ext = 5, max_ext = 5) {
     }
   }
 
+  # Replace any non-positive values created through extrapolation with NA
+  x[which(x <= 0)] <- NA
+
   x
 }
