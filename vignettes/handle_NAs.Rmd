@@ -111,7 +111,7 @@ x$cfs
 
 ### `replace_NAs` = "linear"
 
-If set to "linear", missing conversion factors are inter- and extrapolated at constant growth rates (linearly in log space), at most 5 years beyond the data. Missing PPP conversion factors follow the MER at a constant price level (PPP / MER), at most 10 years beyond the data. See `?convertGDP` for details.
+If set to "linear", missing conversion factors are inter- and extrapolated at constant growth rates (linearly in log space), at most 5 years beyond the data. Missing PPP conversion factors follow the MER at a constant price level (PPP / MER). See `?convertGDP` for details.
 
 ```{r}
 my_gdp <- tibble::tibble(
