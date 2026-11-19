@@ -31,7 +31,7 @@ adapt_source <- function(gdp, source, with_regions, replace_NAs, require_year_co
 
   if (replace_NAs[1] == "linear") {
     # Make sure that source contains observations for every year between min and max years.
-    # This is important for the function lin_int_ext, which works with indices, to compute the
+    # This is important for the function log_lin_int_ext, which works with indices, to compute the
     # correct values
     source_adapted <- source_adapted %>%
       # Add any iso3c-year combinations from gdp, not available in source
@@ -41,10 +41,13 @@ adapt_source <- function(gdp, source, with_regions, replace_NAs, require_year_co
     source_adapted <- source_adapted %>%
       dplyr::group_by(.data$iso3c) %>%
       dplyr::arrange(.data$year) %>%
-      dplyr::mutate(dplyr::across(
-        .cols = c("GDP deflator", "MER (LCU per US$)", "PPP conversion factor, GDP (LCU per international $)"),
-        lin_int_ext
-      ))
+      dplyr::mutate(
+        dplyr::across(.cols = c("GDP deflator", "MER (LCU per US$)"), log_lin_int_ext),
+        "PPP conversion factor, GDP (LCU per international $)" = fill_ppp(
+          .data[["PPP conversion factor, GDP (LCU per international $)"]],
+          .data[["MER (LCU per US$)"]]
+        )
+      )
   }
 
   if ("regional_average" %in% replace_NAs) {
@@ -151,58 +154,42 @@ adapt_source <- function(gdp, source, with_regions, replace_NAs, require_year_co
 }
 
 
-# Linear inter- and extrapolation (max_ext points away) of numeric vector using OLS over the closest n_ext points
-lin_int_ext <- function(x, n_ext = 5, max_ext = 5) {
-  # Interpolate interior NAs
-  x <- zoo::na.approx(x, na.rm = FALSE)
+# The price level (PPP / MER) is far more stable than PPP during hyperinflation, so it is held constant where MER
+# exists. Years without MER fall back to the PPP trend. Both fills extrapolate at most 5 years beyond the data.
+fill_ppp <- function(ppp, mer) {
+  ppp_trend <- log_lin_int_ext(ppp) # PPP trend, extrapolated from the observed data only
+  ppp <- dplyr::coalesce(ppp, log_lin_int_ext(ppp / mer, trend = FALSE) * mer)
+  dplyr::coalesce(ppp, dplyr::if_else(is.na(mer), ppp_trend, NA_real_))
+}
 
-  valid_idx <- which(!is.na(x))
-  if (length(valid_idx) < n_ext) {
+# Constant growth (linear in log space) keeps filled values positive. Extrapolation uses the OLS growth rate of the
+# closest n_ext points (0 if trend = FALSE) and reaches at most max_ext points away. Non-positive values count as
+# missing.
+log_lin_int_ext <- function(x, n_ext = 5, max_ext = 5, trend = TRUE) {
+  x[x <= 0] <- NA
+  if (!anyNA(x)) {
     return(x)
   }
+  log_x <- zoo::na.approx(log(x), na.rm = FALSE)
 
-  # Helper to compute OLS slope (beta) using all points in the window
-  get_regression_slope <- function(indices, values) {
-    if (length(indices) < 2) {
-      return(0)
+  valid <- which(!is.na(log_x))
+  if (length(valid) >= max(n_ext, 2)) {
+    slope <- function(indices) {
+      if (trend) {
+        stats::cov(indices, log_x[indices]) / stats::var(indices)
+      } else {
+        0
+      }
     }
-    stats::cov(indices, values) / stats::var(indices)
+
+    last <- valid[length(valid)]
+    ahead <- seq_len(min(max_ext, length(log_x) - last))
+    log_x[last + ahead] <- log_x[last] + slope(utils::tail(valid, n_ext)) * ahead
+
+    first <- valid[1]
+    behind <- seq_len(min(max_ext, first - 1))
+    log_x[first - behind] <- log_x[first] - slope(utils::head(valid, n_ext)) * behind
   }
 
-  # 1. Forward extrapolation (tail)
-  last_valid <- utils::tail(valid_idx, 1)
-  if (last_valid < length(x)) {
-    # Get the last n_ext valid points and their indices
-    tail_indices <- utils::tail(valid_idx, n_ext)
-    tail_vals <- x[tail_indices]
-
-    slope_fwd <- get_regression_slope(tail_indices, tail_vals)
-
-    # Extrapolate forward up to max_ext steps away
-    end_extrap_idx <- min(length(x), last_valid + max_ext)
-    for (i in (last_valid + 1):end_extrap_idx) {
-      x[i] <- x[i - 1] + slope_fwd
-    }
-  }
-
-  # 2. Backward extrapolation (head)
-  first_valid <- valid_idx[1]
-  if (first_valid > 1) {
-    # Get the first n_ext valid points and their indices
-    head_indices <- utils::head(valid_idx, n_ext)
-    head_vals <- x[head_indices]
-
-    slope_bwd <- get_regression_slope(head_indices, head_vals)
-
-    # Backcast backward up to max_ext steps away
-    start_extrap_idx <- max(1, first_valid - max_ext)
-    for (i in (first_valid - 1):start_extrap_idx) {
-      x[i] <- x[i + 1] - slope_bwd
-    }
-  }
-
-  # Replace any non-positive values created through extrapolation with NA
-  x[which(x <= 0)] <- NA
-
-  x
+  dplyr::coalesce(x, exp(log_x))
 }

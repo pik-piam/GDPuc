@@ -163,9 +163,92 @@ test_that("convertGDP replace_NAs = with_USA, no NAs for MADRAT countries", {
   expect_true(!any(is.na(gdp$value)))
 })
 
-test_that("lin_int_ext", {
-  x <- c(NA, NA, NA, NA, NA, NA, 2, 3, 4, 5, NA, 7, 8, NA, NA, NA, NA, NA, NA)
-  expect_equal(lin_int_ext(x), c(NA, NA, NA, NA, NA, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, NA))
+test_that("log_lin_int_ext", {
+  # Geometric series with an interior gap, filled at constant growth up to 5 points from the data
+  x <- c(rep(NA, 6), 2^(1:4), NA, 2^(6:7), rep(NA, 6))
+  expect_equal(log_lin_int_ext(x), c(NA, 2^(-4:12), NA))
+})
+
+test_that("log_lin_int_ext uses OLS growth rate over the closest n_ext points", {
+  # OLS slope over log values 0, 1, 3, 6, 10 is 2.5; the endpoint slope would be 4
+  x <- exp(c(0, 1, 3, 6, 10))
+  expect_equal(log_lin_int_ext(c(x, NA)), c(x, exp(12.5)))
+  expect_equal(log_lin_int_ext(c(NA, rev(x))), c(exp(12.5), rev(x)))
+})
+
+test_that("log_lin_int_ext keeps observed values and needs n_ext points to extrapolate", {
+  x <- c(NA, 1.1, 2.3, 3.7, 4.9, NA)
+  expect_identical(log_lin_int_ext(x), x)
+  x <- c(NA, 1.1, 2.3, 3.7, 4.9, 6.2, NA)
+  expect_identical(log_lin_int_ext(x)[2:6], x[2:6])
+})
+
+test_that("log_lin_int_ext with max_ext = 0 changes nothing", {
+  x <- c(1, 2, 4, 7, 11, NA)
+  expect_equal(log_lin_int_ext(x, max_ext = 0), x)
+  expect_equal(log_lin_int_ext(rev(x), max_ext = 0), rev(x))
+})
+
+test_that("log_lin_int_ext with trend = FALSE holds the closest value", {
+  x <- c(NA, 1, 2, 4, 8, 16, NA, NA)
+  expect_equal(log_lin_int_ext(x, trend = FALSE), c(1, 1, 2, 4, 8, 16, 16, 16))
+})
+
+test_that("fill_ppp holds the price level constant where MER exists", {
+  ppp <- c(NA, 2, 4, NA, 8, 10, NA)
+  mer <- c(5, 4, 8, 12, 16, 20, 100)
+  # Price level 0.5 everywhere, so PPP follows the MER, also when the MER jumps
+  expect_equal(fill_ppp(ppp, mer), c(2.5, 2, 4, 6, 8, 10, 50))
+})
+
+test_that("fill_ppp falls back to the PPP trend where MER is missing", {
+  ppp <- c(NA, 2, 4, 8, 16, 32, NA)
+  mer <- c(NA, 4, 8, 16, 32, 64, 1000)
+  expect_equal(fill_ppp(ppp, mer), c(1, 2, 4, 8, 16, 32, 500))
+})
+
+test_that("fill_ppp extrapolates at most 5 years, independent of NAs elsewhere in MER (#55)", {
+  # PPP data 1960-1970, MER constant where it exists
+  ppp <- c(rep(2, 11), rep(NA, 10))
+  # Within 5 years of the data, PPP follows MER at a constant price level, beyond that it stays NA
+  expected <- c(rep(2, 16), rep(NA, 5))
+  expect_equal(fill_ppp(ppp, rep(2, 21)), expected)
+  # An NA in MER 1960, where PPP is observed, must not extend the fill beyond 5 years
+  expect_equal(fill_ppp(ppp, replace(rep(2, 21), 1, NA)), expected)
+})
+
+test_that("log_lin_int_ext does not extrapolate conversion factors to non-positive values (#55)", {
+  # Shape of the SYR PPP factor: data only for the last years, rising steeply
+  x <- c(NA, NA, NA, NA, 133, 250, 400, 550, 700, 808)
+  res <- log_lin_int_ext(x)
+  expect_true(all(res > 0))
+})
+
+test_that("replace_NAs = c('linear', 'no_conversion') gives plausible factors for SYR (#55)", {
+  conv <- function(year, unitIn, unitOut) {
+    convertGDP(
+      data.frame(iso3c = "SYR", year = year, value = 1),
+      unitIn,
+      unitOut,
+      replace_NAs = c("linear", "no_conversion")
+    )$value
+  }
+  # SYR PPP data starts in 2017. Bounds are loose plausibility limits, not target values.
+  expect_gt(conv(2017, "constant 2017 Int$PPP", "constant 2005 Int$PPP"), 0)
+  expect_true(all(conv(2012:2016, "current Int$PPP", "current LCU") > 0))
+  res <- purrr::map_dbl(2012:2016, function(y) conv(2017, "constant 2017 Int$PPP", paste("constant", y, "Int$PPP")))
+  expect_true(all(res > 0.1 & res < 10))
+})
+
+test_that("replace_NAs = c('linear', 'no_conversion') gives plausible PPP to MER factors for VEN (#55)", {
+  # VEN PPP data ends in 2011, MER continues through the hyperinflation. Loose plausibility bound, not a target value.
+  res <- convertGDP(
+    data.frame(iso3c = "VEN", year = 2012:2016, value = 1),
+    "current Int$PPP",
+    "current US$MER",
+    replace_NAs = c("linear", "no_conversion")
+  )
+  expect_true(all(res$value > 0.1))
 })
 
 test_that("convertGDP replace_NAs = c('linear', 'no_conversion')", {

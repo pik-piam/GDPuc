@@ -66,8 +66,11 @@
 #'     \item 0: resulting NAs are simply replaced with 0.
 #'     \item NA: resulting NAs are explicitly kept as NA.
 #'     \item "no_conversion": resulting NAs are simply replaced with the values from the gdp argument.
-#'     \item "linear": missing conversion factors in the source object are inter- and extrapolated linearly.
-#'     The extrapolation uses the closest 5 years and extends the time series by a maximum of 5 years.
+#'     \item "linear": missing conversion factors in the source object are inter- and extrapolated linearly in log
+#'     space, i.e. at constant growth rates, so filled values stay positive. The extrapolation uses the growth rate
+#'     of the closest 5 years and extends the time series by a maximum of 5 years. Where MER data exist, missing PPP
+#'     conversion factors are instead derived from the MER, holding the price level (PPP / MER) constant at the
+#'     closest observation, where MER data exists.
 #'     \item "regional_average": missing conversion factors in the source object are replaced with
 #'     the regional average of the region to which the country belongs. This requires a region-mapping to
 #'     be passed to the function, see the with_regions argument.
