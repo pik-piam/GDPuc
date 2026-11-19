@@ -118,7 +118,7 @@ convertGDP <- function(
   # The following line needs to be updated every time the output of convertGDP is affected by an update!
   # This is a trick, so that madrat caching works correctly. For more information, see the documentation of the madrat
   # R-package.
-  "last changes 2026-10-14"
+  "last changes 2026-11-19"
 
   # Save all function arguments as list
   arg <- as.list(environment())
