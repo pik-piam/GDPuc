@@ -155,10 +155,11 @@ adapt_source <- function(gdp, source, with_regions, replace_NAs, require_year_co
 
 
 # The price level (PPP / MER) is far more stable than PPP during hyperinflation, so it is held constant where MER
-# exists. Years without MER fall back to the PPP trend. Both fills extrapolate at most 5 years beyond the data.
+# exists, up to 10 years beyond the data. A constant level does not drift like a trend, so it gets a longer reach.
+# Years without MER fall back to the PPP trend, up to 5 years.
 fill_ppp <- function(ppp, mer) {
   ppp_trend <- log_lin_int_ext(ppp) # PPP trend, extrapolated from the observed data only
-  ppp <- dplyr::coalesce(ppp, log_lin_int_ext(ppp / mer, trend = FALSE) * mer)
+  ppp <- dplyr::coalesce(ppp, log_lin_int_ext(ppp / mer, max_ext = 10, trend = FALSE) * mer)
   dplyr::coalesce(ppp, dplyr::if_else(is.na(mer), ppp_trend, NA_real_))
 }
 

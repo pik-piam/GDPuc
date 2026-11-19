@@ -207,14 +207,16 @@ test_that("fill_ppp falls back to the PPP trend where MER is missing", {
   expect_equal(fill_ppp(ppp, mer), c(1, 2, 4, 8, 16, 32, 500))
 })
 
-test_that("fill_ppp extrapolates at most 5 years, independent of NAs elsewhere in MER (#55)", {
+test_that("fill_ppp extrapolates the price level at most 10 years, independent of NAs elsewhere in MER (#55)", {
   # PPP data 1960-1970, MER constant where it exists
-  ppp <- c(rep(2, 11), rep(NA, 10))
-  # Within 5 years of the data, PPP follows MER at a constant price level, beyond that it stays NA
-  expected <- c(rep(2, 16), rep(NA, 5))
-  expect_equal(fill_ppp(ppp, rep(2, 21)), expected)
-  # An NA in MER 1960, where PPP is observed, must not extend the fill beyond 5 years
-  expect_equal(fill_ppp(ppp, replace(rep(2, 21), 1, NA)), expected)
+  ppp <- c(rep(2, 11), rep(NA, 15))
+  # Within 10 years of the data, PPP follows MER at a constant price level, beyond that it stays NA
+  expected <- c(rep(2, 21), rep(NA, 5))
+  expect_equal(fill_ppp(ppp, rep(2, 26)), expected)
+  # An NA in MER 1960, where PPP is observed, must not extend the fill beyond 10 years
+  expect_equal(fill_ppp(ppp, replace(rep(2, 26), 1, NA)), expected)
+  # Where MER is missing, the PPP trend fallback still stops after 5 years
+  expect_equal(fill_ppp(ppp, c(rep(2, 11), rep(NA, 15))), c(rep(2, 16), rep(NA, 10)))
 })
 
 test_that("log_lin_int_ext does not extrapolate conversion factors to non-positive values (#55)", {
