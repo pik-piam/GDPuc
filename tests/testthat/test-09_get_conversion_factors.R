@@ -18,27 +18,28 @@ test_that("get_conversion_factors", {
   expect_lte(length(mylist$cfs), 4)
   expect_gte(length(mylist$cfs), 2)
   expect_true(colnames(mylist$cfs)[1] == "iso3c")
-  expect_true(mylist$cfs %>%
-                dplyr::filter(iso3c == "USA") %>%
-                dplyr::pull("2010 PPP conversion factors in (LCU per international $)") == 1)
+  expect_true(
+    mylist$cfs %>%
+      dplyr::filter(iso3c == "USA") %>%
+      dplyr::pull("2010 PPP conversion factors in (LCU per international $)") ==
+      1
+  )
 })
-
 
 
 test_that("get_conversion_factors with verbose", {
   gdp <- tibble::tibble("iso3c" = c("JPN", "FRA", "DEU"), "year" = 2010, "value" = 100)
 
-  myresult <- convertGDP(gdp,
-                         unit_in = "constant 2015 Int$PPP",
-                         unit_out = "constant 2017 Int$PPP",
-                         verbose = TRUE) %>%
+  myresult <- convertGDP(gdp, unit_in = "constant 2015 Int$PPP", unit_out = "constant 2017 Int$PPP", verbose = TRUE) %>%
     suppressMessages()
 
-  mylist <- convertGDP(gdp,
-                       unit_in = "constant 2015 Int$PPP",
-                       unit_out = "constant 2017 Int$PPP",
-                       verbose = TRUE,
-                       return_cfs = TRUE) %>%
+  mylist <- convertGDP(
+    gdp,
+    unit_in = "constant 2015 Int$PPP",
+    unit_out = "constant 2017 Int$PPP",
+    verbose = TRUE,
+    return_cfs = TRUE
+  ) %>%
     suppressMessages()
 
   expect_identical(myresult, mylist$result)
@@ -50,15 +51,19 @@ test_that("get_conversion_factors with regions", {
   gdp <- tibble::tibble("iso3c" = c("JPN", "EUR", "DEU"), "year" = 2010, "value" = 100)
   with_regions <- tibble::tibble("iso3c" = c("FRA", "ESP", "DEU"), "region" = "EUR")
 
-  myresult <- convertGDP(gdp,
-                       unit_in = "constant 2015 Int$PPP",
-                       unit_out = "constant 2017 Int$PPP",
-                       with_regions = with_regions)
-  mylist <- convertGDP(gdp,
-                       unit_in = "constant 2015 Int$PPP",
-                       unit_out = "constant 2017 Int$PPP",
-                       with_regions = with_regions,
-                       return_cfs = TRUE)
+  myresult <- convertGDP(
+    gdp,
+    unit_in = "constant 2015 Int$PPP",
+    unit_out = "constant 2017 Int$PPP",
+    with_regions = with_regions
+  )
+  mylist <- convertGDP(
+    gdp,
+    unit_in = "constant 2015 Int$PPP",
+    unit_out = "constant 2017 Int$PPP",
+    with_regions = with_regions,
+    return_cfs = TRUE
+  )
 
   expect_identical(myresult, mylist$result)
   expect_identical(mylist$cfs$iso3c, c("DEU", "ESP", "FRA", "JPN"))

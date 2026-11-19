@@ -111,7 +111,7 @@ x$cfs
 
 ### `replace_NAs` = "linear"
 
-If set to "linear", missing conversion factors are inter- and extrapolated linearly. For the extrapolation, the closest 5 data points are used.
+If set to "linear", missing conversion factors are inter- and extrapolated at constant growth rates (linearly in log space), at most 5 years beyond the data. Missing PPP conversion factors follow the MER at a constant price level (PPP / MER). See `?convertGDP` for details.
 
 ```{r}
 my_gdp <- tibble::tibble(
@@ -167,7 +167,7 @@ x$cfs
 ### `replace_NAs` = c("linear", "...")
 
 If a vector is passed, with "linear" as first element, then the operations are done in sequence. 
-For example for c("linear", 0), missing conversion factors are first inter- and extrapolated linearly but 
+For example for c("linear", 0), missing conversion factors are first inter- and extrapolated linearly (in log space) but 
 if any missing conversion factors still lead to NAs, these are replaced with 0.
 
 ```{r}

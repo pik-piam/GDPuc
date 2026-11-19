@@ -11,7 +11,9 @@ get_conversion_factors <- function(...) {
   x <- testthat::evaluate_promise(convertGDP(..., verbose = TRUE, return_cfs = FALSE))
 
   # If using with_regions, drop first message
-  if (!is.null(list(...)$with_regions)) x$messages <- x$messages[-1]
+  if (!is.null(list(...)$with_regions)) {
+    x$messages <- x$messages[-1]
+  }
 
   # Get number of countries = number of lines in the 2 message, - 2
   my_message_lines <- purrr::map(x$messages, strsplit, "\\n")
@@ -20,8 +22,10 @@ get_conversion_factors <- function(...) {
   # Get list indices to extract specific lines from the captured messages
   i_cf <- seq_along(x$messages)[-1]
   i_lines <- 0L:n_c + 2L
-  my_lines <- purrr::pmap_chr(tidyr::expand_grid("y" = i_lines, "x" = i_cf),
-                              ~ purrr::pluck(my_message_lines, .y, 1, .x))
+  my_lines <- purrr::pmap_chr(
+    tidyr::expand_grid("y" = i_lines, "x" = i_cf),
+    ~ purrr::pluck(my_message_lines, .y, 1, .x)
+  )
 
   # Separate lines into conversion factor names and values
   my_names <- gsub(" used:", "", grep("used:", my_lines, value = TRUE))

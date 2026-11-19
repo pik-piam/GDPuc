@@ -3,8 +3,7 @@ adapt_source_USA <- function(gdp, source) {
   # excluding iso3c.
   source %>%
     dplyr::filter(.data$iso3c == "USA") %>%
-    tidyr::complete(iso3c = unique(gdp$iso3c),
-                    tidyr::nesting(!!!(rlang::syms(colnames(source)[-1]))))
+    tidyr::complete(iso3c = unique(gdp$iso3c), tidyr::nesting(!!!(rlang::syms(colnames(source)[-1]))))
 }
 
 #
@@ -18,17 +17,21 @@ adapt_source <- function(gdp, source, with_regions, replace_NAs, require_year_co
   hcol <- if (require_year_column) c("iso3c", "year") else "iso3c"
   source_adapted <- source %>%
     # Add any hcol combinations from gdp, not available in source
-    dplyr::bind_rows(gdp %>%
-                       {if ("gdpuc_region" %in% colnames(.)) dplyr::filter(., is.na(.data$gdpuc_region)) else .} %>%
-                       dplyr::select(tidyselect::all_of(hcol)) %>%
-                       dplyr::distinct() %>%
-                       dplyr::anti_join(source, by = hcol)) %>%
+    dplyr::bind_rows(
+      gdp %>%
+        {
+          if ("gdpuc_region" %in% colnames(.)) dplyr::filter(., is.na(.data$gdpuc_region)) else .
+        } %>%
+        dplyr::select(tidyselect::all_of(hcol)) %>%
+        dplyr::distinct() %>%
+        dplyr::anti_join(source, by = hcol)
+    ) %>%
     tidyr::complete(.data$iso3c, .data$year) %>%
     dplyr::filter(!is.na(.data$year))
 
   if (replace_NAs[1] == "linear") {
     # Make sure that source contains observations for every year between min and max years.
-    # This is important for the function lin_int_ext, which works with indices, to compute the
+    # This is important for the function log_lin_int_ext, which works with indices, to compute the
     # correct values
     source_adapted <- source_adapted %>%
       # Add any iso3c-year combinations from gdp, not available in source
@@ -38,11 +41,13 @@ adapt_source <- function(gdp, source, with_regions, replace_NAs, require_year_co
     source_adapted <- source_adapted %>%
       dplyr::group_by(.data$iso3c) %>%
       dplyr::arrange(.data$year) %>%
-      dplyr::mutate(dplyr::across(.cols = c(
-        "GDP deflator",
-        "MER (LCU per US$)",
-        "PPP conversion factor, GDP (LCU per international $)"),
-        lin_int_ext))
+      dplyr::mutate(
+        dplyr::across(.cols = c("GDP deflator", "MER (LCU per US$)"), log_lin_int_ext),
+        "PPP conversion factor, GDP (LCU per international $)" = fill_ppp(
+          .data[["PPP conversion factor, GDP (LCU per international $)"]],
+          .data[["MER (LCU per US$)"]]
+        )
+      )
   }
 
   if ("regional_average" %in% replace_NAs) {
@@ -55,12 +60,11 @@ adapt_source <- function(gdp, source, with_regions, replace_NAs, require_year_co
     reg_averages <- source_adapted %>%
       dplyr::full_join(with_regions, by = "iso3c") %>%
       dplyr::group_by(.data$gdpuc_region, .data$year) %>%
-      dplyr::mutate(dplyr::across(.cols = c(
-        "GDP deflator",
-        "MER (LCU per US$)",
-        "PPP conversion factor, GDP (LCU per international $)"),
-        ~ sum(.x * eval(rlang::sym(weight_var)) /sum(eval(rlang::sym(weight_var)), na.rm = TRUE), na.rm = TRUE),
-        .names = "ra_{.col}")) %>%
+      dplyr::mutate(dplyr::across(
+        .cols = c("GDP deflator", "MER (LCU per US$)", "PPP conversion factor, GDP (LCU per international $)"),
+        ~ sum(.x * eval(rlang::sym(weight_var)) / sum(eval(rlang::sym(weight_var)), na.rm = TRUE), na.rm = TRUE),
+        .names = "ra_{.col}"
+      )) %>%
       dplyr::ungroup() %>%
       dplyr::select("iso3c", "year", dplyr::starts_with("ra_"))
 
@@ -69,14 +73,17 @@ adapt_source <- function(gdp, source, with_regions, replace_NAs, require_year_co
       dplyr::left_join(reg_averages, by = c("iso3c", "year")) %>%
       # Mutate the 3 important columns
       dplyr::rowwise() %>%
-      dplyr::mutate(dplyr::across(.cols = c(
-        "GDP deflator",
-        "MER (LCU per US$)",
-        "PPP conversion factor, GDP (LCU per international $)"),
-        ~ if (is.na(.x)) {
-          eval(rlang::sym(paste0("ra_", dplyr::cur_column())))
-        } else .x),
-        .keep = "unused") %>%
+      dplyr::mutate(
+        dplyr::across(
+          .cols = c("GDP deflator", "MER (LCU per US$)", "PPP conversion factor, GDP (LCU per international $)"),
+          ~ if (is.na(.x)) {
+            eval(rlang::sym(paste0("ra_", dplyr::cur_column())))
+          } else {
+            .x
+          }
+        ),
+        .keep = "unused"
+      ) %>%
       dplyr::ungroup()
   }
 
@@ -90,9 +97,10 @@ adapt_source <- function(gdp, source, with_regions, replace_NAs, require_year_co
       dplyr::filter(.data$iso3c %in% unique(gdp$iso3c)) %>%
       # Fill in the MER and PPPs with the growth rates from the USA (= 1)
       dplyr::group_by(.data$iso3c) %>%
-      tidyr::fill(c("MER (LCU per US$)",
-                    "PPP conversion factor, GDP (LCU per international $)"),
-                  .direction = "updown") %>%
+      tidyr::fill(
+        c("MER (LCU per US$)", "PPP conversion factor, GDP (LCU per international $)"),
+        .direction = "updown"
+      ) %>%
       dplyr::ungroup() %>%
       # For the deflator, we need to multiply the bordering values with the actual USA growth
       dplyr::left_join(USA_def_growth, by = dplyr::join_by("year")) %>%
@@ -119,11 +127,14 @@ adapt_source <- function(gdp, source, with_regions, replace_NAs, require_year_co
       dplyr::select(-"gd")
 
     # If there is no PPP data whatsoever for the country, use MERs
-    source_adapted <- source_adapted  %>%
-      dplyr::mutate("PPP conversion factor, GDP (LCU per international $)" =
-                      dplyr::if_else(is.na(.data$`PPP conversion factor, GDP (LCU per international $)`),
-                                     .data$`MER (LCU per US$)`,
-                                     .data$`PPP conversion factor, GDP (LCU per international $)`))
+    source_adapted <- source_adapted %>%
+      dplyr::mutate(
+        "PPP conversion factor, GDP (LCU per international $)" = dplyr::if_else(
+          is.na(.data$`PPP conversion factor, GDP (LCU per international $)`),
+          .data$`MER (LCU per US$)`,
+          .data$`PPP conversion factor, GDP (LCU per international $)`
+        )
+      )
 
     # If there is no deflator data whatsoever for the country, use US values
     ec <- dplyr::group_by(source_adapted, .data$iso3c) %>%
@@ -133,42 +144,52 @@ adapt_source <- function(gdp, source, with_regions, replace_NAs, require_year_co
 
     source_ec <- source %>%
       dplyr::filter(.data$iso3c == "USA") %>%
-      tidyr::complete(iso3c = ec,
-                      tidyr::nesting(!!!(rlang::syms(colnames(source)[-1])))) %>%
+      tidyr::complete(iso3c = ec, tidyr::nesting(!!!(rlang::syms(colnames(source)[-1])))) %>%
       dplyr::filter(.data$iso3c %in% ec)
 
-    source_adapted <- source_adapted %>%
-      dplyr::filter(!.data$iso3c %in% ec) %>%
-      dplyr::bind_rows(source_ec)
+    source_adapted <- source_adapted %>% dplyr::filter(!.data$iso3c %in% ec) %>% dplyr::bind_rows(source_ec)
   }
 
   source_adapted
 }
 
 
-# Linear inter- and extrapolation of numeric vector
-lin_int_ext <- function(x, n_ext = 5) {
-  # Interpolate
-  x <- zoo::na.approx(x, na.rm = FALSE)
-  # Extrapolate linearly using the previous n_ext observations
-  if (length(x[!is.na(x)]) < n_ext) {
-    return(x)
-  }
-  # extrapolate first in one direction...
-  n <- 0
-  for (i in seq_along(x)) {
-    if (is.na(x[i]) && n < n_ext) next
-    n <- n + 1
-    if (n > n_ext && is.na(x[i])) {
-      x[i] <- x[i - 1] + (x[i - 1] - x[i - 1 - n_ext]) / n_ext
-    }
-  }
-  # ...then in the other.
-  for (i in rev(seq_along(x))) {
-    if (is.na(x[i])) {
-      x[i] <- x[i + 1] + (x[i + 1] - x[i + 1 + n_ext]) / n_ext
-    }
-  }
-  x
+# The price level (PPP / MER) is far more stable than PPP during hyperinflation, so it is held constant where MER
+# exists. Years without MER fall back to the PPP trend. Both fills extrapolate at most 5 years beyond the data.
+fill_ppp <- function(ppp, mer) {
+  ppp_trend <- log_lin_int_ext(ppp) # PPP trend, extrapolated from the observed data only
+  ppp <- dplyr::coalesce(ppp, log_lin_int_ext(ppp / mer, trend = FALSE) * mer)
+  dplyr::coalesce(ppp, dplyr::if_else(is.na(mer), ppp_trend, NA_real_))
 }
 
+# Constant growth (linear in log space) keeps filled values positive. Extrapolation uses the OLS growth rate of the
+# closest n_ext points (0 if trend = FALSE) and reaches at most max_ext points away. Non-positive values count as
+# missing.
+log_lin_int_ext <- function(x, n_ext = 5, max_ext = 5, trend = TRUE) {
+  x[x <= 0] <- NA
+  if (!anyNA(x)) {
+    return(x)
+  }
+  log_x <- zoo::na.approx(log(x), na.rm = FALSE)
+
+  valid <- which(!is.na(log_x))
+  if (length(valid) >= max(n_ext, 2)) {
+    slope <- function(indices) {
+      if (trend) {
+        stats::cov(indices, log_x[indices]) / stats::var(indices)
+      } else {
+        0
+      }
+    }
+
+    last <- valid[length(valid)]
+    ahead <- seq_len(min(max_ext, length(log_x) - last))
+    log_x[last + ahead] <- log_x[last] + slope(utils::tail(valid, n_ext)) * ahead
+
+    first <- valid[1]
+    behind <- seq_len(min(max_ext, first - 1))
+    log_x[first - behind] <- log_x[first] - slope(utils::head(valid, n_ext)) * behind
+  }
+
+  dplyr::coalesce(x, exp(log_x))
+}

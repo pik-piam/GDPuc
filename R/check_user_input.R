@@ -2,18 +2,19 @@
 #
 # check_user_input performs some checks on the function arguments.
 # @return TRUE or an Error
-check_user_input <- function(gdp,
-                             unit_in,
-                             unit_out,
-                             source,
-                             use_USA_cf_for_all,
-                             with_regions,
-                             replace_NAs,
-                             verbose,
-                             return_cfs,
-                             iso3c_column,
-                             year_column) {
-
+check_user_input <- function(
+  gdp,
+  unit_in,
+  unit_out,
+  source,
+  use_USA_cf_for_all,
+  with_regions,
+  replace_NAs,
+  verbose,
+  return_cfs,
+  iso3c_column,
+  year_column
+) {
   check_gdp(gdp)
   check_unit_in_out(unit_in, unit_out)
   source <- check_source(source)
@@ -28,11 +29,10 @@ check_user_input <- function(gdp,
 }
 
 
-
 # Check 'gdp' input parameter
 check_gdp <- function(gdp) {
   if (is.data.frame(gdp)) {
-    if (! "value" %in% colnames(gdp)) {
+    if (!"value" %in% colnames(gdp)) {
       abort("Invalid 'gdp' argument. 'gdp' does not have the required 'value' column.")
     }
     if (!is.numeric(gdp$value)) {
@@ -76,9 +76,11 @@ check_source <- function(source) {
       if (exists(source, environment())) {
         source <- rlang::eval_tidy(rlang::sym(source))
       } else {
-        abort("Invalid 'source' argument. If 'source' is a string, it must be one of the internal sources. \\
+        abort(
+          "Invalid 'source' argument. If 'source' is a string, it must be one of the internal sources. \\
               Use print_source_info() for information on available sources. \\
-              If you are trying to pass a custom source, pass the data frame directly, not its name.")
+              If you are trying to pass a custom source, pass the data frame directly, not its name."
+        )
       }
     } else {
       abort("Invalid 'source' argument. 'source' is neither a data frame nor a string.")
@@ -95,7 +97,7 @@ check_source <- function(source) {
   if (!all(required_cols_in_source %in% colnames(source))) {
     abort("Invalid 'source' argument. Required columns are: {paste(required_cols_in_source, collapse = '; ')}")
   }
-  if (nrow(source) != nrow(dplyr::distinct(source, .data$iso3c , .data$year))) {
+  if (nrow(source) != nrow(dplyr::distinct(source, .data$iso3c, .data$year))) {
     abort("Invalid 'source' argument. Duplicate iso3c - year pairs found.")
   }
   source
@@ -139,12 +141,16 @@ check_with_regions <- function(unit_in, unit_out, source, with_regions) {
 check_replace_NAs <- function(with_regions, replace_NAs) {
   if (!is.null(replace_NAs)) {
     if (!all(replace_NAs %in% c(NA, 0, "no_conversion", "linear", "regional_average", "with_USA"))) {
-      abort("Invalid 'replace_NAs' argument. Has to be either NULL, NA, 0, no_conversion, linear, \\
-            regional_average, with_USA or a combination of the above.")
+      abort(
+        "Invalid 'replace_NAs' argument. Has to be either NULL, NA, 0, no_conversion, linear, \\
+            regional_average, with_USA or a combination of the above."
+      )
     }
     if (length(replace_NAs) > 1 && replace_NAs[1] != "linear") {
-      abort("Invalid 'replace_NAs' argument. The only accepted combinations of arguments start with 'linear', e.g. \\
-            c('linear', 'no_conversion').")
+      abort(
+        "Invalid 'replace_NAs' argument. The only accepted combinations of arguments start with 'linear', e.g. \\
+            c('linear', 'no_conversion')."
+      )
     }
     if ("regional_average" %in% replace_NAs && is.null(with_regions)) {
       abort("Using 'regional_average' requires a region mapping. The 'with_regions' argument can't be NULL.")
@@ -166,7 +172,7 @@ check_return_cfs <- function(return_cfs) {
   }
 }
 
-check_custom_column_names <- function (iso3c_column, year_column) {
+check_custom_column_names <- function(iso3c_column, year_column) {
   if (!is.character(iso3c_column)) {
     abort("Invalid 'iso3c_column' argument. Has to be a string.")
   }

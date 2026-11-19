@@ -1,12 +1,10 @@
 # Replace any regions with the countries they comprise.
 replace_regions_with_countries <- function(gdp, unit_in, base_x, with_regions, source) {
   # Separate regions (excluding regions that are countries) from countries
-  my_reg <- intersect(unique(gdp$iso3c),
-                      setdiff(unique(with_regions$region),
-                              unique(with_regions$iso3c)))
+  my_reg <- intersect(unique(gdp$iso3c), setdiff(unique(with_regions$region), unique(with_regions$iso3c)))
 
   gdp_reg <- dplyr::filter(gdp, .data$iso3c %in% my_reg)
-  gdp <- dplyr::filter(gdp, ! .data$iso3c %in% my_reg)
+  gdp <- dplyr::filter(gdp, !.data$iso3c %in% my_reg)
 
   # Disaggregate regions
   with_regions <- dplyr::rename(with_regions, "gdpuc_region" = "region")
@@ -15,7 +13,6 @@ replace_regions_with_countries <- function(gdp, unit_in, base_x, with_regions, s
   # Bind original countries and countries from disaggregation (duplicates now possible)
   gdp <- dplyr::bind_rows(gdp, gdp_reg)
 }
-
 
 
 # Take gdp data at regional level and disaggregate to country level according to a region mapping.
@@ -43,10 +40,7 @@ disaggregate_regions <- function(gdp, with_regions, unit_in, base_x, source) {
   shares <- source %>%
     dplyr::filter(.data$year == weight_year) %>%
     # Keep only countries with all conversion factors available
-    tidyr::drop_na(c(
-      "GDP deflator",
-      "MER (LCU per US$)",
-      "PPP conversion factor, GDP (LCU per international $)")) %>%
+    tidyr::drop_na(c("GDP deflator", "MER (LCU per US$)", "PPP conversion factor, GDP (LCU per international $)")) %>%
     dplyr::select("iso3c", "year", "value" = tidyselect::all_of(share_var)) %>%
     dplyr::left_join(with_regions, by = "iso3c") %>%
     tidyr::drop_na("gdpuc_region") %>%
