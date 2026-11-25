@@ -194,27 +194,27 @@ test_that("log_lin_int_ext with trend = FALSE holds the closest value", {
   expect_equal(log_lin_int_ext(x, trend = FALSE), c(1, 1, 2, 4, 8, 16, 16, 16))
 })
 
-test_that("fill_ppp holds the price level constant where MER exists", {
+test_that("fill_by_anchor holds the price level constant where MER exists", {
   ppp <- c(NA, 2, 4, NA, 8, 10, NA)
   mer <- c(5, 4, 8, 12, 16, 20, 100)
   # Price level 0.5 everywhere, so PPP follows the MER, also when the MER jumps
-  expect_equal(fill_ppp(ppp, mer), c(2.5, 2, 4, 6, 8, 10, 50))
+  expect_equal(fill_by_anchor(ppp, mer), c(2.5, 2, 4, 6, 8, 10, 50))
 })
 
-test_that("fill_ppp falls back to the PPP trend where MER is missing", {
+test_that("fill_by_anchor falls back to the PPP trend where MER is missing", {
   ppp <- c(NA, 2, 4, 8, 16, 32, NA)
   mer <- c(NA, 4, 8, 16, 32, 64, 1000)
-  expect_equal(fill_ppp(ppp, mer), c(1, 2, 4, 8, 16, 32, 500))
+  expect_equal(fill_by_anchor(ppp, mer), c(1, 2, 4, 8, 16, 32, 500))
 })
 
-test_that("fill_ppp extrapolates at most 5 years, independent of NAs elsewhere in MER (#55)", {
+test_that("fill_by_anchor extrapolates at most 5 years, independent of NAs elsewhere in MER (#55)", {
   # PPP data 1960-1970, MER constant where it exists
   ppp <- c(rep(2, 11), rep(NA, 10))
   # Within 5 years of the data, PPP follows MER at a constant price level, beyond that it stays NA
   expected <- c(rep(2, 16), rep(NA, 5))
-  expect_equal(fill_ppp(ppp, rep(2, 21)), expected)
+  expect_equal(fill_by_anchor(ppp, rep(2, 21)), expected)
   # An NA in MER 1960, where PPP is observed, must not extend the fill beyond 5 years
-  expect_equal(fill_ppp(ppp, replace(rep(2, 21), 1, NA)), expected)
+  expect_equal(fill_by_anchor(ppp, replace(rep(2, 21), 1, NA)), expected)
 })
 
 test_that("log_lin_int_ext does not extrapolate conversion factors to non-positive values (#55)", {
@@ -303,4 +303,38 @@ test_that("convertGDP use_USA_cf_for_all = TRUE", {
     dplyr::filter(gdp_conv, .data$iso3c == "DEU") %>% dplyr::select(-"iso3c"),
     dplyr::filter(gdp_conv, .data$iso3c == "AFG") %>% dplyr::select(-"iso3c")
   )
+})
+
+test_that("replace_NAs = 'linear' fills deflators consistently with PPPs for SSD", {
+  # SSD has PPPs for the 2016-2017 hyperinflation but no deflator, and no data before 2008. Filling the deflator
+  # with its own trend gave a factor of ~8. Loose plausibility bounds, not target values.
+  res <- convertGDP(
+    data.frame(iso3c = "SSD", year = 2020, value = 1),
+    "constant 2017 Int$PPP",
+    "constant 2005 Int$PPP",
+    replace_NAs = "linear"
+  )
+  expect_gt(res$value, 0.5)
+  expect_lt(res$value, 2)
+})
+
+test_that("fill_by_anchor fills the deflator from PPP times US deflator", {
+  # Deflator and PPP agree up to year 5, then the PPP jumps (hyperinflation) and the deflator is missing
+  deflator <- c(1, 1.1, 1.2, 1.3, 1.4, NA, NA)
+  ppp <- c(1, 1.1, 1.2, 1.3, 1.4, 14, 140)
+  us <- c(1, 1, 1, 1, 1, 1, 1.1)
+  res <- fill_by_anchor(deflator, ppp * us)
+  expect_equal(res[1:5], deflator[1:5])
+  expect_equal(res[6:7], c(14, 154))
+  # Without PPPs, the deflator trend is used
+  expect_equal(fill_by_anchor(deflator, rep(NA_real_, 7)), log_lin_int_ext(deflator))
+})
+
+test_that("fill_by_anchor fills x when x and anchor overlap little or not at all", {
+  # Deflator in years 1-10, anchor only from year 8: 3 years of overlap are enough to hold the ratio
+  x <- c(1.1^(0:9), rep(NA, 5))
+  anchor <- c(rep(NA, 7), 1.1^(7:14))
+  expect_equal(fill_by_anchor(x, anchor), 1.1^(0:14))
+  # No overlap: the trend of x is used, also where the anchor exists
+  expect_equal(fill_by_anchor(x, c(rep(NA, 10), 1.1^(10:14))), log_lin_int_ext(x))
 })

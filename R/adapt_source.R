@@ -38,16 +38,29 @@ adapt_source <- function(gdp, source, with_regions, replace_NAs, require_year_co
       dplyr::bind_rows(tibble::tibble("year" = min(.$year):max(.$year))) %>%
       tidyr::complete(.data$iso3c, .data$year)
 
+    us <- source_adapted %>%
+      dplyr::filter(.data$iso3c == "USA") %>%
+      dplyr::arrange(.data$year)
+    us_deflator <- log_lin_int_ext(us$`GDP deflator`)
+
     source_adapted <- source_adapted %>%
       dplyr::group_by(.data$iso3c) %>%
       dplyr::arrange(.data$year) %>%
       dplyr::mutate(
-        dplyr::across(.cols = c("GDP deflator", "MER (LCU per US$)"), log_lin_int_ext),
-        "PPP conversion factor, GDP (LCU per international $)" = fill_ppp(
+        "MER (LCU per US$)" = log_lin_int_ext(.data[["MER (LCU per US$)"]]),
+        # The price level (PPP / MER) is far more stable than PPP during hyperinflation
+        "PPP conversion factor, GDP (LCU per international $)" = fill_by_anchor(
           .data[["PPP conversion factor, GDP (LCU per international $)"]],
           .data[["MER (LCU per US$)"]]
+        ),
+        # PPP_t / PPP_t0 tracks D_t / D_t0 relative to US inflation, so this keeps deflator and PPP consistent
+        "GDP deflator" = fill_by_anchor(
+          .data[["GDP deflator"]],
+          .data[["PPP conversion factor, GDP (LCU per international $)"]] *
+            us_deflator[match(.data$year, us$year)]
         )
-      )
+      ) %>%
+      dplyr::ungroup()
   }
 
   if ("regional_average" %in% replace_NAs) {
@@ -154,17 +167,15 @@ adapt_source <- function(gdp, source, with_regions, replace_NAs, require_year_co
 }
 
 
-# The price level (PPP / MER) is far more stable than PPP during hyperinflation, so it is held constant where MER
-# exists. Years without MER fall back to the PPP trend. Both fills extrapolate at most 5 years beyond the data.
-fill_ppp <- function(ppp, mer) {
-  ppp_trend <- log_lin_int_ext(ppp) # PPP trend, extrapolated from the observed data only
-  ppp <- dplyr::coalesce(ppp, log_lin_int_ext(ppp / mer, trend = FALSE) * mer)
-  dplyr::coalesce(ppp, dplyr::if_else(is.na(mer), ppp_trend, NA_real_))
+# Holds x / anchor constant at the closest observation where the anchor exists. Where that gives no value (no anchor,
+# no overlap of x and anchor, or beyond 5 years of the overlap), falls back to the trend of x.
+fill_by_anchor <- function(x, anchor) {
+  dplyr::coalesce(x, log_lin_int_ext(x / anchor, trend = FALSE) * anchor, log_lin_int_ext(x))
 }
 
 # Constant growth (linear in log space) keeps filled values positive. Extrapolation uses the OLS growth rate of the
-# closest n_ext points (0 if trend = FALSE) and reaches at most max_ext points away. Non-positive values count as
-# missing.
+# closest n_ext points (0 if trend = FALSE, which needs only 1 point) and reaches at most max_ext points away.
+# Non-positive values count as missing.
 log_lin_int_ext <- function(x, n_ext = 5, max_ext = 5, trend = TRUE) {
   x[x <= 0] <- NA
   if (!anyNA(x)) {
@@ -173,7 +184,7 @@ log_lin_int_ext <- function(x, n_ext = 5, max_ext = 5, trend = TRUE) {
   log_x <- zoo::na.approx(log(x), na.rm = FALSE)
 
   valid <- which(!is.na(log_x))
-  if (length(valid) >= max(n_ext, 2)) {
+  if (length(valid) >= (if (trend) max(n_ext, 2) else 1)) {
     slope <- function(indices) {
       if (trend) {
         stats::cov(indices, log_x[indices]) / stats::var(indices)
