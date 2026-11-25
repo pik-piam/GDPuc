@@ -3,6 +3,8 @@
 * `replace_NAs = "linear"` now fills conversion factors at constant growth rates (linear in log space), so they
   stay positive, and extrapolates at most 5 years beyond the data; further years stay missing for the next
   `replace_NAs` element. Missing PPP factors follow the MER at a constant price level (PPP / MER) (#55).
+* `replace_NAs = "linear"` derives missing GDP deflators from the PPP factor times the US deflator, so deflators
+  stay consistent with PPPs, e.g. through hyperinflations. 
 * Convert magpie objects that hold more than one value per country and year by scaling them with
   their conversion factors, instead of melting them into a long data frame with one row per value.
   Objects with several data dimensions, or with a second spatial sub-dimension such as bilateral
